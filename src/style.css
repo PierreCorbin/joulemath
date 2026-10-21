@@ -119,3 +119,12 @@ fieldset.card>.fields{clear:both}
 .fields>*{min-width:0}.ig input{width:100%}
 .inputs>*{min-width:0}
 .foot .disc{flex-basis:100%;font-size:.78rem;color:var(--faint)}
+.post-list{list-style:none;padding:0;margin:0;display:grid;gap:1rem;max-width:760px}
+.post-item{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:1.15rem 1.25rem;box-shadow:var(--shadow)}
+.post-item time{font-size:.8rem;color:var(--faint)}.post-item h2{margin:.2rem 0 .4rem;font-size:1.25rem}.post-item h2 a{color:var(--text);text-decoration:none}.post-item h2 a:hover{color:var(--accent-ink)}.post-item p{margin:0;color:var(--muted)}
+.post .eyebrow a{color:inherit;text-decoration:none}
+.post figure{margin:1.5rem 0;padding:1rem;background:var(--card);border:1px solid var(--line);border-radius:var(--r)}
+.post figure svg{width:100%;height:auto;display:block}.post figcaption{font-size:.8rem;color:var(--muted);margin-top:.5rem}
+.post table{margin:1rem 0 1.5rem}.post .callout{margin:2rem 0;padding:1.1rem 1.25rem;border-radius:var(--r);background:var(--accent-soft);border:1px solid var(--line)}
+.post .callout .btn{margin-top:.5rem}
+.chart-bar-m{fill:var(--accent)}.chart-bar-g{fill:var(--gpu)}.chart-bar-c{fill:var(--faint)}.chart-t{fill:var(--text);font:600 13px Inter,system-ui,sans-serif}.chart-l{fill:var(--muted);font:500 12px Inter,system-ui,sans-serif}.chart-grid{stroke:var(--line)}

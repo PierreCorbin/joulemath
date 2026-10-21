@@ -1,0 +1,31 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f7f7f5" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#0d0e11" media="(prefers-color-scheme: dark)">
+<script>try{var t=localStorage.getItem('jm-theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="preload" href="/fonts/inter-var-latin.woff2" as="font" type="font/woff2" crossorigin>
+<title>Methodology: live data and formulas | joulemath</title><meta name="description" content="How joulemath calculates hashprice, mining revenue, GPU rental revenue per kW and breakeven, and where each live figure comes from."><link rel="canonical" href="https://joulemath.com/methodology/">
+<meta property="og:title" content="Methodology: live data and formulas | joulemath"><meta property="og:description" content="How joulemath calculates hashprice, mining revenue, GPU rental revenue per kW and breakeven, and where each live figure comes from."><meta property="og:url" content="https://joulemath.com/methodology/"><meta property="og:type" content="website">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Methodology: live data and formulas | joulemath","url":"https://joulemath.com/methodology/"}</script></head><body>
+<header class="site-head"><div class="wrap"><a class="logo" href="/"><svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#16171a"/><path d="M18 4 7.5 18h6.5l-2 10L22.5 14H16z" fill="#f7931a"/></svg>joulemath</a><button class="theme-btn" id="theme" type="button" aria-label="Toggle theme"><svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button><nav class="nav" aria-label="Main"><a href="/">Mine vs AI</a><a href="/mining-calculator/">ASIC calculator</a><a href="/guides/">Guides</a><a href="/blog/">Blog</a><a href="/reports/">Reports</a><a href="/about/">About</a></nav></div></header><main><div class="wrap">
+<div class="prose"><div class="eyebrow">Methodology</div><h1>How joulemath calculates</h1>
+<p class="lead">Every number on joulemath is your input, live from a public API, or linked to where it came from. Here is exactly how the calculators work.</p>
+<h2>Live data</h2>
+<ul><li><b>Difficulty and network hashrate:</b> <a href="https://mempool.space/docs/api/rest#get-hashrate">mempool.space /api/v1/mining/hashrate/3d</a>.</li>
+<li><b>Reward per block:</b> total reward (subsidy plus fees) averaged over the last 144 blocks, from <a href="https://mempool.space/docs/api/rest#get-reward-stats">mempool.space /api/v1/mining/reward-stats/144</a>. If that call fails we fall back to the 3.125 BTC subsidy alone and say so.</li>
+<li><b>BTC price (USD and EUR):</b> <a href="https://mempool.space/docs/api">mempool.space /api/v1/prices</a>, with <a href="https://www.coingecko.com/en/api">CoinGecko</a> as a fallback.</li></ul>
+<p>All requests run in your browser when the page loads. Nothing you type is sent to us or anyone else.</p>
+<h2>Formulas</h2>
+<ul><li><b>BTC per TH/s per day</b> = 10<sup>12</sup> × 86,400 ÷ (difficulty × 2<sup>32</sup>) × reward per block (<a href="https://en.bitcoin.it/wiki/Difficulty">Bitcoin Wiki: Difficulty</a>).</li>
+<li><b>Hashprice</b> = BTC per TH/s per day × BTC price.</li>
+<li><b>Mining revenue per day</b> = TH/s × BTC per TH/s per day × (1 − pool fee) × BTC price.</li>
+<li><b>Power cost per day</b> = watts ÷ 1,000 × 24 × price per kWh.</li>
+<li><b>Breakeven power price</b> = daily revenue ÷ daily kWh.</li>
+<li><b>Hardware payback</b> = hardware cost ÷ daily profit, assuming today's difficulty and price stay flat.</li></ul>
+<h2>Per-kW comparison</h2>
+<p>The home calculator works per 1 kW of facility power. With PUE <i>p</i>, 1 kW at the meter leaves 1/<i>p</i> kW for IT load. Mining TH/s per kW = 1,000 ÷ <i>p</i> ÷ J/TH. GPUs per kW = 1,000 ÷ <i>p</i> ÷ watts per GPU. GPU revenue per kW per day = GPUs per kW × rate per GPU-hour × 24 × utilization × (1 − platform overhead). EUR conversion of USD rental rates uses the BTC EUR/USD price ratio.</p>
+<h2>What we leave out</h2>
+<p>Hardware capex for GPUs, downtime, curtailment revenue, taxes, hosting fees, hardware resale value and future changes in difficulty or price. GPU power and rental rates are left for you to enter because they vary a lot by server build and platform. Reference prices we quote are what renters pay a marketplace, not what a host nets.</p>
+<p>See it in action in the <a href="/calculators/">calculators</a>, or read the worked example in our <a href="/guides/is-bitcoin-mining-profitable-2026/">profitability guide</a>.</p></div>
+</div></main><footer class="foot"><div class="wrap"><p><b>joulemath.com</b>. Numbers are estimates, not financial advice.</p><p>Live data from <a href="https://mempool.space/docs/api">mempool.space</a> and <a href="https://www.coingecko.com/en/api">CoinGecko</a>.</p><p><a href="/calculators/">Calculators</a> · <a href="/methodology/">Methodology</a> · <a href="/blog/rss.xml">RSS</a></p><p class="disc">Some links are affiliate links. If you sign up through them, joulemath may earn a commission at no extra cost to you.</p></div></footer>
+<script src="/js/theme.js" defer></script>
+</body></html>

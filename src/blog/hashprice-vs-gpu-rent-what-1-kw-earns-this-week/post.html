@@ -1,0 +1,48 @@
+<!--meta {"title":"Hashprice vs GPU rent: what 1 kW earns this week (Oct 21, 2026)","description":"Hashprice today vs H100 rental rates, converted to revenue per kW per day: Bitcoin mining vs AI GPU rental, every figure sourced and dated October 21, 2026.","date":"2026-10-21"} -->
+<p class="lead">One kilowatt, two ways to sell it. Here is what each one pays on paper this week, using numbers pulled on October 21, 2026, and why the gap is not as simple as it looks.</p>
+
+<p>Every figure below is either pulled from a public source on the date shown, or labeled clearly as an assumption. If you want to check our work, every number has a link. If you want your own numbers, skip to the <a href="/">calculator</a>.</p>
+
+<h2>Hashprice today: what 1 kW of Bitcoin mining earns</h2>
+<p>All of this comes from the <a href="https://mempool.space/docs/api">mempool.space API</a>, accessed October 21, 2026 at about 19:35 CEST:</p>
+<ul>
+<li><b>BTC price:</b> $84,559 (€75,233), from <a href="https://mempool.space/api/v1/prices">/api/v1/prices</a>.</li>
+<li><b>Difficulty:</b> 140.58 T, and an estimated network hashrate of about 1,062 EH/s over the last 3 days, from <a href="https://mempool.space/api/v1/mining/hashrate/3d">/api/v1/mining/hashrate/3d</a>.</li>
+<li><b>Reward per block:</b> 452.29 BTC across the 144 blocks from 972,371 to 972,514, so 3.1409 BTC per block on average. That is the 3.125 BTC subsidy plus about 0.0159 BTC in fees. Source: <a href="https://mempool.space/api/v1/mining/reward-stats/144">/api/v1/mining/reward-stats/144</a>.</li>
+<li><b>Next difficulty adjustment:</b> mempool.space estimates about +7.04% in 1,214 blocks, around October 29. That is a projection, not a done deal (<a href="https://mempool.space/api/v1/difficulty-adjustment">/api/v1/difficulty-adjustment</a>).</li>
+</ul>
+<p>Put that through the standard formula (hashrate × 86,400 ÷ (difficulty × 2<sup>32</sup>) × reward, explained in our <a href="/guides/is-bitcoin-mining-profitable-2026/">profitability guide</a>) and you get <b>hashprice of about $0.0380 per TH/s per day</b>.</p>
+<p>Now turn a kilowatt into terahashes. Bitmain lists the Antminer S21 XP at 13.5 J/TH (<a href="https://support.bitmain.com/hc/en-us/articles/35383015643673-S21-XP-Specifications">Bitmain support</a>, accessed October 21, 2026). 1,000 W divided by 13.5 J/TH is about 74.1 TH/s. Times hashprice, minus a 2% pool fee (our example figure, not a quote), and <b>1 kW of S21 XP mining grosses about $2.76 a day</b>, or roughly $83 over 30 days.</p>
+<p>Power at $0.06/kWh (an example price, plug in yours) costs $1.44 a day per kW. So mining nets about $1.32 per kW per day before anything else. The breakeven power price is about $0.115/kWh at today's numbers. If that projected +7% difficulty bump lands and BTC price stays flat, revenue drops by roughly the same 7%.</p>
+
+<h2>H100 rental rates, converted to per kW</h2>
+<p>Here is where people get excited, so let's be careful.</p>
+<p><b>RunPod:</b> its <a href="https://www.runpod.io/pricing">pricing page</a> (marked "Updated October 8, 2026", accessed October 21, 2026) lists the H100 SXM at $2.69/hr on Community Cloud and $3.99/hr on Secure Cloud. The H100 PCIe is $1.99 and $2.89/hr.</p>
+<p><b>Vast.ai:</b> prices there are a marketplace, set by hosts. We queried Vast's public offer search (<a href="https://console.vast.ai/api/v0/bundles/">console.vast.ai/api/v0/bundles</a>) on October 21, 2026 at about 19:39 CEST for rentable, on-demand, single-GPU H100 SXM offers. It returned only 4 offers: the lowest at $2.20/hr, a median of $2.34/hr, and one outlier at $7.54/hr. Four offers is a thin sample, so treat that median loosely. For context, the same query for single RTX 4090s returned 64 offers with a median of $0.54/hr. Vast's own overview is on its <a href="https://vast.ai/pricing">pricing page</a>.</p>
+<p>Now the part nobody can source for you: how much power one rented H100 actually draws. NVIDIA lists the H100 SXM at <a href="https://www.nvidia.com/en-us/data-center/h100/">up to 700 W max TDP</a> (accessed October 21, 2026). But the GPU is not the whole server. CPUs, memory, networking and fans all add up. For this post <b>we assume 1,000 W per GPU including its share of the server</b>. That is our round number, not a measured figure. Change it in the calculator if you know yours.</p>
+<p>We also assume <b>70% utilization</b>, meaning the GPU is rented 70% of the hours. Also our assumption, also adjustable.</p>
+<p>With 1 GPU per kW, 24 hours and 70% utilization:</p>
+<ul>
+<li>At the Vast.ai median of $2.34/hr: about <b>$39.23 per kW per day</b>.</li>
+<li>At RunPod Community's $2.69/hr: about <b>$45.19 per kW per day</b>.</li>
+</ul>
+
+<figure><svg viewBox="0 0 720 200" role="img" aria-labelledby="ct cd"><title id="ct">Gross revenue per kW per day</title><desc id="cd">Bitcoin mining $2.76, power cost $1.44, H100 SXM rental at 70 percent utilization $39.23 on Vast.ai and $45.19 on RunPod.</desc><text class="chart-l" x="0" y="34">Mining (S21 XP)</text><rect class="chart-bar-m" x="230" y="20" width="26.3" height="20" rx="5"/><text class="chart-t" x="264.3" y="35">$2.76</text><text class="chart-l" x="0" y="76">Power cost, $0.06/kWh</text><rect class="chart-bar-c" x="230" y="62" width="13.7" height="20" rx="5"/><text class="chart-t" x="251.7" y="77">$1.44</text><text class="chart-l" x="0" y="118">H100 SXM, Vast median</text><rect class="chart-bar-g" x="230" y="104" width="373.3" height="20" rx="5"/><text class="chart-t" x="611.3" y="119">$39.23</text><text class="chart-l" x="0" y="160">H100 SXM, RunPod</text><rect class="chart-bar-g" x="230" y="146" width="430.0" height="20" rx="5"/><text class="chart-t" x="668.0" y="161">$45.19</text></svg><figcaption>Gross revenue per kW per day, October 21, 2026. GPU bars assume 1,000 W per GPU and 70% utilization (our assumptions). Mining assumes an S21 XP at 13.5 J/TH and a 2% pool fee. Sources linked in the text.</figcaption></figure>
+
+<h2>Bitcoin mining vs AI per kW: does GPU rent win by 14x?</h2>
+<p>On gross revenue per kW, the GPU numbers come out roughly 14 to 16 times higher than mining. That ratio is real arithmetic on real prices, but it flatters GPUs in a few big ways:</p>
+<ul>
+<li><b>Those are renter prices.</b> What a customer pays RunPod or a Vast listing is not what the host nets. Platforms take a cut, and hosts on a marketplace compete on price. We don't have a sourced figure for the host's share, so we haven't applied one. The calculator has an overhead field for it.</li>
+<li><b>Capex is wildly different.</b> One kilowatt of ASICs and one kilowatt of H100 servers are not in the same price universe. The GPU side has to pay back far more hardware. We didn't put a dollar figure on that here because we didn't pull a sourced hardware price today.</li>
+<li><b>Utilization is a guess.</b> Mining runs every hour you have power. Rentals only pay when someone is renting. At 35% instead of 70%, the GPU numbers halve.</li>
+<li><b>Thin data on one side.</b> Four Vast offers is not a market survey.</li>
+<li><b>Different sites, different needs.</b> GPU hosting wants good connectivity, uptime guarantees and often a proper data center. A lot of mining power sits in places that would never qualify.</li>
+</ul>
+<p>What the gap does tell you: per kilowatt, GPU rental has a lot more revenue headroom, which is why so many miners are looking at it. Whether that headroom survives hardware cost, platform fees and real utilization is a site-by-site question.</p>
+
+<h2>Hashprice this week, in one line</h2>
+<p>Hashprice is around $0.038/TH/day, an efficient ASIC grosses about $2.76 per kW per day, and a rented H100 grosses roughly $39 to $45 per kW per day on our assumptions, before the costs that make GPUs a very different business.</p>
+
+<div class="callout"><b>Run it with your own numbers.</b> Power price, PUE, J/TH, GPU wattage, rental rate, utilization and platform overhead are all inputs, and the Bitcoin side uses live data every time you load it.<br><a class="btn" href="/">Open the per-kW calculator <span aria-hidden="true">→</span></a></div>
+
+<p class="note">How we calculate: see our <a href="/methodology/">methodology</a>. Figures accessed October 21, 2026. Prices and network numbers change constantly; this post won't. Nothing here is financial advice.</p>
