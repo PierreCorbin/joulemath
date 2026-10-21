@@ -1,0 +1,6 @@
+body{font:16px/1.6 system-ui,sans-serif;margin:0;color:#1a1a1a;background:#fafaf7}header{display:flex;gap:1rem;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:1rem 1.5rem;border-bottom:1px solid #ddd}
+.logo{font-weight:700;font-size:1.2rem;color:#111;text-decoration:none}nav a{margin-left:1rem;color:#333}main{max-width:860px;margin:auto;padding:1.5rem}
+.lead{font-size:1.15rem}.live{background:#eef6ee;padding:.75rem;border-radius:6px;font-size:.9rem}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;margin:1rem 0}
+fieldset{border:1px solid #ddd;border-radius:6px}label{display:block;margin:.4rem 0;font-size:.9rem}input,select{display:block;width:100%;padding:.4rem;box-sizing:border-box}
+small,.note{color:#555;font-size:.85rem}table{width:100%;border-collapse:collapse}td,th{padding:.4rem;border-bottom:1px solid #e3e3e3;text-align:left}
+.cta{margin-top:2.5rem;padding:1.25rem;background:#111;color:#fff;border-radius:8px}.btn{display:inline-block;background:#f7931a;color:#111;padding:.6rem 1rem;border-radius:6px;font-weight:600;text-decoration:none}footer{padding:1.5rem;text-align:center;font-size:.85rem;color:#666}

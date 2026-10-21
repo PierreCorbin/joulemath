@@ -1,0 +1,32 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mine Bitcoin or rent GPUs to AI? Per-kW calculator | joulemath</title><meta name="description" content="Compare what a kilowatt earns mining Bitcoin versus renting GPUs for AI, using live hashprice and your own power price."><link rel="canonical" href="https://joulemath.com/">
+<meta property="og:title" content="Mine Bitcoin or rent GPUs to AI? Per-kW calculator | joulemath"><meta property="og:description" content="Compare what a kilowatt earns mining Bitcoin versus renting GPUs for AI, using live hashprice and your own power price."><meta property="og:url" content="https://joulemath.com/"><meta property="og:type" content="website">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Mine Bitcoin or rent to AI calculator","url":"https://joulemath.com/","applicationCategory":"FinanceApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0"}}</script></head><body>
+<header><a class="logo" href="/">joulemath</a><nav><a href="/">Mine vs AI</a><a href="/mining-calculator/">ASIC calculator</a><a href="/guides/is-bitcoin-mining-profitable-2026/">Guide</a><a href="/about/">About</a></nav></header><main>
+<h1>Mine Bitcoin or rent to AI?</h1>
+<p class="lead">Same power, two ways to sell it. Plug in your numbers and see what each kW earns per day.</p>
+<div class="live" id="live">Loading live network data...</div>
+<form id="calc" class="grid">
+<fieldset><legend>Shared</legend>
+<label>Electricity price (per kWh)<input id="price" type="number" step="0.001" value="0.06"></label>
+<label>Currency<select id="cur"><option value="USD" selected>USD</option><option>EUR</option></select></label>
+<label>PUE / cooling overhead (1.0 = none)<input id="pue" type="number" step="0.01" value="1.1"></label></fieldset>
+<fieldset><legend>Mining</legend>
+<label>ASIC efficiency (J/TH)<input id="jth" type="number" step="0.1" value="13.5"></label>
+<small>13.5 J/TH is Bitmain's spec for the S21 XP (<a href="https://support.bitmain.com/hc/en-us/articles/35383015643673-S21-XP-Specifications">source</a>).</small>
+<label>Pool fee (%)<input id="poolfee" type="number" step="0.1" value="2"></label></fieldset>
+<fieldset><legend>GPU rental</legend>
+<label>GPU count<input id="gpus" type="number" value="8"></label>
+<label>Power per GPU incl. share of server (W)<input id="gpuw" type="number" placeholder="you enter this"></label>
+<label>Rental rate (USD per GPU-hour)<input id="rate" type="number" step="0.01" placeholder="you enter this"></label>
+<small>Reference only: RunPod's public pricing page listed H100 PCIe at $1.99/hr (Community Cloud) and $2.89/hr (Secure Cloud), and H100 NVL at $2.59 to $3.19/hr, as checked Oct 21, 2026 (<a href="https://www.runpod.io/pricing">source</a>). That is what renters pay a marketplace, not what a host nets.</small>
+<label>Utilization (% of hours rented)<input id="util" type="number" value="70"></label>
+<label>Hosting / platform overhead (% of rental revenue)<input id="ovh" type="number" value="0"></label></fieldset>
+</form>
+<div id="out" class="out"></div>
+<p class="note">Mining revenue uses live hashprice: network difficulty plus the last 144 blocks' average reward (subsidy + fees), converted with the live BTC price. GPU power figures are left for you to fill in because they vary a lot by server build.</p>
+<section class="cta"><h2>Running real sites?</h2><p>If you run miners across one or more sites and want per-site financials, Flash builds that for miners.</p><a class="btn" href="https://paywithflash.com/mining?utm_source=joulemath&utm_medium=referral&utm_campaign=home">See Flash for miners</a></section>
+</main><footer><p>joulemath.com. Numbers are estimates, not financial advice. Live data from <a href="https://mempool.space/docs/api">mempool.space</a> and <a href="https://www.coingecko.com/en/api">CoinGecko</a>.</p></footer>
+<script src="/js/live.js"></script><script src="/js/compare.js"></script>
+</body></html>

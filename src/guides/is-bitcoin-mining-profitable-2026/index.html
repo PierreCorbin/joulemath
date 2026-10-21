@@ -1,0 +1,30 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Is Bitcoin mining profitable in 2026? How to calculate it | joulemath</title><meta name="description" content="The actual math behind Bitcoin mining profit in 2026: hashprice, difficulty, block subsidy, power cost and breakeven, with every figure sourced."><link rel="canonical" href="https://joulemath.com/guides/is-bitcoin-mining-profitable-2026/">
+<meta property="og:title" content="Is Bitcoin mining profitable in 2026? How to calculate it | joulemath"><meta property="og:description" content="The actual math behind Bitcoin mining profit in 2026: hashprice, difficulty, block subsidy, power cost and breakeven, with every figure sourced."><meta property="og:url" content="https://joulemath.com/guides/is-bitcoin-mining-profitable-2026/"><meta property="og:type" content="website">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Is Bitcoin mining profitable in 2026? How to calculate it","datePublished":"2026-10-21","author":{"@type":"Organization","name":"joulemath"},"mainEntityOfPage":"https://joulemath.com/guides/is-bitcoin-mining-profitable-2026/"}</script></head><body>
+<header><a class="logo" href="/">joulemath</a><nav><a href="/">Mine vs AI</a><a href="/mining-calculator/">ASIC calculator</a><a href="/guides/is-bitcoin-mining-profitable-2026/">Guide</a><a href="/about/">About</a></nav></header><main>
+<article><h1>Is Bitcoin mining profitable in 2026? How to calculate it</h1>
+<p class="lead">Short answer: it depends almost entirely on your power price and how efficient your machine is. Here's how to work it out yourself.</p>
+<p>The live numbers in the box below come straight from the mempool.space API when you load this page, so they're current, not whatever they were when we wrote this.</p>
+<div class="live" id="live">Loading live network data...</div>
+<h2>1. What the network pays out</h2>
+<p>Every block pays a subsidy plus transaction fees. Since the April 2024 halving at block 840,000 the subsidy is 3.125 BTC per block (<a href="https://github.com/bitcoin/bitcoin/blob/master/src/validation.cpp">Bitcoin Core, GetBlockSubsidy</a>: 50 BTC halved every 210,000 blocks). The next halving is at block 1,050,000. Blocks target one every 10 minutes, so about 144 per day.</p>
+<p>Fees move around. We use the average total reward over the last 144 blocks from <a href="https://mempool.space/docs/api/rest#get-reward-stats">mempool.space reward-stats</a>. Current value: <b data-k="rewardPerBlock">...</b> BTC per block.</p>
+<h2>2. Your share</h2>
+<p>Your expected share of blocks is your hashrate divided by the network's. The standard way to write it uses difficulty: expected BTC per day = hashrate (H/s) × 86,400 ÷ (difficulty × 2<sup>32</sup>) × reward per block. That 2<sup>32</sup> comes from how difficulty is defined (<a href="https://en.bitcoin.it/wiki/Difficulty">Bitcoin Wiki: Difficulty</a>). Current difficulty: <b data-k="difficulty">...</b>.</p>
+<h2>3. Hashprice</h2>
+<p>Plug in 1 TH/s and multiply by the BTC price and you get hashprice: dollars earned per TH/s per day. Right now: <b data-k="hashpriceUSD">...</b> USD per TH/s per day, at a BTC price of <b data-k="btcUSD">...</b> USD. Revenue = your TH/s × hashprice × (1 − pool fee).</p>
+<h2>4. Power cost</h2>
+<p>Power cost per day = watts ÷ 1000 × 24 × price per kWh. Example using Bitmain's published S21 XP spec of 3,645 W (<a href="https://support.bitmain.com/hc/en-us/articles/35383015643673-S21-XP-Specifications">source</a>) at an example price of $0.06/kWh: 3.645 × 24 × 0.06 = $5.25 per day. That price is just an example, use yours.</p>
+<h2>5. The shortcut: breakeven power price</h2>
+<p>Divide daily revenue per TH by daily kWh per TH and you get the power price where you stop making money. A machine at E J/TH uses E × 24 ÷ 1000 kWh per TH per day. So breakeven price per kWh = hashprice × (1 − pool fee) ÷ (E × 0.024). For the S21 XP at 13.5 J/TH that's <b data-k="breakevenS21">...</b> USD/kWh with a 2% pool fee, at today's numbers.</p>
+<h2>6. Paying back the hardware</h2>
+<p>Breakeven days = hardware cost ÷ daily profit. This assumes difficulty and price stay flat, which they never do. Difficulty has mostly gone up over time, so real payback is usually longer than this number.</p>
+<h2>So, is it profitable?</h2>
+<p>If your all-in power price is comfortably below the breakeven price above, yes, on paper, today. If it's close, small moves in difficulty or BTC price flip it. Run your own numbers in the <a href="/mining-calculator/">ASIC calculator</a>, or see whether your power is worth more <a href="/">renting GPUs to AI</a>.</p>
+<p class="note">Things we don't model: downtime, curtailment revenue, cooling, taxes, hosting fees, and hardware resale value.</p></article>
+
+</main><footer><p>joulemath.com. Numbers are estimates, not financial advice. Live data from <a href="https://mempool.space/docs/api">mempool.space</a> and <a href="https://www.coingecko.com/en/api">CoinGecko</a>.</p></footer>
+<script src="/js/live.js"></script><script src="/js/guide.js"></script>
+</body></html>
