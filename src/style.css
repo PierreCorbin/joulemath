@@ -118,3 +118,4 @@ fieldset.card>legend{float:left;width:100%}
 fieldset.card>.fields{clear:both}
 .fields>*{min-width:0}.ig input{width:100%}
 .inputs>*{min-width:0}
+.foot .disc{flex-basis:100%;font-size:.78rem;color:var(--faint)}
