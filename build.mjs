@@ -10,7 +10,7 @@ for(const u of urls){const f='dist'+u+'index.html';let h=fs.readFileSync(f,'utf8
  if(NEWSLETTER)h=h.replace('</body>','<script src="/js/signup.js" defer></script></body>');fs.writeFileSync(f,h);}
 fs.writeFileSync('dist/sitemap.xml',`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map(u=>`<url><loc>https://joulemath.com${u}</loc><lastmod>${new Date().toISOString().slice(0,10)}</lastmod></url>`).join('\n')}\n</urlset>\n`);
 let bad=0;for(const u of urls){const h=fs.readFileSync('dist'+u+'index.html','utf8');if(h.includes('\u2014')){console.error('em dash in',u);bad++;}
- for(const m of h.matchAll(/href="(\/[^"]*)"/g)){const t=m[1];if(t.startsWith('/go/'))continue;if(!fs.existsSync('dist'+t)&&!fs.existsSync('dist'+t+'index.html')){console.error('broken link',t,'in',u);bad++;}}}
+ for(const m of h.matchAll(/href="(\/[^"]*)"/g)){const [t,frag]=m[1].split('#');if(t.startsWith('/go/'))continue;const tf=fs.existsSync('dist'+t+'index.html')?'dist'+t+'index.html':'dist'+t;if(!fs.existsSync(tf)){console.error('broken link',t,'in',u);bad++;}else if(frag&&!fs.readFileSync(tf,'utf8').includes(`id="${frag}"`)){console.error('broken anchor',m[1],'in',u);bad++;}}}
 console.log('pages:',urls.join(' '));if(bad)process.exit(1);
 // Fingerprint CSS/JS: copy to /assets/<name>.<hash>.<ext>, rewrite HTML refs, keep originals at old paths.
 import crypto from 'crypto';
