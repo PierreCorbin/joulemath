@@ -1,5 +1,5 @@
-import fs from 'fs';import path from 'path';import {buildBlog} from './blog.mjs';
-fs.rmSync('dist',{recursive:true,force:true});fs.cpSync('src','dist',{recursive:true});buildBlog();
+import fs from 'fs';import path from 'path';import {buildBlog} from './blog.mjs';import {buildAsic} from './asic.mjs';
+fs.rmSync('dist',{recursive:true,force:true});fs.cpSync('src','dist',{recursive:true});buildBlog();await buildAsic();
 const pages=[];(function w(d){for(const f of fs.readdirSync(d)){const p=path.join(d,f);if(fs.statSync(p).isDirectory())w(p);else if(f==='index.html')pages.push('/'+path.relative('dist',path.dirname(p)).replace(/^$/,'')+(d==='dist'?'':'/'));}})('dist');
 const urls=pages.map(u=>u.replace('//','/'));
 fs.writeFileSync('dist/sitemap.xml',`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map(u=>`<url><loc>https://joulemath.com${u}</loc><lastmod>${new Date().toISOString().slice(0,10)}</lastmod></url>`).join('\n')}\n</urlset>\n`);

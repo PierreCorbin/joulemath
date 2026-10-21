@@ -128,3 +128,4 @@ fieldset.card>.fields{clear:both}
 .post table{margin:1rem 0 1.5rem}.post .callout{margin:2rem 0;padding:1.1rem 1.25rem;border-radius:var(--r);background:var(--accent-soft);border:1px solid var(--line)}
 .post .callout .btn{margin-top:.5rem}
 .chart-bar-m{fill:var(--accent)}.chart-bar-g{fill:var(--gpu)}.chart-bar-c{fill:var(--faint)}.chart-t{fill:var(--text);font:600 13px Inter,system-ui,sans-serif}.chart-l{fill:var(--muted);font:500 12px Inter,system-ui,sans-serif}.chart-grid{stroke:var(--line)}
+.aff-slot:empty{display:none}.post tr.hl td{background:var(--accent-soft)}
