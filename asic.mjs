@@ -75,7 +75,8 @@ ${body}
 ${slots}
 <div class="callout"><b>Use your own numbers.</b> Pool fee, live price and your exact power cost are all inputs in the ASIC calculator, which pulls fresh data every time you load it.<br><a class="btn" href="/mining-calculator/">Open the ASIC calculator <span aria-hidden="true">→</span></a></div>
 <p>Wondering whether the same kilowatts would earn more renting GPUs? Try the <a href="/">mine vs AI per-kW calculator</a>. Other models: ${others}, or see <a href="/asic/">all ASICs</a>.</p>
-<!--signup--></article>`;
+<!--signup--></article>
+<section class="cta"><div><h2>Already mining?</h2><p>Track your real per-site numbers (uptime, power cost, curtailment, payouts) instead of estimates. Flash does that for miners.</p></div><a class="btn" rel="nofollow" href="/go/flash?c=asic-model&amp;p=cta">See Flash for miners <span aria-hidden="true">→</span></a></section>`;
     const ld={"@context":"https://schema.org","@type":"WebPage","name":title,"description":desc,"url":SITE+url,"dateModified":iso,"breadcrumb":{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ASIC profitability","item":SITE+'/asic/'},{"@type":"ListItem","position":2,"name":m.name,"item":SITE+url}]}};
     fs.mkdirSync('dist'+url,{recursive:true});fs.writeFileSync('dist'+url+'index.html',page({title:`${title} | joulemath`,desc,url,ld,body}));
   }
