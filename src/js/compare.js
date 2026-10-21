@@ -71,4 +71,6 @@ function setSc(k,push){if(!SC[k])k='default';const o={...BASE,...SC[k]};for(cons
  if(push){const q=new URLSearchParams(location.search);k==='default'?q.delete('scenario'):q.set('scenario',k);history.replaceState(null,'',location.pathname+(q.toString()?'?'+q:''));}calc();}
 document.querySelectorAll('#sc button').forEach(b=>b.addEventListener('click',()=>setSc(b.dataset.sc,true)));
 setSc(new URLSearchParams(location.search).get('scenario')||'default',false);
+// Prefill numeric inputs from the URL, e.g. /?price=0.0707&kw=100 (used by /power-prices/ pages). Applied after the scenario.
+{const q=new URLSearchParams(location.search);let n=0;q.forEach((val,k)=>{const e=document.getElementById(k);const x=parseFloat(val);if(e&&e.type==='number'&&e.closest('#calc')&&!isNaN(x)){e.value=x;n++;}});if(n){document.querySelectorAll('#sc button').forEach(b=>b.setAttribute('aria-pressed','false'));calc();}}
 getLive().then(d=>{L=d;calc();});

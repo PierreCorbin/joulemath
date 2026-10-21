@@ -88,4 +88,5 @@ ${slots}
 <p>For your own power price and pool fee, use the <a href="/mining-calculator/">ASIC calculator</a>.</p><!--signup--></div>`;
   fs.writeFileSync('dist/asic/index.html',page({title:'Bitcoin ASIC profitability by model (live hashprice) | joulemath',desc:'Antminer S21 XP, S21 Pro, S21, S19 XP, S19k Pro and WhatsMiner M60S, M66S, M63S, M70S: daily profit and break-even power price from live hashprice.',url:'/asic/',ld:{"@context":"https://schema.org","@type":"CollectionPage","name":"Bitcoin ASIC profitability by model","url":SITE+'/asic/'},body}));
   console.log('asic: hashprice',hp.toFixed(4),'pages',MODELS.length);
+  return {hp,btc,eurPerUsd:pr.EUR/pr.USD,when,iso,dataLine,page};
 }
