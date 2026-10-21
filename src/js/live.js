@@ -10,9 +10,13 @@ async function getLive(){
   if(d.difficulty){d.btcPerTHDay=1e12*86400/(d.difficulty*2**32)*d.rewardPerBlock;
     if(d.btcUSD){d.hashpriceUSD=d.btcPerTHDay*d.btcUSD;d.hashpriceEUR=d.btcPerTHDay*d.btcEUR;d.breakevenS21=d.hashpriceUSD*0.98/(13.5*0.024);}}
   const el=document.getElementById('live');
-  if(el){el.innerHTML=d.errors.length&&!d.hashpriceUSD?'Could not load live data ('+d.errors.join(', ')+'). Try refreshing.':
-   `<b>Live:</b> BTC $${fmt(d.btcUSD,0)} / €${fmt(d.btcEUR,0)} (${d.priceSrc}) · difficulty ${fmt(d.difficulty/1e12,2)} T · network ${fmt(d.hashrateEH,0)} EH/s · reward ${fmt(d.rewardPerBlock,4)} BTC/block (avg last 144 blocks${d.rewardFallback?', fallback: subsidy only':''}) · hashprice $${fmt(d.hashpriceUSD,4)}/TH/day. Source: <a href="https://mempool.space/docs/api">mempool.space</a>${d.errors.length?' · failed: '+d.errors.join(', '):''}`;}
+  if(el){const c=(k,v)=>`<span class="chip">${k} <b>${v}</b></span>`;el.innerHTML=d.errors.length&&!d.hashpriceUSD?'Could not load live data ('+d.errors.join(', ')+'). Try refreshing.':
+   `<span class="dot" aria-hidden="true"></span>`+c('BTC',`$${fmt(d.btcUSD,0)} / €${fmt(d.btcEUR,0)}`)+c('Hashprice',`$${fmt(d.hashpriceUSD,4)}/TH/day`)+c('Difficulty',`${fmt(d.difficulty/1e12,2)} T`)+c('Network',`${fmt(d.hashrateEH,0)} EH/s`)+c('Reward',`${fmt(d.rewardPerBlock,4)} BTC/block`)+
+   `<span class="src">Live. BTC price via ${d.priceSrc}. Reward is the average of the last 144 blocks${d.rewardFallback?' (fallback: subsidy only)':''}. Source: <a href="https://mempool.space/docs/api">mempool.space</a>${d.errors.length?'. Failed: '+d.errors.join(', '):''}</span>`;}
   document.querySelectorAll('[data-k]').forEach(b=>{const v=d[b.dataset.k];if(v!=null)b.textContent=b.dataset.k==='difficulty'?fmt(v,0):fmt(v,v<1?4:v<100?3:0);});
   return d;}
 function fmt(n,dp=2){return n==null||isNaN(n)?'n/a':Number(n).toLocaleString('en-US',{minimumFractionDigits:dp,maximumFractionDigits:dp});}
 function v(id){const x=parseFloat(document.getElementById(id).value);return isNaN(x)?null:x;}
+function curVal(){const r=document.querySelector('input[name=cur]:checked');return r?r.value:'USD';}
+function money(s,n,dp=2){return n==null||isNaN(n)?'n/a':(n<0?'−':'')+s+fmt(Math.abs(n),dp);}
+function cls(n){return n==null?'muted':n>=0?'pos':'neg';}

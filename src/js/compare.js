@@ -1,19 +1,24 @@
-let L;['price','cur','pue','jth','poolfee','gpus','gpuw','rate','util','ovh'].forEach(i=>document.getElementById(i).addEventListener('input',calc));
-function calc(){const o=document.getElementById('out');if(!L||!L.btcPerTHDay||!L.btcUSD){o.textContent='Waiting for live data.';return;}
- const cur=document.getElementById('cur').value,s=cur==='EUR'?'€':'$',btc=cur==='EUR'?L.btcEUR:L.btcUSD,fx=L.btcEUR/L.btcUSD;
+let L;document.getElementById('calc').addEventListener('input',calc);
+function bar(label,val,max,c,s){const w=max>0?Math.max(0,val)/max*100:0;return `<div class="bar-row"><div class="bl"><span>${label}</span><b class="${val<0?'neg':''}">${money(s,val)}</b></div><div class="track"><div class="fill ${c}" style="width:${w.toFixed(1)}%"></div></div></div>`;}
+function calc(){const o=document.getElementById('out');if(!L||!L.btcPerTHDay||!L.btcUSD){o.innerHTML='<div class="empty">Waiting for live data.</div>';return;}
+ const cur=curVal(),s=cur==='EUR'?'€':'$',btc=cur==='EUR'?L.btcEUR:L.btcUSD,fx=L.btcEUR/L.btcUSD;
  const p=v('price')||0,pue=v('pue')||1,jth=v('jth'),fee=(v('poolfee')||0)/100;
  const kwhDay=24; // per 1 kW of facility power
  const itKW=1/pue,costKW=kwhDay*p;
  const mRev=jth?itKW*1000/jth*L.btcPerTHDay*(1-fee)*btc:0,mProf=mRev-costKW;
  const g=v('gpus'),gw=v('gpuw'),rate=v('rate'),util=(v('util')||0)/100,ovh=(v('ovh')||0)/100;
- let gRow='<td colspan="3">Enter GPU power and rental rate to compare.</td>',gProf=null;
+ let gRev=null,gProf=null,extra='';
  if(g&&gw&&rate){const gpusPerKW=itKW*1000/gw;const rateC=cur==='EUR'?rate*fx:rate;
-  const gRev=gpusPerKW*rateC*24*util*(1-ovh);gProf=gRev-costKW;
-  gRow=`<td>${s}${fmt(gRev)}</td><td>${s}${fmt(costKW)}</td><td><b>${s}${fmt(gProf)}</b></td>`;
-  gRow+=`</tr><tr><td colspan="4"><small>${fmt(gpusPerKW,2)} GPUs fit per facility kW. Your ${g} GPUs draw ${fmt(g*gw*pue/1000,1)} kW at the meter: ${s}${fmt(gProf*g*gw*pue/1000)}/day vs mining that same power: ${s}${fmt(mProf*g*gw*pue/1000)}/day.</small></td>`;}
- o.innerHTML=`<table><tr><th>Per 1 kW of facility power, per day</th><th>Revenue</th><th>Power cost</th><th>Profit</th></tr>
- <tr><td>Bitcoin mining</td><td>${s}${fmt(mRev)}</td><td>${s}${fmt(costKW)}</td><td><b>${s}${fmt(mProf)}</b></td></tr>
- <tr><td>GPU rental</td>${gRow}</tr></table>
- <p>Per MW per month (30d): mining ${s}${fmt(mProf*1000*30,0)}${gProf!=null?`, GPU rental ${s}${fmt(gProf*1000*30,0)}`:''}.</p>
- <p class="note">GPU rental side leaves out GPU capex, which is far higher per kW than ASICs. EUR conversion of the USD rental rate uses the BTC USD/EUR price ratio.</p>`;}
+  gRev=gpusPerKW*rateC*24*util*(1-ovh);gProf=gRev-costKW;
+  extra=`<p class="note" style="margin:0">${fmt(gpusPerKW,2)} GPUs fit per facility kW. Your ${g} GPUs draw ${fmt(g*gw*pue/1000,1)} kW at the meter: ${money(s,gProf*g*gw*pue/1000)}/day vs mining that same power: ${money(s,mProf*g*gw*pue/1000)}/day.</p>`;}
+ const max=Math.max(mRev,gRev||0,costKW);
+ let verdict='';if(gProf!=null){const d=gProf-mProf;verdict=`<div class="verdict">${d>=0?'<span class="pos">GPU rental</span> earns':'<span class="pos">Mining</span> earns'} ${money(s,Math.abs(d))} more per kW per day at these inputs.</div>`;}
+ o.innerHTML=`<div class="stat-grid">
+ <div class="stat"><div class="k"><i style="background:var(--accent)"></i>Mining profit</div><div class="v ${cls(mProf)}">${money(s,mProf)}</div><div class="s">${money(s,mRev)} rev · ${money(s,costKW)} power</div></div>
+ <div class="stat"><div class="k"><i style="background:var(--gpu)"></i>GPU rental profit</div>${gProf!=null?`<div class="v ${cls(gProf)}">${money(s,gProf)}</div><div class="s">${money(s,gRev)} rev · ${money(s,costKW)} power</div>`:`<div class="v muted">n/a</div><div class="s">Enter GPU power and rental rate to compare.</div>`}</div></div>
+ ${verdict}
+ <div class="bars">${bar('Mining revenue',mRev,max,'m',s)}${gRev!=null?bar('GPU rental revenue',gRev,max,'g',s):''}${bar('Power cost',costKW,max,'c',s)}</div>
+ <table><tr><th>Per MW per month (30d)</th><th>Profit</th></tr><tr><td>Bitcoin mining</td><td class="${cls(mProf)}">${money(s,mProf*1000*30,0)}</td></tr><tr><td>GPU rental</td><td class="${cls(gProf)}">${gProf!=null?money(s,gProf*1000*30,0):'n/a'}</td></tr></table>
+ ${extra}
+ <p class="note" style="margin:0">GPU rental side leaves out GPU capex, which is far higher per kW than ASICs. EUR conversion of the USD rental rate uses the BTC USD/EUR price ratio.</p>`;}
 getLive().then(d=>{L=d;calc();});
