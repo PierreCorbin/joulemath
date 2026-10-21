@@ -1,15 +1,21 @@
 User-agent: *
 Allow: /
+Disallow: /go/
 
 User-agent: GPTBot
 Allow: /
+Disallow: /go/
 User-agent: ClaudeBot
 Allow: /
+Disallow: /go/
 User-agent: PerplexityBot
 Allow: /
+Disallow: /go/
 User-agent: Google-Extended
 Allow: /
+Disallow: /go/
 User-agent: CCBot
 Allow: /
+Disallow: /go/
 
 Sitemap: https://joulemath.com/sitemap.xml
