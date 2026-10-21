@@ -8,7 +8,12 @@ const signup=c=>`<form class="signup" method="post" action="/api/subscribe"${NEW
 for(const u of urls){const f='dist'+u+'index.html';let h=fs.readFileSync(f,'utf8');const c=u==='/'?'home':u.startsWith('/blog/')&&u!=='/blog/'?'blog':u.startsWith('/asic/')?'asic':null;if(!c)continue;
  if(h.includes('<!--signup-->'))h=h.replace('<!--signup-->',signup(c));else if(c==='blog')h=h.replace('</article>',signup(c)+'</article>');else h=h.replace('<section class="cta">',signup(c)+'<section class="cta">');
  if(NEWSLETTER)h=h.replace('</body>','<script src="/js/signup.js" defer></script></body>');fs.writeFileSync(f,h);}
-fs.writeFileSync('dist/sitemap.xml',`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map(u=>`<url><loc>https://joulemath.com${u}</loc><lastmod>${new Date().toISOString().slice(0,10)}</lastmod></url>`).join('\n')}\n</urlset>\n`);
+// Sitemap lastmod = last git commit touching the page's source (its src dir or file, plus the generator that renders it), not the build date.
+import {execFileSync} from 'child_process';
+const gitDate=fs2=>{try{return execFileSync('git',['log','-1','--format=%cs','--',...fs2],{encoding:'utf8'}).trim();}catch(e){return '';}};
+const srcFor=u=>{const f=[u==='/'?'src/index.html':'src'+u];if(u.startsWith('/blog/'))f.push('blog.mjs');if(u.startsWith('/asic/'))f.push('asic.mjs');if(u.startsWith('/power-prices/'))f.push('power.mjs');return f.filter(x=>fs.existsSync(x));};
+const lastmod=u=>{const f=srcFor(u);return (f.length&&gitDate(f))||new Date().toISOString().slice(0,10);};
+fs.writeFileSync('dist/sitemap.xml',`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map(u=>`<url><loc>https://joulemath.com${u}</loc><lastmod>${lastmod(u)}</lastmod></url>`).join('\n')}\n</urlset>\n`);
 let bad=0;for(const u of urls){const h=fs.readFileSync('dist'+u+'index.html','utf8');if(h.includes('\u2014')){console.error('em dash in',u);bad++;}
  for(const m of h.matchAll(/href="(\/[^"]*)"/g)){const [t,frag]=m[1].split('#');if(t.startsWith('/go/'))continue;const tf=fs.existsSync('dist'+t+'index.html')?'dist'+t+'index.html':'dist'+t;if(!fs.existsSync(tf)){console.error('broken link',t,'in',u);bad++;}else if(frag&&!fs.readFileSync(tf,'utf8').includes(`id="${frag}"`)){console.error('broken anchor',m[1],'in',u);bad++;}}}
 for(const u of urls){const f='dist'+u+'index.html';const h=fs.readFileSync(f,'utf8');if(!h.includes('/js/t.js'))fs.writeFileSync(f,h.replace('</body>','<script src="/js/t.js" defer></script></body>'));}
