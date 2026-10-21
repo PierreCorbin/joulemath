@@ -130,3 +130,5 @@ fieldset.card>.fields{clear:both}
 .chart-bar-m{fill:var(--accent)}.chart-bar-g{fill:var(--gpu)}.chart-bar-c{fill:var(--faint)}.chart-t{fill:var(--text);font:600 13px Inter,system-ui,sans-serif}.chart-l{fill:var(--muted);font:500 12px Inter,system-ui,sans-serif}.chart-grid{stroke:var(--line)}
 .aff-slot:empty{display:none}.post tr.hl td{background:var(--accent-soft)}
 .signup{margin:2rem 0;padding:1.1rem 1.25rem;border:1px solid var(--line);border-radius:var(--r);background:var(--card)}.signup .row{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.5rem}.signup input[type=email]{flex:1;min-width:200px;padding:.65rem .8rem;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--text)}.signup .hp{position:absolute;left:-9999px}.signup-msg{font-size:.85rem;color:var(--muted);margin:.4rem 0 0}
+
+.lead-s{margin:0 0 .9rem;font-size:.92rem;line-height:1.5}.tbl{overflow-x:auto}details.taxes summary{cursor:pointer;list-style:revert}details.taxes[open] summary{margin-bottom:.6rem}[hidden]{display:none!important}
