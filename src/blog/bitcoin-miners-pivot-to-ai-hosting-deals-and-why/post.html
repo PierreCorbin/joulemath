@@ -1,0 +1,57 @@
+<!--meta {"title":"Bitcoin miners pivoting to AI: the deals, the money per kW, and why","description":"TeraWulf, Hut 8, Core Scientific, Cipher and IREN have signed billions in AI hosting deals. Here is who signed what, what it works out to per kW, and why power is the reason.","date":"2026-10-21"} -->
+<p class="lead">The biggest listed Bitcoin miners are turning into AI landlords. Here are the deals they announced, what each one works out to per kilowatt, and why miners ended up holding exactly what AI companies are short of.</p>
+
+<p>Every deal figure below comes from the company's own press release or SEC filing, linked inline and accessed October 21, 2026. The per-kW numbers are our arithmetic on those figures, and we show how we got them.</p>
+
+<h2>Who signed what</h2>
+<ul>
+<li><b>TeraWulf and Anthropic.</b> On July 6, 2026 TeraWulf announced a 20-year lease with Anthropic for about 401 MW of critical IT load at its Justified Data campus in Hawesville, Kentucky. It expects about $19 billion of contracted lease revenue over the initial term, with capacity coming online from the second half of 2027 and the full 401 MW by early 2028 (<a href="https://investors.terawulf.com/news-events/press-releases/detail/142/terawulf-announces-anthropic-lease-at-justified-data-campus-and-sale-of-majority-interest-in-abernathy-joint-venture-to-fluidstack">TeraWulf press release</a>; <a href="https://investors.terawulf.com/sec-filings/all-sec-filings/content/0001104659-26-080583/0001104659-26-080583.pdf">8-K</a>).</li>
+<li><b>Hut 8 and an unnamed tenant.</b> On July 20, 2026 Hut 8 signed a second 15-year, $9.8 billion lease for 352 MW of IT capacity at its Beacon Point campus in Nueces County, Texas. The tenant is described only as "high-investment-grade" and is the same one that signed Phase 1, so it now holds 704 MW there. Hut 8 says its whole AI portfolio is 949 MW of contracted IT capacity and $26.6 billion of base-term contract value (<a href="https://www.prnewswire.com/news-releases/hut-8-fully-commercializes-1-gw-beacon-point-ai-data-center-campus-with-second-352-mw-it-lease-bringing-campus-level-base-term-contract-value-to-19-6-billion-302829514.html">Hut 8 press release</a>).</li>
+<li><b>Core Scientific and AMD.</b> On July 28, 2026 Core Scientific announced 15-year agreements for about 530 MW across five sites, with more than $14 billion of potential base contracted revenue and room to grow to 2.5 GW (<a href="https://investors.corescientific.com/news-events/press-releases/detail/138/core-scientific-and-amd-announce-infrastructure-partnership">Core Scientific and AMD release</a>). The 8-K splits it into 377 MW leased to AMD and 152 MW leased to an unnamed "Neocloud" with AMD credit support (<a href="https://investors.corescientific.com/sec-filings/all-sec-filings/content/0001839341-26-000012/0001839341-26-000012.pdf">8-K</a>). Same day, the company said its total leased customer capacity was about 1.1 GW, representing more than $24 billion of potential contracted revenue (<a href="https://investors.corescientific.com/news-events/press-releases/detail/139/core-scientific-announces-second-quarter-2026-results">Q2 2026 results</a>).</li>
+<li><b>Cipher and AWS.</b> In November 2025 Cipher announced an approximately $5.5 billion, 15-year lease with Amazon Web Services (<a href="https://investors.cipherdigital.com/news-releases/news-release-details/cipher-mining-provides-third-quarter-2025-business-update/">Cipher Q3 2025 update</a>). A later filing puts it at 300 MW gross and 216 MW critical IT load at Black Pearl in Wink, Texas, with initial rent targeted for October 2026 (<a href="https://investors.cipherdigital.com/static-files/ea18cc35-53af-4e32-81a7-32a835429abf">Cipher 8-K, Feb 3, 2026</a>).</li>
+<li><b>IREN and Microsoft.</b> IREN took a different route. It is not just leasing space. It signed a five-year GPU cloud contract with Microsoft worth about $9.7 billion, running NVIDIA GB300s in about 200 MW of critical IT load at Childress, Texas, and agreed to buy the GPUs and equipment from Dell for about $5.8 billion (<a href="https://iren.gcs-web.com/news-releases/news-release-details/iren-secures-97bn-ai-cloud-contract-microsoft">IREN press release</a>).</li>
+</ul>
+
+<h2>What the deals pay per kW</h2>
+<p>Here is a simple way to compare them: contract value divided by years, divided by IT kilowatts. It is a flat average. It ignores rent escalators (Hut 8 cites 3% a year, Cipher's filing also shows 3%), ramp-up time and renewal options, so treat it as a rough yardstick, not what any company books in a given month.</p>
+<table>
+<thead><tr><th>Deal</th><th>Value / term / IT MW</th><th>Per IT kW per month</th><th>Per IT kW per day</th></tr></thead>
+<tbody>
+<tr><td>TeraWulf / Anthropic</td><td>$19B / 20 yr / 401 MW</td><td>~$197</td><td>~$6.49</td></tr>
+<tr><td>Hut 8 / Beacon Point Phase 2</td><td>$9.8B / 15 yr / 352 MW</td><td>~$155</td><td>~$5.09</td></tr>
+<tr><td>Core Scientific / AMD</td><td>$14B / 15 yr / 530 MW</td><td>~$147</td><td>~$4.82</td></tr>
+<tr><td>Cipher / AWS</td><td>$5.5B / 15 yr / 216 MW</td><td>~$141</td><td>~$4.65</td></tr>
+<tr><td>IREN / Microsoft (GPU cloud)</td><td>$9.7B / 5 yr / 200 MW</td><td>~$808</td><td>~$26.58</td></tr>
+</tbody></table>
+<p>IREN's number is not comparable to the others. It sells GPU compute, so its revenue has to pay for the GPUs it owns. The leases are mostly powered shells where the tenant brings the chips.</p>
+
+<h2>Compare that with mining the same kW</h2>
+<p>From the <a href="https://mempool.space/docs/api">mempool.space API</a> at about 20:13 CEST on October 21, 2026: BTC at $84,655, difficulty at 140.58 T, and an average of 3.1409 BTC per block across the last 144 blocks. That gives a hashprice of about <b>$0.0380 per TH/s per day</b> (formula in our <a href="/methodology/">methodology</a>).</p>
+<p>A kilowatt of Antminer S21 XP at Bitmain's listed 13.5 J/TH (<a href="https://support.bitmain.com/hc/en-us/articles/35383015643673-S21-XP-Specifications">spec sheet</a>) is about 74 TH/s, so it grosses about <b>$2.82 per kW per day</b> before pool fees and before paying for the power. The lease numbers above are $4.65 to $6.49 per IT kW per day.</p>
+<p>That is not apples to apples, and it is worth being honest about why:</p>
+<ul>
+<li>Lease rent is mostly <b>net of power</b>. Hut 8 and Cipher describe triple net leases, where the tenant covers operating costs. Mining revenue still has to pay the power bill.</li>
+<li>Rent is <b>contracted for 15 to 20 years</b>. Hashprice moves every block, and mempool.space projects the next difficulty adjustment at about +6.6% as of our pull.</li>
+<li>Leasing needs <b>a real data center</b>. IREN's own deck estimates all-in capex of $14 to 16 million per MW of IT load for its Horizon buildings (<a href="https://iren.gcs-web.com/static-files/a421bb34-0156-4687-be7d-19f53a5236e5">IREN investor deck</a>). A mining shed is a very different build.</li>
+</ul>
+<p>So the pitch is not "AI pays 2x". It is "AI pays steady, long-dated rent from big-name tenants, if you can build to their spec".</p>
+
+<h2>Why miners, of all people</h2>
+<p>The short answer is power. Mining sites were picked for cheap, large grid connections, and that is the scarce part of an AI data center. The companies say it themselves:</p>
+<ul>
+<li>Hut 8 calls its approach "power-first" and notes Beacon Point was first underwritten "on a speed-to-power thesis" for its Bitcoin mining affiliate before it was leased to an AI tenant. The site's full 1,000 MW is secured under an interconnection agreement with AEP Texas (<a href="https://www.prnewswire.com/news-releases/hut-8-fully-commercializes-1-gw-beacon-point-ai-data-center-campus-with-second-352-mw-it-lease-bringing-campus-level-base-term-contract-value-to-19-6-billion-302829514.html">Hut 8</a>).</li>
+<li>Core Scientific and AMD's release says "access to power, land and data center infrastructure has become critical to bringing new AI compute online" (<a href="https://investors.corescientific.com/news-events/press-releases/detail/138/core-scientific-and-amd-announce-infrastructure-partnership">release</a>).</li>
+<li>Microsoft's quote in IREN's release names IREN's "secured power capacity" as a reason it is a strategic partner, and IREN points to a 3 GW secured power portfolio (<a href="https://iren.gcs-web.com/news-releases/news-release-details/iren-secures-97bn-ai-cloud-contract-microsoft">IREN</a>).</li>
+</ul>
+<p>The ASICs themselves are not part of the deal. They cannot run AI workloads. What gets sold is the land, the substation, the interconnect and the team that knows how to energize a site fast.</p>
+
+<h2>What to watch</h2>
+<ul>
+<li><b>Delivery dates.</b> Most of this capacity is not live yet. TeraWulf's Kentucky campus ramps through early 2028, and Hut 8's Phase 2 first data hall is expected in Q2 2028.</li>
+<li><b>Unnamed tenants.</b> Hut 8's Beacon Point tenant and Core Scientific's "Neocloud" are not named in the filings we read.</li>
+<li><b>What happens to the hashrate.</b> Every MW that moves to AI is a MW that stops mining. If enough of it moves, difficulty growth slows, which helps whoever is still mining.</li>
+</ul>
+
+<div class="callout"><b>Run your own site's numbers.</b> Plug in your power price and ASIC efficiency, and compare mining with GPU rental per kW, using live hashprice.<br><a class="btn" href="/">Open the per-kW calculator <span aria-hidden="true">→</span></a></div>
+
+<p class="note">How we calculate: see our <a href="/methodology/">methodology</a>. Deal figures are as disclosed by the companies, accessed October 21, 2026. Per-kW figures are our own flat-average arithmetic and ignore escalators, ramp-up and renewals. Nothing here is financial advice.</p>

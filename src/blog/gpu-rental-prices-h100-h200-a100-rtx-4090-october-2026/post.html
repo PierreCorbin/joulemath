@@ -1,0 +1,63 @@
+<!--meta {"title":"GPU rental prices right now: H100, H200, A100 and RTX 4090 (Oct 21, 2026)","description":"H100, H200, A100 and RTX 4090 rental prices per hour on Vast.ai, RunPod and Lambda, pulled October 21, 2026, plus what each works out to per kW per day.","date":"2026-10-21"} -->
+<p class="lead">How much does it cost to rent an H100 per hour right now? Here are live and listed prices for four popular GPUs across three providers, all pulled on October 21, 2026, and what each one means per kilowatt.</p>
+
+<p class="note">Disclosure: this post contains an affiliate link to Vast.ai. If you sign up through it, joulemath may earn a commission at no extra cost to you. It does not change any number here.</p>
+
+<h2>Where these prices come from</h2>
+<ul>
+<li><b>Vast.ai</b> is a marketplace, so hosts set prices and they move all day. We queried Vast's public offer search (<a href="https://console.vast.ai/api/v0/bundles/">console.vast.ai/api/v0/bundles</a>) at about 20:13 CEST on October 21, 2026 for rentable, on-demand offers with exactly one GPU of each model, and took the lowest, median and highest total price per hour. You can browse the same market on <a href="/go/vast?c=blog-gpu-prices&amp;p=sources" rel="sponsored nofollow">Vast.ai</a> (affiliate link).</li>
+<li><b>RunPod</b> publishes fixed on-demand prices for Community Cloud and Secure Cloud on its <a href="https://www.runpod.io/pricing">pricing page</a>, marked "Updated October 8, 2026" and accessed October 21, 2026.</li>
+<li><b>Lambda</b> publishes per-GPU hourly prices on its <a href="https://lambda.ai/pricing">pricing page</a>, accessed October 21, 2026. Prices are "plus applicable sales tax/VAT/GST" and vary with how many GPUs are in the instance.</li>
+</ul>
+
+<h2>The prices, per GPU per hour</h2>
+<table>
+<thead><tr><th>GPU</th><th>Vast.ai (low / median / high, offers)</th><th>RunPod (Community / Secure)</th><th>Lambda</th></tr></thead>
+<tbody>
+<tr><td>H100 SXM</td><td>$2.14 / $2.20 / $2.40 (3)</td><td>$2.69 / $3.99</td><td>$4.29 (1x), $3.99 (8x)</td></tr>
+<tr><td>H100 PCIe</td><td>$2.34 (1)</td><td>$1.99 / $2.89</td><td>$3.29 (1x)</td></tr>
+<tr><td>H200</td><td>$3.43 / $4.02 / $4.61 (2)</td><td>$3.59 / $5.29</td><td>Not listed</td></tr>
+<tr><td>H200 NVL</td><td>$3.20 / $4.44 / $6.42 (5)</td><td>Not listed</td><td>Not listed</td></tr>
+<tr><td>A100 SXM4 80GB</td><td>$0.44 / $0.80 / $1.41 (17)</td><td>$1.39 / $1.79</td><td>$2.79 (8x)</td></tr>
+<tr><td>A100 PCIe</td><td>$0.37 / $0.89 / $1.00 (10)</td><td>$1.19 / $1.79</td><td>$1.99 (40GB)</td></tr>
+<tr><td>RTX 4090</td><td>$0.15 / $0.55 / $2.67 (64)</td><td>$0.34 / $0.89</td><td>Not listed</td></tr>
+</tbody></table>
+<p>The number in brackets is how many single-GPU Vast offers matched. For RTX 4090 the API returned 64 offers, which may be a page limit rather than the whole market. The H100 and H200 samples are tiny, so the medians can swing a lot from one hour to the next.</p>
+<p>A quick note on the RunPod Community and Secure prices: those come from the structured price data embedded in the same pricing page. The page's main grid shows the Secure Cloud figure by default.</p>
+
+<h2>What jumps out</h2>
+<ul>
+<li><b>Single H100s are around $2 to $4 an hour.</b> The cheapest single H100 SXM we saw was $2.14 on Vast. RunPod Community is $2.69, Lambda's single-GPU instance is $4.29.</li>
+<li><b>H200 costs roughly 1.5x to 2x an H100</b> at the same provider. RunPod Community lists $3.59 vs $2.69, Secure $5.29 vs $3.99.</li>
+<li><b>A100s are cheap now.</b> The Vast median for a single A100 SXM4 was $0.80/hr, under a third of a single H100.</li>
+<li><b>RTX 4090 spreads widely.</b> $0.15 to $2.67 on Vast, with a $0.55 median. The high end is likely a host with unusual specs or bandwidth, so the median is the more useful figure.</li>
+<li><b>Marketplace vs fixed price.</b> Vast's medians sit below RunPod's Community prices for H100 SXM and A100, but above for RTX 4090. With samples this small, do not read too much into the H100 gap.</li>
+</ul>
+
+<h2>Per kW: what a host could gross</h2>
+<p>This is the joulemath angle. If you have power and are thinking about GPUs instead of ASICs, what does a kilowatt of rented GPU bring in?</p>
+<p>Two assumptions, both <b>ours, not sourced</b>: about <b>1,000 W per data center GPU</b> (H100, H200, A100) including its share of the server, and about <b>600 W per RTX 4090</b> including its share of the host machine. For reference, NVIDIA lists the H100 SXM at <a href="https://www.nvidia.com/en-us/data-center/h100/">up to 700 W max TDP</a>. We also assume the GPU is rented <b>70% of the hours</b>. Change all three in the <a href="/">calculator</a>.</p>
+<table>
+<thead><tr><th>GPU and price</th><th>Gross per kW per day</th></tr></thead>
+<tbody>
+<tr><td>H100 SXM, Vast median $2.20</td><td>~$36.99</td></tr>
+<tr><td>H100 SXM, RunPod Community $2.69</td><td>~$45.19</td></tr>
+<tr><td>H200, RunPod Community $3.59</td><td>~$60.31</td></tr>
+<tr><td>A100 SXM4, Vast median $0.80</td><td>~$13.47</td></tr>
+<tr><td>RTX 4090, Vast median $0.55</td><td>~$15.40</td></tr>
+</tbody></table>
+<p>Compare that to Bitcoin mining at the same moment. Using the <a href="https://mempool.space/docs/api">mempool.space API</a> (BTC $84,655, difficulty 140.58 T, 3.1409 BTC average reward per block over the last 144 blocks, accessed 20:13 CEST), hashprice is about $0.0380 per TH/s per day. A kilowatt of Antminer S21 XP at Bitmain's listed <a href="https://support.bitmain.com/hc/en-us/articles/35383015643673-S21-XP-Specifications">13.5 J/TH</a> grosses about $2.82 a day before pool fees and power.</p>
+<p>Before anyone quits mining over that gap, remember:</p>
+<ul>
+<li>These are <b>renter prices</b>. The host gets less after the platform's cut. We have not applied a figure for that because we do not have a sourced one.</li>
+<li>A GPU kilowatt costs <b>far more hardware</b> than an ASIC kilowatt, and it has to pay that back before the comparison means much.</li>
+<li><b>70% utilization</b> is a guess. Miners earn every hour the power is on. GPUs only earn when rented.</li>
+<li>Small Vast samples for H100 and H200 mean these per-kW figures can move a lot week to week.</li>
+</ul>
+
+<h2>GPU rental prices in one line</h2>
+<p>Right now a single H100 rents for about $2.14 to $4.29 an hour depending on where you look, an H200 for about $3.43 to $5.29, an A100 for well under $2, and an RTX 4090 for about $0.55 at the Vast median.</p>
+
+<div class="callout"><b>Check the market and run the math.</b> Prices change hourly on a marketplace. See current offers on <a href="/go/vast?c=blog-gpu-prices&amp;p=callout" rel="sponsored nofollow">Vast.ai</a> (affiliate link), then put your own rate, wattage and utilization into the per-kW calculator.<br><a class="btn" href="/">Open the per-kW calculator <span aria-hidden="true">→</span></a></div>
+
+<p class="note">How we calculate: see our <a href="/methodology/">methodology</a>. All prices accessed October 21, 2026 (Vast.ai at about 20:13 CEST). Prices change constantly; this post won't. Nothing here is financial advice.</p>
