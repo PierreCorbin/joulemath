@@ -1,0 +1,21 @@
+name: KV setup (manual)
+on: workflow_dispatch
+jobs:
+  kv:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create SUBSCRIBERS KV namespace and bind it to the Pages project
+        env:
+          T: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          A: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -e
+          api(){ curl -s -H "Authorization: Bearer $T" -H "Content-Type: application/json" "$@"; }
+          L=$(api "https://api.cloudflare.com/client/v4/accounts/$A/storage/kv/namespaces?per_page=100")
+          echo "$L" | jq -c '{success, errors}'
+          ID=$(echo "$L" | jq -r '.result[]? | select(.title=="joulemath-subscribers") | .id')
+          if [ -z "$ID" ]; then R=$(api -X POST "https://api.cloudflare.com/client/v4/accounts/$A/storage/kv/namespaces" -d '{"title":"joulemath-subscribers"}'); echo "$R" | jq -c '{success, errors}'; ID=$(echo "$R" | jq -r '.result.id // empty'); fi
+          [ -n "$ID" ] || { echo "KV namespace not available"; exit 1; }
+          echo "namespace id: $ID"
+          P=$(api -X PATCH "https://api.cloudflare.com/client/v4/accounts/$A/pages/projects/joulemath" -d "{\"deployment_configs\":{\"production\":{\"kv_namespaces\":{\"SUBSCRIBERS\":{\"namespace_id\":\"$ID\"}}},\"preview\":{\"kv_namespaces\":{\"SUBSCRIBERS\":{\"namespace_id\":\"$ID\"}}}}}")
+          echo "$P" | jq -c '{success, errors, kv: .result.deployment_configs.production.kv_namespaces}'
