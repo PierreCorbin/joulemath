@@ -10,6 +10,7 @@
 <div class="hero"><div class="eyebrow">Per-kW calculator</div><h1>Mine Bitcoin or rent to AI?</h1>
 <p class="lead">Same power, two ways to sell it. Plug in your numbers and see what each kW earns per day.</p></div>
 <div class="live" id="live">Loading live network data...</div>
+<div class="scen"><span class="note">Scenarios:</span><div id="sc" class="chips"><button type="button" data-sc="default" aria-pressed="true">Default</button><button type="button" data-sc="cheap-power" aria-pressed="false">Cheap power</button><button type="button" data-sc="used-asics" aria-pressed="false">Used ASICs</button><button type="button" data-sc="curtailment" aria-pressed="false">Curtailment</button><button type="button" data-sc="low-gpu-util" aria-pressed="false">Low GPU utilization</button></div><a class="hint" href="/methodology/#scenarios">What each one changes</a></div>
 <div class="calc"><form id="calc" class="inputs" onsubmit="return false">
 <fieldset class="card"><legend class="card-h"><i></i>Compare by</legend><div class="fields">
 <div class="field full"><div class="seg" role="radiogroup" aria-label="Compare by"><label><input type="radio" name="basis" value="kw" checked><span>Same power (kW)</span></label><label><input type="radio" name="basis" value="usd"><span>Same budget ($)</span></label></div></div>
@@ -25,6 +26,7 @@
 <label class="field"><span>ASIC efficiency</span><span class="ig"><input id="jth" type="number" inputmode="decimal" step="0.1" value="13.5"><span class="u">J/TH</span></span></label>
 <label class="field"><span>Pool fee</span><span class="ig"><input id="poolfee" type="number" inputmode="decimal" step="0.1" value="2"><span class="u">%</span></span></label>
 <label class="field own-only"><span>ASIC price</span><span class="ig"><span class=pre>$</span><input id="thprice" type="number" inputmode="decimal" step="0.01" value="15.81"><span class="u">/TH</span></span></label>
+<label class="field own-only"><span>Mining uptime</span><span class="ig"><input id="mup" type="number" inputmode="decimal" step="1" value="100"><span class="u">% of hrs</span></span></label>
 <label class="field own-only"><span>ASIC life</span><span class="ig"><input id="alife" type="number" inputmode="decimal" step="0.5" value="3"><span class="u">years</span></span></label>
 <label class="field rent-only" hidden><span>Hashrate premium</span><span class="ig"><input id="prem" type="number" inputmode="decimal" step="0.1" value="16.4"><span class="u">% over hashprice</span></span></label>
 <a class="hint full" href="/methodology/#sources-mining">Where these defaults come from</a>
@@ -47,7 +49,8 @@
 </form>
 <section class="results card" aria-live="polite"><div id="out" class="results"><div class="skeleton"></div></div></section>
 </div>
-<section class="cta"><div><h2>Running real sites?</h2><p>If you run miners across one or more sites and want per-site financials, Flash builds that for miners.</p></div><a class="btn" rel="nofollow" href="/go/flash?c=home&amp;p=cta">See Flash for miners <span aria-hidden="true">→</span></a></section>
+<section class="who card"><h2>Who can actually do this</h2><ul><li><b>GPU rental:</b> a data-center grade site, fiber, serious cooling, and customers who expect uptime SLAs. You only earn when someone books.</li><li><b>Mining:</b> power and ventilation. No customers to find. The network pays a reward every block (about every 10 minutes), and you can switch off when power gets pricey.</li></ul><a class="hint" href="/methodology/#who-can">More on what each takes</a></section>
+<section class="cta"><div><h2>Already mining?</h2><p>Track your real per-site numbers (uptime, power cost, curtailment, payouts) instead of estimates. Flash does that for miners.</p></div><a class="btn" rel="nofollow" href="/go/flash?c=home&amp;p=cta">See Flash for miners <span aria-hidden="true">→</span></a></section>
 </div></main><footer class="foot"><div class="wrap"><p><b>joulemath.com</b>. Numbers are estimates, not financial advice.</p><p>Live data from <a href="https://mempool.space/docs/api">mempool.space</a> and <a href="https://www.coingecko.com/en/api">CoinGecko</a>.</p><p><a href="/calculators/">Calculators</a> · <a href="/methodology/">Methodology</a> · <a href="/blog/rss.xml">RSS</a> · <a href="https://github.com/PierreCorbin/joulemath">Source on GitHub</a></p><p class="disc">Some links are affiliate links. If you sign up through them, joulemath may earn a commission at no extra cost to you.</p></div></footer>
 <script src="/js/live.js"></script><script src="/js/compare.js"></script>
 <script src="/js/theme.js" defer></script>
