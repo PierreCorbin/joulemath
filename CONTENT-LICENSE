@@ -1,0 +1,12 @@
+Content License
+
+Copyright (c) 2026 Pierre Corbin. All rights reserved.
+
+The MIT License in LICENSE covers the source code only (build scripts,
+JavaScript, CSS, HTML templates and Cloudflare functions).
+
+It does not cover the written content (articles, guides, reports, blog posts,
+methodology text), the data compilations (ASIC and GPU spec tables, curated
+datasets and derived figures) or the images and graphics in this repository.
+All of that is reserved and may not be republished or redistributed without
+written permission. Short quotes with a link to https://joulemath.com are fine.
