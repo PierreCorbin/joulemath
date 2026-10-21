@@ -2,6 +2,12 @@ import fs from 'fs';import path from 'path';import {buildBlog} from './blog.mjs'
 fs.rmSync('dist',{recursive:true,force:true});fs.cpSync('src','dist',{recursive:true});buildBlog();await buildAsic();
 const pages=[];(function w(d){for(const f of fs.readdirSync(d)){const p=path.join(d,f);if(fs.statSync(p).isDirectory())w(p);else if(f==='index.html')pages.push('/'+path.relative('dist',path.dirname(p)).replace(/^$/,'')+(d==='dist'?'':'/'));}})('dist');
 const urls=pages.map(u=>u.replace('//','/'));
+// Newsletter box. Hidden until the SUBSCRIBERS KV binding exists on the Pages project; flip NEWSLETTER to true then.
+const NEWSLETTER=false;
+const signup=c=>`<form class="signup" method="post" action="/api/subscribe"${NEWSLETTER?'':' hidden'}><b>Weekly energy-to-compute data, free</b><p class="note" style="margin:.2rem 0 0">Hashprice, GPU rent per kW and the deals behind them, once a week. Unsubscribe any time.</p><div class="row"><input type="email" name="email" required placeholder="you@example.com" aria-label="Email"><input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true"><input type="hidden" name="src" value="${c}"><button class="btn" type="submit">Subscribe</button></div><p class="signup-msg" aria-live="polite"></p></form>`;
+for(const u of urls){const f='dist'+u+'index.html';let h=fs.readFileSync(f,'utf8');const c=u==='/'?'home':u.startsWith('/blog/')&&u!=='/blog/'?'blog':u.startsWith('/asic/')?'asic':null;if(!c)continue;
+ if(h.includes('<!--signup-->'))h=h.replace('<!--signup-->',signup(c));else if(c==='blog')h=h.replace('</article>',signup(c)+'</article>');else h=h.replace('<section class="cta">',signup(c)+'<section class="cta">');
+ if(NEWSLETTER)h=h.replace('</body>','<script src="/js/signup.js" defer></script></body>');fs.writeFileSync(f,h);}
 fs.writeFileSync('dist/sitemap.xml',`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map(u=>`<url><loc>https://joulemath.com${u}</loc><lastmod>${new Date().toISOString().slice(0,10)}</lastmod></url>`).join('\n')}\n</urlset>\n`);
 let bad=0;for(const u of urls){const h=fs.readFileSync('dist'+u+'index.html','utf8');if(h.includes('\u2014')){console.error('em dash in',u);bad++;}
  for(const m of h.matchAll(/href="(\/[^"]*)"/g)){const t=m[1];if(t.startsWith('/go/'))continue;if(!fs.existsSync('dist'+t)&&!fs.existsSync('dist'+t+'index.html')){console.error('broken link',t,'in',u);bad++;}}}

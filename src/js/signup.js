@@ -1,0 +1,2 @@
+document.querySelectorAll('form.signup').forEach(f=>f.addEventListener('submit',async e=>{e.preventDefault();const m=f.querySelector('.signup-msg');m.textContent='Sending...';
+try{const r=await fetch('/api/subscribe',{method:'POST',body:new FormData(f)});const d=await r.json();m.textContent=d.ok?'Thanks, you are on the list.':(d.error==='invalid email'?'That email does not look right.':'Something went wrong. Try again later.');if(d.ok)f.reset();}catch{m.textContent='Something went wrong. Try again later.';}}));
