@@ -14,7 +14,8 @@
 <fieldset class="card"><legend class="card-h"><i></i>Shared</legend><div class="fields">
 <label class="field"><span>Electricity price</span><span class="ig"><input id="price" type="number" inputmode="decimal" step="0.001" value="0.06"><span class="u">/kWh</span></span></label>
 <div class="field"><span id="curl">Currency</span><div class="seg" role="radiogroup" aria-labelledby="curl"><label><input type="radio" name="cur" id="cur" value="USD" checked><span>USD $</span></label><label><input type="radio" name="cur" value="EUR"><span>EUR €</span></label></div></div>
-<label class="field full"><span>PUE / cooling overhead</span><span class="ig"><input id="pue" type="number" inputmode="decimal" step="0.01" value="1.1"><span class="u">×</span></span><span class=hint>1.0 = no overhead.</span></label>
+<label class="field"><span>Operation size</span><span class="ig"><input id="kw" type="number" inputmode="decimal" step="1" value="100"><span class="u">kW</span></span><span class=hint>Facility power, used for both sides.</span></label>
+<label class="field"><span>PUE / cooling overhead</span><span class="ig"><input id="pue" type="number" inputmode="decimal" step="0.01" value="1.1"><span class="u">×</span></span><span class=hint>1.0 = no overhead.</span></label>
 </div></fieldset>
 <fieldset class="card"><legend class="card-h"><i class="m"></i>Bitcoin mining</legend><div class="fields">
 <label class="field"><span>ASIC efficiency</span><span class="ig"><input id="jth" type="number" inputmode="decimal" step="0.1" value="13.5"><span class="u">J/TH</span></span></label>
@@ -22,18 +23,17 @@
 <span class="hint full">13.5 J/TH is Bitmain's spec for the S21 XP (<a href="https://support.bitmain.com/hc/en-us/articles/35383015643673-S21-XP-Specifications">source</a>).</span>
 </div></fieldset>
 <fieldset class="card"><legend class="card-h"><i class="g"></i>GPU rental</legend><div class="fields">
-<label class="field"><span>GPU count</span><span class="ig"><input id="gpus" type="number" inputmode="decimal" value="8"><span class="u">GPUs</span></span></label>
-<label class="field"><span>Power per GPU</span><span class="ig"><input id="gpuw" type="number" inputmode="decimal" placeholder="you enter this"><span class="u">W</span></span><span class=hint>Include its share of the server.</span></label>
-<label class="field full"><span>Rental rate</span><span class="ig"><span class=pre>$</span><input id="rate" type="number" inputmode="decimal" step="0.01" placeholder="you enter this"><span class="u">/GPU-hr</span></span></label>
-<span class="hint full">Reference only: RunPod's public pricing page listed H100 PCIe at $1.99/hr (Community Cloud) and $2.89/hr (Secure Cloud), and H100 NVL at $2.59 to $3.19/hr, as checked Oct 21, 2026 (<a href="https://www.runpod.io/pricing">source</a>). That is what renters pay a marketplace, not what a host nets. Rate is in USD.</span>
+<label class="field"><span>Power per GPU</span><span class="ig"><input id="gpuw" type="number" inputmode="decimal" value="1000"><span class="u">W</span></span><span class=hint>Our assumption: 1,000 W per H100 SXM incl. its server share. NVIDIA lists the GPU at up to 700 W TDP (<a href="https://www.nvidia.com/en-us/data-center/h100/">source</a>, accessed Oct 21, 2026).</span></label>
+<label class="field"><span>Rental rate</span><span class="ig"><span class=pre>$</span><input id="rate" type="number" inputmode="decimal" step="0.01" value="2.69"><span class="u">/GPU-hr</span></span></label>
+<span class="hint full">Default $2.69/hr is RunPod's H100 SXM Community Cloud price ($3.99 Secure), page updated Oct 8, 2026, accessed Oct 21, 2026 (<a href="https://www.runpod.io/pricing">source</a>). Vast.ai's single-GPU H100 SXM median was $2.20/hr on Oct 21, 2026 at 20:13 CEST (<a href="/blog/gpu-rental-prices-h100-h200-a100-rtx-4090-october-2026/">details</a>). That is what renters pay a marketplace, not what a host nets. Rate is in USD.</span>
 <span class="hint full"><a href="/go/vast?c=home&amp;p=gpu" rel="sponsored nofollow">Compare live GPU rental prices on Vast.ai</a> (affiliate link)</span>
-<label class="field"><span>Utilization</span><span class="ig"><input id="util" type="number" inputmode="decimal" value="70"><span class="u">% of hrs</span></span></label>
+<label class="field"><span>Utilization</span><span class="ig"><input id="util" type="number" inputmode="decimal" value="70"><span class="u">% of hrs</span></span><span class=hint>Our assumption. Edit it.</span></label>
 <label class="field"><span>Hosting / platform overhead</span><span class="ig"><input id="ovh" type="number" inputmode="decimal" value="0"><span class="u">% of rev</span></span></label>
 </div></fieldset>
 </form>
-<section class="results card" aria-live="polite"><h2 class="card-h" style="margin:0"><i></i>Per 1 kW of facility power, per day</h2><div id="out" class="results"><div class="skeleton"></div></div></section>
+<section class="results card" aria-live="polite"><h2 class="card-h" style="margin:0"><i></i>Same operation size, per day</h2><div id="out" class="results"><div class="skeleton"></div></div></section>
 </div>
-<p class="note" style="margin-top:1.25rem">Mining revenue uses live hashprice: network difficulty plus the last 144 blocks' average reward (subsidy + fees), converted with the live BTC price. GPU power figures are left for you to fill in because they vary a lot by server build.</p>
+<p class="note" style="margin-top:1.25rem">Mining revenue uses live hashprice: network difficulty plus the last 144 blocks' average reward (subsidy + fees), converted with the live BTC price. The GPU side is sized to the same facility kW: GPU count = IT kW ÷ power per GPU, rounded down. Power per GPU and utilization are our assumptions; change them to match your build.</p>
 <section class="cta"><div><h2>Running real sites?</h2><p>If you run miners across one or more sites and want per-site financials, Flash builds that for miners.</p></div><a class="btn" rel="nofollow" href="/go/flash?c=home&amp;p=cta">See Flash for miners <span aria-hidden="true">→</span></a></section>
 </div></main><footer class="foot"><div class="wrap"><p><b>joulemath.com</b>. Numbers are estimates, not financial advice.</p><p>Live data from <a href="https://mempool.space/docs/api">mempool.space</a> and <a href="https://www.coingecko.com/en/api">CoinGecko</a>.</p><p><a href="/calculators/">Calculators</a> · <a href="/methodology/">Methodology</a> · <a href="/blog/rss.xml">RSS</a></p><p class="disc">Some links are affiliate links. If you sign up through them, joulemath may earn a commission at no extra cost to you.</p></div></footer>
 <script src="/js/live.js"></script><script src="/js/compare.js"></script>
