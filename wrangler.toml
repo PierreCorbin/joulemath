@@ -1,0 +1,12 @@
+# Cloudflare Pages config. KV namespace IDs are not secrets.
+name = "joulemath"
+pages_build_output_dir = "dist"
+compatibility_date = "2026-10-21"
+
+[[kv_namespaces]]
+binding = "SUBSCRIBERS"   # joulemath-subscribers
+id = "09fb6b918f8b4ea08a5ec401975afb41"
+
+[[kv_namespaces]]
+binding = "EVENTS"        # joulemath-events
+id = "25910d4d5f5e4dee8dd20e3336a1e227"
