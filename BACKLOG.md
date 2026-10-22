@@ -15,3 +15,6 @@ Ranked. Ship top to bottom.
 11. [ ] Power price pages + GPU hosting cost
 12. [ ] Energy-to-Compute Index (target ~Nov 1)
 13. [ ] SEO quick wins: thicken mining-calculator and ASIC pages, ~60 char titles, sortable /asic/ table
+
+## PRIORITY for Fri Oct 23 site-improve run (Pierre asked, Oct 22)
+- [ ] Calculator result -> "Where to run this" comparator block. If AI wins: GPU clouds (RunPod, Massed Compute, Vast, Lambda) with cited current $/hr. If mining wins: hosting + ASIC sellers + Flash CTA (/go/flash). Neutral comparator; plain links now, label affiliate links clearly, swap in referral links as approvals land (Massed Compute pending, RunPod not signed up). Cite every price.
