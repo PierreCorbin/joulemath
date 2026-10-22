@@ -32,9 +32,11 @@ function calc(){const o=document.getElementById('out');if(!L||!L.btcPerTHDay||!L
  const N=x=>`<span class="${cls(x)}">${money(s,x)}</span>`,P=x=>x==null?'n/a':`<span class="${cls(x)}">${x<0?"−":""}${fmt(Math.abs(x),1)}%</span>`;
  const row=(k,a,b,h)=>`<tr><td>${k}${h?` <a class="how" href="/methodology/#${h}">how</a>`:''}</td><td>${a}</td><td>${b}</td></tr>`;
  const at=tax?', after tax':'',W=m.k!=null&&g.k!=null?(g.k>=m.k?'GPU rental':'Mining'):null;
- const head=W?`<b>${W}</b> nets more per ${s}1,000 ${rent?'of rent':'invested'}: <b class="${cls(g.k)}">${money(s,g.k,0)}</b>/mo for GPUs vs <b class="${cls(m.k)}">${money(s,m.k,0)}</b> for mining${at}.`:'Enter prices to compare.';
+ const K=x=>x==null?'n/a':`<b class="${cls(x)}">${money(s,x,Math.abs(x)<10?2:0)}</b>${Math.abs(x)<0.5?' (about break-even after hardware)':''}`;
+ const cash=rent?'':`<b>Cash profit before hardware cost:</b> mining <b class="${cls(m.op)}">${money(s,m.op,0)}</b>/day vs GPUs <b class="${cls(g.op)}">${money(s,g.op,0)}</b>/day (${byUsd?s+fmt(bud,0)+' budget':fmt(kw,0)+' kW'} each side).<br>`;
+ const head=W?`${cash}After hardware cost${at}, per ${s}1,000 ${rent?'of rent':'invested'}: GPUs ${K(g.k)}/mo vs mining ${K(m.k)}/mo. <b>${W}</b> nets more.`:'Enter prices to compare.';
  const hU=byUsd&&(m.cap||g.cap||rent),Wu=g.atNet>=m.atNet?'GPU rental':'Mining';
- const head2=`With ${s}${fmt(bud,0)}${rent?' of rent a month':''}, <b>${Wu}</b> nets more: <b class="${cls(g.atNet)}">${money(s,g.atNet*30.4,0)}</b>/mo for GPUs vs <b class="${cls(m.atNet)}">${money(s,m.atNet*30.4,0)}</b> for mining${at}.`;
+ const head2=`${cash}With ${s}${fmt(bud,0)}${rent?' of rent a month':''}, <b>${Wu}</b> nets more: ${K(g.atNet*30.4)}/mo for GPUs vs ${K(m.atNet*30.4)}/mo for mining, after hardware cost${at}.`;
  const left=byUsd?bud-(rent?n*lease*24*30.4:n*gP):0;
  const pb=x=>x.cap?(x.pb==null?'never':fmt(x.pb,1)+' mo'):'n/a';
  const sz=byUsd?`${s}${fmt(bud,0)} ${rent?'rent per month':'budget'} each side`:`${fmt(kw,0)} kW each side`;
