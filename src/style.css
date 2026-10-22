@@ -46,7 +46,7 @@ main{padding:2rem 0 3rem}
 .live .src{flex-basis:100%;font-size:.78rem;color:var(--faint)}
 /* calculator */
 .calc{display:grid;gap:1.25rem;align-items:start}
-@media (min-width:960px){.calc{grid-template-columns:minmax(0,1.05fr) minmax(0,1fr)}.results{position:sticky;top:80px}}
+@media (min-width:960px){.calc{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .inputs{display:grid;gap:1rem}
 .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:1.15rem;box-shadow:var(--shadow)}
 .card-h{display:flex;align-items:center;gap:.55rem;margin:0 0 .9rem;font-size:.8rem;font-weight:650;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
@@ -137,3 +137,8 @@ fieldset.card>.fields{clear:both}
 
 .scen{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin:0 0 1rem}.chips{display:flex;flex-wrap:wrap;gap:.4rem}.chips button{font:inherit;font-size:.85rem;font-weight:550;padding:.38rem .75rem;border-radius:999px;border:1px solid var(--line2);background:var(--card);color:var(--muted);cursor:pointer}.chips button[aria-pressed=true]{color:var(--text);border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
 .who{margin-top:2rem;padding:1.25rem 1.5rem}.who h2{margin:0 0 .5rem;font-size:1.1rem}.who ul{margin:0 0 .5rem;padding-left:1.1rem;line-height:1.55}
+
+.sum{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin:.6rem 0}.sum>div{border:1px solid var(--line,#8883);border-radius:10px;padding:.6rem .7rem;min-width:0}.sum h3{margin:0 0 .35rem;font-size:.95rem}.sum dl{display:grid;grid-template-columns:auto auto;gap:.15rem .5rem;margin:0;font-size:.86rem}.sum dt{color:var(--faint)}.sum dd{margin:0;text-align:right;font-variant-numeric:tabular-nums}.sum .need{margin:.4rem 0 0;font-size:.78rem;color:var(--faint);line-height:1.35}.verdict{margin:.2rem 0 0;font-size:.95rem}
+@media (max-width:520px){.sum{grid-template-columns:1fr}}
+details.assume>summary{cursor:pointer;list-style:revert}details.assume[open]>summary{margin-bottom:.8rem}.results.card{margin-bottom:1rem}.scen{margin:0 0 1rem}
+@media (max-width:520px){.hero .lead{display:none}.live .src{display:none}.hero h1{font-size:1.6rem}.results .headline{font-size:.95rem}}

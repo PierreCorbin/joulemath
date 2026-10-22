@@ -36,13 +36,30 @@ function calc(){const o=document.getElementById('out');if(!L||!L.btcPerTHDay||!L
  const cash=rent?'':`<b>Cash profit before hardware cost:</b> mining <b class="${cls(m.op)}">${money(s,m.op,0)}</b>/day vs GPUs <b class="${cls(g.op)}">${money(s,g.op,0)}</b>/day (${byUsd?s+fmt(bud,0)+' budget':fmt(kw,0)+' kW'} each side).<br>`;
  const head=W?`${cash}After hardware cost${at}, per ${s}1,000 ${rent?'of rent':'invested'}: GPUs ${K(g.k)}/mo vs mining ${K(m.k)}/mo. <b>${W}</b> nets more.`:'Enter prices to compare.';
  const hU=byUsd&&(m.cap||g.cap||rent),Wu=g.atNet>=m.atNet?'GPU rental':'Mining';
- const head2=`${cash}With ${s}${fmt(bud,0)}${rent?' of rent a month':''}, <b>${Wu}</b> nets more: ${K(g.atNet*30.4)}/mo for GPUs vs ${K(m.atNet*30.4)}/mo for mining, after hardware cost${at}.`;
+ const head2=`With ${s}${fmt(bud,0)}${rent?' of rent a month':''}, <b>${Wu}</b> nets more: ${K(g.atNet*30.4)}/mo for GPUs vs ${K(m.atNet*30.4)}/mo for mining, after hardware cost${at}.`;
  const left=byUsd?bud-(rent?n*lease*24*30.4:n*gP):0;
  const pb=x=>x.cap?(x.pb==null?'never':fmt(x.pb,1)+' mo'):'n/a';
  const sz=byUsd?`${s}${fmt(bud,0)} ${rent?'rent per month':'budget'} each side`:`${fmt(kw,0)} kW each side`;
- o.innerHTML=`<p class="headline">${hU?head2:head}</p><p class="note" style="margin:0">${sz}, ${rent?'rented machines':'bought machines'}${left>1?`. GPUs come in whole units, so ${money(s,left,0)} of the GPU budget is left unspent`:''}.</p>
+ const mo=x=>x==null?'n/a':`<span class="${cls(x)}">${money(s,x,Math.abs(x)<10?2:0)}</span>`;
+ const card=(nm,dot,x,eq,need)=>`<div><h3><i class="${dot}"></i>${nm}</h3><p class="need" style="margin:0 0 .35rem">${eq}</p><dl>
+ <dt>${rent?'Rent per month':'Capital needed'}</dt><dd>${money(s,rent?x.hw*30.4:x.cap,0)}</dd>
+ ${rent?'':`<dt>Cash profit / mo (before hardware cost)</dt><dd>${mo(x.op*30.4)}</dd>`}
+ <dt>Net / mo (after ${rent?'rent':'hardware cost'}${at})</dt><dd>${mo(x.atNet*30.4)}${Math.abs(x.atNet*30.4)<15?' <small>about break-even</small>':''}</dd>
+ ${rent?'':`<dt>Payback</dt><dd>${pb(x)}</dd>`}</dl><p class="need">${need}</p></div>`;
+ const mEq=`${fmt(th,0)} TH/s${v('jth')===13.5?`, about ${fmt(th/270,0)} S21 XP`:''}, ${fmt(mKW,1)} kW`,gEq=`${n} GPU${n===1?'':'s'}${v('gpuw')===1000?' (H100 class)':''}, ${fmt(gKW,1)} kW`;
+ const best=m.k==null||g.k==null?null:(g.k>=m.k?'g':'m');
+ const capR=m.cap&&g.cap?g.cap/m.cap:null,kwR=mKW&&gKW?mKW/gKW:null;
+ let ver='Enter prices to compare.';
+ if(best==='g'){ver='GPUs return more per '+s+' here';
+  if(!byUsd&&capR>1.5)ver+=`, but need about ${fmt(capR,0)}x the capital for the same ${fmt(kw,0)} kW`;
+  else if(byUsd&&kwR>1.5)ver+=`. Mining the same money needs about ${fmt(kwR,0)}x the power`;
+  ver+=', and GPUs are the harder setup (data-center-grade site, fiber, paying customers).';}
+ else if(best==='m'){ver='Mining returns more per '+s+' here, and it is the simpler setup.';if(!byUsd&&capR&&capR<0.67)ver+=` GPUs would need less capital for the same ${fmt(kw,0)} kW.`;}
+ o.innerHTML=`<p class="headline"><b>${ver}</b></p><p class="note" style="margin:.2rem 0 0">${sz}, ${rent?'rented machines':'bought machines'}${left>1?`. GPUs come in whole units, so ${money(s,left,0)} of the GPU budget is left unspent`:''}.</p>
+ <div class="sum">${card('Bitcoin mining','dot-m',m,mEq,'What you need: cheap power, ventilation, and a rack or a hosting deal.')}${card('GPU rental','dot-g',g,gEq,'What you need: a data-center-grade site, fiber, and customers or a marketplace like Vast.ai.')}</div>
+ <p class="note" style="margin:0">${hU?head2:head}</p>
  <p class="note be" style="margin:.3rem 0 0">${be?(be.none?(be.hi?'Mining nets more per $1k at any power price up to $1/kWh.':'GPUs net more per $1k at any power price, even free power.'):`Break-even power price: <b>${s}${fmt(be.p,3)}/kWh</b>. Below that, mining nets more per ${s}1k invested.`):'Break-even power price: n/a when renting (you pay no power).'} <a class="how" href="/methodology/#break-even">how</a></p>
- <div class="tbl"><table class="kt"><tr><th></th><th><i class="dot-m"></i>Mining</th><th><i class="dot-g"></i>GPU</th></tr>
+ <details class="full-num"><summary>More ratios</summary><div class="tbl"><table class="kt"><tr><th></th><th><i class="dot-m"></i>Mining</th><th><i class="dot-g"></i>GPU</th></tr>
  ${row('Net / mo per '+s+'1k '+(rent?'rent':'invested')+(rent?'':' (after hardware cost)'),N(m.k),N(g.k),'scale-free')}
  ${row('Payback',pb(m),pb(g),'payback')}
  ${row('Net margin'+(rent?'':' (after hardware cost)'),P(m.mg),P(g.mg),'scale-free')}
@@ -50,7 +67,7 @@ function calc(){const o=document.getElementById('out');if(!L||!L.btcPerTHDay||!L
  ${rent?'':row('Cash profit per kW / day (before hardware cost)',N(m.opkw),N(g.opkw),'payback')}
  ${row('Lifetime return per '+s+'1',m.cap?N(m.roi):'n/a',g.cap?N(g.roi):'n/a','payback')}
  ${byUsd?row('Buys',`${fmt(th,0)} TH/s${v('jth')===13.5?` (${fmt(th/270,1)} S21 XP)`:''}`,`${n} GPUs`,'same-budget')+row('Power used',fmt(mKW,1)+' kW',fmt(gKW,1)+' kW','same-budget')+row('Net / month',N(m.atNet*30.4),N(g.atNet*30.4),'same-budget'):''}
- </table></div>
+ </table></div></details>
  <details class="full-num"><summary>Full numbers</summary><div class="tbl"><table><tr><th>Per day</th><th>Mining</th><th>GPU</th></tr>
  ${row('Hardware',`${fmt(th,0)} TH/s`,`${n} GPUs`)}${row('Facility power',fmt(mKW,1)+' kW',fmt(gKW,1)+' kW')}
  ${row('Revenue',money(s,m.rev),money(s,g.rev))}${row('Power',money(s,-m.pow),money(s,-g.pow))}
