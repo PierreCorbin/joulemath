@@ -1,4 +1,5 @@
-let L,hodl='sell',DG=null;
+const v2=id=>(document.getElementById(id)||{}).value;
+let L,hodl='hold',DG=null;
 function run(pp,fx,btc,rent,byUsd){
  const p=pp,pue=v('pue')||1,jth=v('jth')||1,fee=(v('poolfee')||0)/100,kw=v('kw')||1,host=(v('host')||0)*fx,bud=(v('budget')||0)*fx;
  const thP=(v('thprice')||0)*fx,aLife=v('alife')||1,prem=(v('prem')||0)/100,hpTH=L.btcPerTHDay*btc;
@@ -46,7 +47,7 @@ function calc(){const o=document.getElementById('out');if(!L||!L.btcPerTHDay||!L
 
  const life=x=>x.life||1,lp=x=>x.atNet*365*life(x),K0=x=>`<b class="${cls(x)}">${x>0?'+':''}${money(s,x,0)}</b>`;
  // Hold: simulate day by day with difficulty trend and the next halving.
- let H=null;if(hold&&m.cap){const days=Math.round(m.life*365),gr=DG?DG.g:0,hd=DG&&DG.toH!=null?DG.toH:Infinity,R=L.rewardPerBlock;let st=0;
+ let H=null;if(hold&&m.cap){const days=Math.round(m.life*365),gr=DG&&v2('dmode')==='trend'?DG.g:0,hd=DG&&DG.toH!=null?DG.toH:Infinity,R=L.rewardPerBlock;let st=0;
   for(let t=0;t<days;t++){st+=m.btcDay*Math.pow(1+gr,-t/365)*(t>=hd?Math.max(0,R-1.5625)/R:1);}
   const fiat=(m.pow+m.host)*days,val=st*m.endB,pre=val-fiat-m.cap,p=pre>0?pre*(1-tax):pre;H={st,val,fiat,p};}
  const mP=H?H.p:lp(m),gP2=lp(g);
@@ -63,7 +64,7 @@ function calc(){const o=document.getElementById('out');if(!L||!L.btcPerTHDay||!L
  ${rent?`<dt>Profit per month</dt><dd>${K0(x.atNet*30.4)}</dd>`:`<dt>You get back (${yrs} yrs)</dt><dd>${money(s,P+x.cap,0)}</dd><dt>Profit (${yrs} yrs)</dt><dd>${K0(P)}</dd>
  <dt>Pays back in</dt><dd>${hd?(P>0?`year ${yrs}, when you sell`:'never at this price'):x.pb==null?'never':fmt(x.pb,0)+' months'}</dd>`}</dl></div>`;};
  const mEq=`${v('jth')===13.5?`${fmt(th/270,0)} mining machines`:fmt(th,0)+' TH/s'}${rent?'':hosted?', hosted':', your site'}`,gEq=`${n} AI GPU${n===1?'':'s'}${rent?'':hosted?', in a data center':', your site'}`;
- const dTxt=DG?`Difficulty changed ${DG.g>=0?'+':''}${fmt(DG.g*100,1)}% a year over the last 12 months (mempool.space); we assume it keeps that pace${DG.toH!=null?`, and the reward halves in about ${fmt(DG.toH/365,1)} years (block 1,050,000)`:''}.`:'Difficulty held flat (trend data did not load).';
+ const hv=DG&&DG.toH!=null?` The reward halves in about ${fmt(DG.toH/365,1)} years (block 1,050,000).`:'',dTxt=v2('dmode')==='trend'&&DG?`Difficulty: last-12-month trend, ${DG.g>=0?'+':''}${fmt(DG.g*100,1)}% a year (mempool.space), assumed to continue.${hv}`:`Difficulty: held flat at today's level (default, more conservative). You can switch to the last-12-month trend in Change assumptions${DG?`, which is ${DG.g>=0?'+':''}${fmt(DG.g*100,1)}% a year`:''}.${hv}`;
  o.innerHTML=`<p class="headline">${ver}</p>
  <div class="sum">${card('Bitcoin mining','dot-m',m,mEq,mP,!!H)}${card('AI GPU rental','dot-g',g,gEq,gP2,false)}</div>
  ${H?`<p class="note" style="margin:0">${fmt(H.st,2)} BTC mined, worth ${money(s,H.val,0)}. <a class="how" href="/methodology/#hodl">how</a> Past performance is not a guarantee.</p>`:''}
@@ -119,9 +120,11 @@ document.querySelectorAll('#hodl button').forEach(b=>b.addEventListener('click',
 document.querySelectorAll('#endc button').forEach(b=>b.addEventListener('click',()=>{if(L&&L.btcUSD){document.getElementById('endbtc').value=Math.round(L.btcUSD*b.dataset.m);document.getElementById('endx').value=b.dataset.m;}document.querySelectorAll('#endc button').forEach(x=>x.setAttribute('aria-pressed',x===b));calc();}));
 document.getElementById('endx').addEventListener('input',e=>{if(L&&L.btcUSD)document.getElementById('endbtc').value=Math.round(L.btcUSD*e.target.value);document.querySelectorAll('#endc button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.m===e.target.value));calc();});
 document.getElementById('endbtc').addEventListener('input',()=>{if(L&&L.btcUSD)document.getElementById('endx').value=v('endbtc')/L.btcUSD;document.querySelectorAll('#endc button').forEach(x=>x.setAttribute('aria-pressed','false'));calc();});
-{const q=new URLSearchParams(location.search);if(q.get('hold')){setTimeout(()=>{document.querySelector('#hodl [data-h=hold]').click();const x=q.get('x');if(x){const go=()=>{if(!L)return setTimeout(go,300);const b=document.querySelector(`#endc [data-m="${x}"]`);if(b)b.click();};go();}},0);}}
+{const q=new URLSearchParams(location.search);if(q.get('hold')==='0')setTimeout(()=>document.querySelector('#hodl [data-h=sell]').click(),0);else if(q.get('x')){setTimeout(()=>{document.querySelector('#hodl [data-h=hold]').click();const x=q.get('x');if(x){const go=()=>{if(!L)return setTimeout(go,300);const b=document.querySelector(`#endc [data-m="${x}"]`);if(b)b.click();};go();}},0);}}
 setPf(new URLSearchParams(location.search).get('profile')||'mid',false);
 // Prefill numeric inputs from the URL, e.g. /?price=0.0707&kw=100 (used by /power-prices/ pages). Applied after the scenario.
 {const q=new URLSearchParams(location.search);let n=0;q.forEach((val,k)=>{const e=document.getElementById(k);const x=parseFloat(val);if(e&&e.type==='number'&&e.closest('#calc')&&!isNaN(x)){e.value=x;n++;}});if(n){document.querySelectorAll('#sc button').forEach(b=>b.setAttribute('aria-pressed','false'));calc();}}
 Promise.all([fetch('https://mempool.space/api/v1/mining/hashrate/1y').then(r=>r.json()),fetch('https://mempool.space/api/blocks/tip/height').then(r=>r.text())]).then(([h,tip])=>{const a=h.difficulty[0],b=h.difficulty[h.difficulty.length-1],yr=(b.time-a.time)/86400/365;DG={g:Math.pow(b.difficulty/a.difficulty,1/yr)-1,toH:Math.max(0,(1050000-parseInt(tip))/144)};calc();}).catch(()=>{});
 getLive().then(d=>{L=d;const e=document.getElementById('endbtc');if(e&&!e.value&&d.btcUSD)e.value=Math.round(d.btcUSD);calc();});
+
+document.getElementById('dmode').addEventListener('change',()=>calc());
