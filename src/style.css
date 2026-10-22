@@ -17,7 +17,7 @@ p{margin:0 0 1rem}
 .site-head{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:saturate(1.4) blur(12px);-webkit-backdrop-filter:saturate(1.4) blur(12px);border-bottom:1px solid var(--line)}
 .site-head .wrap{display:flex;align-items:center;gap:.75rem;height:60px}
 .logo{display:flex;align-items:center;gap:.5rem;font-weight:700;font-size:1.05rem;letter-spacing:-.02em;color:var(--text);text-decoration:none;margin-right:auto}
-.logo svg{width:26px;height:26px}
+.logo svg,.logo img{width:26px;height:26px;border-radius:6px}
 .nav{display:flex;gap:.15rem;overflow-x:auto;scrollbar-width:none}
 .nav a{color:var(--muted);text-decoration:none;font-size:.9rem;font-weight:500;padding:.4rem .65rem;border-radius:8px;white-space:nowrap}
 .nav a:hover{color:var(--text);background:var(--line)}

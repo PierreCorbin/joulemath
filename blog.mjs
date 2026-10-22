@@ -9,7 +9,7 @@ export function buildBlog(){
   const header=shell.match(/<header[\s\S]*?<\/header>/)[0].replace(/ aria-current="page"/g,'').replace('<a href="/blog/">','<a href="/blog/" aria-current="page">');
   const footer=shell.match(/<footer[\s\S]*?<\/footer>/)[0];
   const headBits=shell.match(/<meta name="theme-color"[\s\S]*?crossorigin>/)[0];
-  const page=({title,desc,url,type,ld,body,scripts=''})=>`<!doctype html><html lang="en"><head><meta charset="utf-8"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><meta name="viewport" content="width=device-width,initial-scale=1">
+  const page=({title,desc,url,type,ld,body,scripts=''})=>`<!doctype html><html lang="en"><head><meta charset="utf-8"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="32x32"><link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"><meta property="og:image" content="https://joulemath.com/og-image.png"><meta name="viewport" content="width=device-width,initial-scale=1">
 ${headBits}
 <title>${esc(title)}</title><meta name="description" content="${esc(desc)}"><link rel="canonical" href="${SITE}${url}">
 <meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(desc)}"><meta property="og:url" content="${SITE}${url}"><meta property="og:type" content="${type}"><meta property="og:site_name" content="joulemath"><meta name="twitter:card" content="summary">
