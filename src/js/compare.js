@@ -1,5 +1,7 @@
 const v2=id=>(document.getElementById(id)||{}).value;
 let L,hodl='hold',DG=null;
+// Average share of today's daily BTC output over the machine life: difficulty setting plus the next halving. Same for sell and hold.
+function outF(life){const days=Math.max(1,Math.round(life*365)),gr=DG&&v2('dmode')==='trend'?DG.g:0,hd=DG&&DG.toH!=null?DG.toH:Infinity,R=L.rewardPerBlock||3.125;let a=0;for(let t=0;t<days;t++)a+=Math.pow(1+gr,-t/365)*(t>=hd?Math.max(0,R-1.5625)/R:1);return a/days;}
 function run(pp,fx,btc,rent,byUsd){
  const p=pp,pue=v('pue')||1,jth=v('jth')||1,fee=(v('poolfee')||0)/100,kw=v('kw')||1,host=(v('host')||0)*fx,bud=(v('budget')||0)*fx;
  const thP=(v('thprice')||0)*fx,aLife=v('alife')||1,prem=(v('prem')||0)/100,hpTH=L.btcPerTHDay*btc;
@@ -10,10 +12,10 @@ function run(pp,fx,btc,rent,byUsd){
  if(!byUsd){const it=kw/pue;th=(hosted&&!rent?kw:it)*1000/jth;n=Math.floor(it*1000/gw+1e-9);}
  else if(!rent){th=thP?bud/thP:0;n=gP?Math.floor(bud/gP+1e-9):0;}
  else{const mc=hpTH*(1+prem)*30.4,gc=lease*24*30.4;th=mc?bud/mc:0;n=gc?Math.floor(bud/gc+1e-9):0;}
- const mIT=th*jth/1000,gIT=n*gw/1000,mKW=mIT*(hosted&&!rent?1:pue),gKW=n*gw*pue/1000,up=rent?1:Math.min(100,Math.max(0,v('mup')??100))/100,mRev=th*hpTH*(1-fee)*up,gRev=n*rate*24*util*(1-ovh);
+ const mIT=th*jth/1000,gIT=n*gw/1000,mKW=mIT*(hosted&&!rent?1:pue),gKW=n*gw*pue/1000,up=rent?1:Math.min(100,Math.max(0,v('mup')??100))/100,mF=rent?1:outF(aLife),mRev=th*hpTH*(1-fee)*up*mF,gRev=n*rate*24*util*(1-ovh);
  let m,g;
  const hold=!rent&&hodl==='hold',endB=(v('endbtc')||L.btcUSD)*fx,btcDay=th*L.btcPerTHDay*(1-fee)*up;
- if(!rent){const mp=hosted?mh:p;m={rev:mRev,sellRev:mRev,btcDay,endB,pow:mKW*24*mp*up,hw:th*thP/(aLife*365),host:hosted?0:mKW*host*12/365,cap:th*thP,life:aLife,bk:mKW*24*up,mp};g={rev:gRev,pow:gKW*24*p,hw:n*gP/(gLife*365),host:hosted?gIT*colo*12/365:gKW*host*12/365,cap:n*gP,life:gLife,ru:n*rate*24*(1-ovh),util};}
+ if(!rent){const mp=hosted?mh:p;m={rev:mRev,sellRev:mRev,btcDay,mF,endB,pow:mKW*24*mp*up,hw:th*thP/(aLife*365),host:hosted?0:mKW*host*12/365,cap:th*thP,life:aLife,bk:mKW*24*up,mp};g={rev:gRev,pow:gKW*24*p,hw:n*gP/(gLife*365),host:hosted?gIT*colo*12/365:gKW*host*12/365,cap:n*gP,life:gLife,ru:n*rate*24*(1-ovh),util};}
  else{m={rev:mRev,pow:0,hw:th*hpTH*(1+prem),host:0,cap:0};g={rev:gRev,pow:0,hw:n*lease*24,host:0,cap:0};}
  const tax=(v('tax')||0)/100,acc=chk('dep')==='acc';
  for(const x of [m,g]){x.kw=x===m?mKW:gKW;x.net=x.rev-x.pow-x.hw-x.host;x.op=x.rev-x.pow-x.host;
@@ -47,13 +49,13 @@ function calc(){const o=document.getElementById('out');if(!L||!L.btcPerTHDay||!L
 
  const life=x=>x.life||1,lp=x=>x.atNet*365*life(x),K0=x=>`<b class="${cls(x)}">${x>0?'+':''}${money(s,x,0)}</b>`;
  // Hold: simulate day by day with difficulty trend and the next halving.
- let H=null;if(hold&&m.cap){const days=Math.round(m.life*365),gr=DG&&v2('dmode')==='trend'?DG.g:0,hd=DG&&DG.toH!=null?DG.toH:Infinity,R=L.rewardPerBlock;let st=0;
-  for(let t=0;t<days;t++){st+=m.btcDay*Math.pow(1+gr,-t/365)*(t>=hd?Math.max(0,R-1.5625)/R:1);}
+ let H=null;if(hold&&m.cap){const days=Math.round(m.life*365),st=m.btcDay*m.mF*days;
   const fiat=(m.pow+m.host)*days,val=st*m.endB,pre=val-fiat-m.cap,p=pre>0?pre*(1-tax):pre;H={st,val,fiat,p};}
  const mP=H?H.p:lp(m),gP2=lp(g);
  const ver=rent?`Renting for a month: mining ${K0(m.atNet*30.4)}, GPUs ${K0(g.atNet*30.4)}.`:H?`If you hold and BTC hits ${money(s,m.endB,0)}, mining makes ${K0(mP)} over ${fmt(m.life,0)} years. GPUs: ${K0(gP2)} over ${fmt(g.life,0)} years.`:`If you sell as you mine, mining makes ${K0(mP)} over ${fmt(m.life,0)} years. GPUs: ${K0(gP2)} over ${fmt(g.life,0)} years.`;
  const tips=[];
- if(!rent&&m.cap&&m.bk){tips.push(`Mining breaks even at ${s}${fmt(Math.max(0,(m.sellRev-m.hw-m.host)/m.bk),3)}/kWh ${hosted?'hosting':'power'} (you pay ${s}${fmt(m.mp,3)}).`);if(m.pb)tips.push(`Machines must last ${fmt(m.pb/12,1)} yrs to pay back (assumed ${fmt(m.life,0)}).`);}
+ if(H&&m.bk){const days=Math.round(m.life*365);tips.push(`Holding breaks even if BTC is worth ${money(s,(H.fiat+m.cap)/H.st,0)} when you sell (today ${money(s,btc,0)}).`);tips.push(`At ${money(s,m.endB,0)}, mining breaks even at ${s}${fmt(Math.max(0,(H.val-m.cap-m.host*days)/(m.bk*days)),3)}/kWh ${hosted?'hosting':'power'} (you pay ${s}${fmt(m.mp,3)}).`);}
+ else if(!rent&&m.cap&&m.bk){tips.push(`Mining breaks even at ${s}${fmt(Math.max(0,(m.sellRev-m.hw-m.host)/m.bk),3)}/kWh ${hosted?'hosting':'power'} (you pay ${s}${fmt(m.mp,3)}).`);if(m.pb)tips.push(`Machines must last ${fmt(m.pb/12,1)} yrs to pay back (assumed ${fmt(m.life,0)}).`);}
  if(!rent&&g.cap&&g.ru){const bu=(g.pow+g.host+g.hw)/g.ru*100;tips.push(bu>100?'GPUs lose money even if rented 100% of the time.':`GPUs must be rented ${fmt(bu,0)}% of the time (assumed ${fmt(g.util*100,0)}%).`);}
  if(!rent&&m.bk&&chk('hw')==='own'){const e=document.getElementById('i-be');if(e)e.textContent=s+fmt((m.sellRev-m.hw-m.host)/m.bk,3)+'/kWh';}
  const hp=document.getElementById('i-hp');if(hp)hp.textContent=s+fmt(L.btcPerTHDay*btc,4);
@@ -64,14 +66,14 @@ function calc(){const o=document.getElementById('out');if(!L||!L.btcPerTHDay||!L
  ${rent?`<dt>Profit per month</dt><dd>${K0(x.atNet*30.4)}</dd>`:`<dt>You get back (${yrs} yrs)</dt><dd>${money(s,P+x.cap,0)}</dd><dt>Profit (${yrs} yrs)</dt><dd>${K0(P)}</dd>
  <dt>Pays back in</dt><dd>${hd?(P>0?`year ${yrs}, when you sell`:'never at this price'):x.pb==null?'never':fmt(x.pb,0)+' months'}</dd>`}</dl></div>`;};
  const mEq=`${v('jth')===13.5?`${fmt(th/270,0)} mining machines`:fmt(th,0)+' TH/s'}${rent?'':hosted?', hosted':', your site'}`,gEq=`${n} AI GPU${n===1?'':'s'}${rent?'':hosted?', in a data center':', your site'}`;
- const hv=DG&&DG.toH!=null?` The reward halves in about ${fmt(DG.toH/365,1)} years (block 1,050,000).`:'',dTxt=v2('dmode')==='trend'&&DG?`Difficulty: last-12-month trend, ${DG.g>=0?'+':''}${fmt(DG.g*100,1)}% a year (mempool.space), assumed to continue.${hv}`:`Difficulty: held flat at today's level (default, more conservative). You can switch to the last-12-month trend in Change assumptions${DG?`, which is ${DG.g>=0?'+':''}${fmt(DG.g*100,1)}% a year`:''}.${hv}`;
+ const hv=DG&&DG.toH!=null?` The reward halves in about ${fmt(DG.toH/365,1)} years (block 1,050,000).`:'',dTxt=v2('dmode')==='trend'&&DG?`Difficulty: last-12-month trend, ${DG.g>=0?'+':''}${fmt(DG.g*100,1)}% a year (mempool.space), assumed to continue.${hv}`:`Difficulty: held flat at today's level (default, more conservative); switch to the last-12-month trend in Change assumptions${DG?`, which is ${DG.g>=0?'+':''}${fmt(DG.g*100,1)}% a year`:''}.${hv}`;
  o.innerHTML=`<p class="headline">${ver}</p>
  <div class="sum">${card('Bitcoin mining','dot-m',m,mEq,mP,!!H)}${card('AI GPU rental','dot-g',g,gEq,gP2,false)}</div>
  ${H?`<p class="note" style="margin:0">${fmt(H.st,2)} BTC mined, worth ${money(s,H.val,0)}. <a class="how" href="/methodology/#hodl">how</a> Past performance is not a guarantee.</p>`:''}
  <details class="full-num"><summary>What changes the answer</summary><ul class="tips"><li>${tips.join('</li><li>')}</li></ul></details>
  <details class="full-num"><summary>How this is calculated</summary><div class="note">
- <p>${sz}${left>1?`. GPUs come in whole units, so ${money(s,left,0)} is left unspent`:''}. Profit = income minus power, hosting${tax?', tax':''} and the machines, over their life (mining ${fmt(v('alife'),1)} yrs, GPUs ${fmt(v('glife'),1)} yrs). Selling uses today's prices.</p>
- ${H?`<p>Holding: costs are paid monthly in cash and the BTC is sold at the end. ${dTxt}</p>`:''}
+ <p>${sz}${left>1?`. GPUs come in whole units, so ${money(s,left,0)} is left unspent`:''}. Profit = income minus power, hosting${tax?', tax':''} and the machines, over their life (mining ${fmt(v('alife'),1)} yrs, GPUs ${fmt(v('glife'),1)} yrs). Selling values each day's BTC at today's price. Both modes use the same BTC output: ${dTxt}</p>
+ ${H?`<p>Holding: costs are paid monthly in cash and all the BTC is sold at the end.</p>`:''}
  ${pf&&pfOn()?`<p>${pf.look}</p>`:''}
  <p>Mining needs ${hosted?'a hosting contract (the host covers power, cooling and repairs)':'cheap power, ventilation and racks'}. GPUs need ${hosted?'data center space for dense racks plus renters (a marketplace like Vast.ai or direct contracts)':'a data center grade site, fiber and renters'}.</p>
  ${hosted||rent?'':be?`<p>${be.none?(be.hi?'Mining nets more per $1k at any power price up to $1/kWh.':'GPUs net more per $1k at any power price.'):`Mining nets more per ${s}1k below ${s}${fmt(be.p,3)}/kWh.`}</p>`:''}
@@ -85,7 +87,7 @@ function calc(){const o=document.getElementById('out');if(!L||!L.btcPerTHDay||!L
  ${row('Lifetime return per '+s+'1',m.cap?N(m.roi):'n/a',g.cap?N(g.roi):'n/a','payback')}
  ${row('Buys',`${fmt(th,0)} TH/s`,`${n} GPUs`,'same-budget')+row('Power used',fmt(mKW,1)+' kW',fmt(gKW,1)+' kW','same-budget')}
  </table></div></details>
- <details class="full-num"><summary>Full numbers (per day, selling)</summary><div class="tbl"><table><tr><th>Per day</th><th>Mining</th><th>GPU</th></tr>
+ <details class="full-num"><summary>Full numbers (per day, life average, selling)</summary><div class="tbl"><table><tr><th>Per day</th><th>Mining</th><th>GPU</th></tr>
  ${row('Revenue',money(s,m.sellRev??m.rev),money(s,g.rev))}${row('Power',money(s,-m.pow),money(s,-g.pow))}
  ${row(rent?'Machine rent':'Hardware (spread over its life)',money(s,-m.hw),money(s,-g.hw))}${row('Hosting',money(s,-m.host),money(s,-g.host))}
  ${tax?row('Tax ('+fmt(tax*100,1)+'%)',money(s,-m.tax),money(s,-g.tax)):''}
@@ -128,3 +130,4 @@ Promise.all([fetch('https://mempool.space/api/v1/mining/hashrate/1y').then(r=>r.
 getLive().then(d=>{L=d;const e=document.getElementById('endbtc');if(e&&!e.value&&d.btcUSD)e.value=Math.round(d.btcUSD);calc();});
 
 document.getElementById('dmode').addEventListener('change',()=>calc());
+{const p=new URLSearchParams(location.search).get('pf');if(p){const go=()=>{if(!L)return setTimeout(go,300);const b=document.querySelector('#pf [data-pf="'+p+'"]');if(b)b.click();};go();}}
