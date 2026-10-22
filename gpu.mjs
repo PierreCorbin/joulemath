@@ -45,6 +45,7 @@ ${PRICES.map(p=>`<tr${p===0.06?' class="hl"':''}><td>Net at $${p.toFixed(2)}/kWh
 ${RENT.map(([n,u,d,s,p])=>`<tr><td><a href="${u}">${n}</a></td><td>${d}</td><td>${s}</td><td>${p}</td></tr>`).join('\n')}
 </tbody></table>
 <p class="note">These are what renters pay, not what a host nets after the platform cut. Vast is a live marketplace with only a handful of single H100 offers, so its median moves a lot. Our Vast query: rentable, on-demand, exactly one GPU. October 21 numbers from all three providers are in the <a href="/blog/gpu-rental-prices-h100-h200-a100-rtx-4090-october-2026/">GPU rental prices post</a>.</p>
+<p class="hint"><a href="/go/vast?c=gpu-h100&amp;p=rent" rel="sponsored nofollow">See live H100 offers on Vast.ai</a> (affiliate link, we may earn a referral fee).</p>
 <h2>Revenue per kW per day</h2>
 <p>Our assumptions, not sourced: about 1,000 W per H100 SXM including its share of the server (so 1 kW is one GPU), rented 70% of hours, power paid for all 24 hours.</p>
 ${tbl}
