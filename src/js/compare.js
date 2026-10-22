@@ -18,7 +18,7 @@ function run(pp,fx,btc,rent,byUsd){
   const opAT=x.cap?(acc?x.op*(1-tax):x.op-x.tax):0,capAT=acc?x.cap*(1-tax):x.cap;
   x.pb=x.cap&&opAT>0?capAT/(opAT*30.4):null;
   x.base=x.cap||x.hw*30.4; // $ invested, or $ rent paid per month
-  x.k=x.base?x.atNet*30.4/x.base*1000:null;x.mg=x.rev?x.atNet/x.rev*100:null;x.pkw=x.kw?x.atNet/x.kw:null;x.roi=x.cap?x.atNet*x.life*365/x.cap:null;}
+  x.k=x.base?x.atNet*30.4/x.base*1000:null;x.mg=x.rev?x.atNet/x.rev*100:null;x.pkw=x.kw?x.atNet/x.kw:null;x.opkw=x.kw?x.op/x.kw:null;x.roi=x.cap?x.atNet*x.life*365/x.cap:null;}
  return {m,g,th,n,mKW,gKW,kw,bud,lease,gP};}
 // Power price where mining's net per $1k invested equals GPUs'. Bisection on $0 to $1/kWh.
 function brk(fx,btc,byUsd){const d=p=>{const r=run(p,fx,btc,false,byUsd);return r.m.k==null||r.g.k==null?NaN:r.m.k-r.g.k;};let a=0,b=1,fa=d(a),fb=d(b);if(isNaN(fa)||isNaN(fb)||fa*fb>0)return {none:true,hi:fa>0};for(let i=0;i<60;i++){const c=(a+b)/2,fc=d(c);if(fa*fc<=0){b=c;fb=fc;}else{a=c;fa=fc;}}return {p:(a+b)/2};}
@@ -41,10 +41,11 @@ function calc(){const o=document.getElementById('out');if(!L||!L.btcPerTHDay||!L
  o.innerHTML=`<p class="headline">${hU?head2:head}</p><p class="note" style="margin:0">${sz}, ${rent?'rented machines':'bought machines'}${left>1?`. GPUs come in whole units, so ${money(s,left,0)} of the GPU budget is left unspent`:''}.</p>
  <p class="note be" style="margin:.3rem 0 0">${be?(be.none?(be.hi?'Mining nets more per $1k at any power price up to $1/kWh.':'GPUs net more per $1k at any power price, even free power.'):`Break-even power price: <b>${s}${fmt(be.p,3)}/kWh</b>. Below that, mining nets more per ${s}1k invested.`):'Break-even power price: n/a when renting (you pay no power).'} <a class="how" href="/methodology/#break-even">how</a></p>
  <div class="tbl"><table class="kt"><tr><th></th><th><i class="dot-m"></i>Mining</th><th><i class="dot-g"></i>GPU</th></tr>
- ${row('Net / mo per '+s+'1k '+(rent?'rent':'invested'),N(m.k),N(g.k),'scale-free')}
+ ${row('Net / mo per '+s+'1k '+(rent?'rent':'invested')+(rent?'':' (after hardware cost)'),N(m.k),N(g.k),'scale-free')}
  ${row('Payback',pb(m),pb(g),'payback')}
- ${row('Net margin',P(m.mg),P(g.mg),'scale-free')}
- ${row('Net per kW / day',N(m.pkw),N(g.pkw),'scale-free')}
+ ${row('Net margin'+(rent?'':' (after hardware cost)'),P(m.mg),P(g.mg),'scale-free')}
+ ${row('Net per kW / day'+(rent?'':' (after hardware cost)'),N(m.pkw),N(g.pkw),'scale-free')}
+ ${rent?'':row('Cash profit per kW / day (before hardware cost)',N(m.opkw),N(g.opkw),'payback')}
  ${row('Lifetime return per '+s+'1',m.cap?N(m.roi):'n/a',g.cap?N(g.roi):'n/a','payback')}
  ${byUsd?row('Buys',`${fmt(th,0)} TH/s${v('jth')===13.5?` (${fmt(th/270,1)} S21 XP)`:''}`,`${n} GPUs`,'same-budget')+row('Power used',fmt(mKW,1)+' kW',fmt(gKW,1)+' kW','same-budget')+row('Net / month',N(m.atNet*30.4),N(g.atNet*30.4),'same-budget'):''}
  </table></div>
@@ -55,6 +56,7 @@ function calc(){const o=document.getElementById('out');if(!L||!L.btcPerTHDay||!L
  ${tax?row('Tax ('+fmt(tax*100,1)+'%)',money(s,-m.tax),money(s,-g.tax)):''}
  ${row('<b>Net / day</b>',N(m.atNet),N(g.atNet))}${row('Net / 30 days',N(m.atNet*30),N(g.atNet*30))}
  ${row('Capex',m.cap?money(s,m.cap,0):'0',g.cap?money(s,g.cap,0):'0')}</table></div></details>
+ ${rent?'':`<p class="note" style="margin:0">Net rows subtract hardware cost spread evenly over its life (ASIC ${fmt(v('alife'),1)} yr, GPU ${fmt(v('glife'),1)} yr). Cash profit is revenue minus power and hosting, before hardware. Payback uses cash profit, so a net near zero means payback is close to the hardware life.</p>`}
  <p class="note" style="margin:0"><a href="/methodology/#full-cost">How we calculate this</a> · <a href="/methodology/#risks">Risks</a></p>`;}
 document.querySelectorAll('input[name=dep]').forEach(r=>r.addEventListener('change',calc));
 function vis(){const rent=chk('hw')==='rent',usd=chk('basis')==='usd';
