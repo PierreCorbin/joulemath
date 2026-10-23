@@ -2,12 +2,14 @@
 // No cookies, no IPs or personal data stored. Keys: ev:YYYY-MM-DD:event:value (kept ~400 days).
 const PRESETS=['default','cheap-power','used-asics','curtailment','low-gpu-util'];
 const GO=['flash','vast'];
+const OUT=['simplemining','compass','bitmainshop','endless','runpod','lambda'];
 const V={
   preset:v=>PRESETS.includes(v)?v:null,
   hw:v=>v==='own'||v==='buy'?'buy':v==='rent'?'rent':null,
   basis:v=>['kw','usd'].includes(v)?v:null,
   price:v=>{const n=Number(v);if(!Number.isFinite(n)||n<0)return null;const c=Math.round(n);return c>100?'100plus':String(c);}, // cents/kWh bucket
   go:v=>GO.includes(v)?v:(/^[a-z0-9-]{1,20}$/.test(v)?'other':null),
+  out:v=>OUT.includes(v)?v:null,
   signup:()=>'submit',
 };
 const r=(s)=>new Response(null,{status:s,headers:{'Cache-Control':'no-store'}});
