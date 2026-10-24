@@ -21,3 +21,6 @@ Ranked. Ship top to bottom.
 
 - Cite GPU 4-year life (CoreWeave 10-K depreciation policy) on /methodology/.
 - Profile guides as future content: small investor guide ($10k to $50k, hosted ASICs vs marketplace GPU) and institutional guide (MW scale, enterprise hosting, wholesale colo, direct GPU contracts).
+
+## Next site-improve & explainer angle (Pierre, Oct 24)
+- Surface the two-lens takeaway clearly on the home calculator: AI GPUs cover monthly fiat cash flow; holding mined BTC wins on long-term upside if BTC appreciates (and why operators blend both so they don't have to sell mined BTC at weak prices to pay power bills).
