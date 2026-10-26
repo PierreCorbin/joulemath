@@ -1,0 +1,43 @@
+<!--meta {"title":"What an H100 hour costs across 7 clouds (Oct 26, 2026)","description":"H100 rental price per GPU-hour on RunPod, Lambda, Vast.ai, Massed Compute, Together AI, Nebius, CoreWeave and the Ornn index, read October 26, 2026, plus what it means per kW.","date":"2026-10-26"} -->
+<p class="lead">How much is one H100 hour this week? We checked 7 public price lists and one trade index on October 26, 2026. Fixed on-demand prices run from $2.69 to $6.16 per GPU-hour. The index of real trades sits at $3.03.</p>
+
+<p class="note">Disclosure: this post has an affiliate link to Vast.ai. If you sign up through it, joulemath may earn a commission at no extra cost to you. It does not change any number here.</p>
+
+<h2>H100 SXM, per GPU per hour</h2>
+<table>
+<thead><tr><th>Where</th><th>Price</th><th>What it is</th></tr></thead>
+<tbody>
+<tr><td><a href="https://www.runpod.io/pricing">RunPod</a> Community</td><td>$2.69</td><td>1 GPU, on-demand. Secure Cloud is $3.99.</td></tr>
+<tr><td><a href="https://data.ornn.com/">Ornn OCPI-H100</a></td><td>$3.03</td><td>Index of executed rental trades, page updated Oct 25, 20:00 UTC</td></tr>
+<tr><td><a href="https://massedcompute.com/pricing/">Massed Compute</a></td><td>$3.14</td><td>1x H100 SXM5, on-demand</td></tr>
+<tr><td><a href="/go/vast?c=blog-h100-oct26&amp;p=table" rel="sponsored nofollow">Vast.ai</a> median (affiliate)</td><td>$3.20</td><td>Marketplace, 4 single-GPU offers: $1.93 low, $9.10 high</td></tr>
+<tr><td><a href="https://www.together.ai/pricing">Together AI</a></td><td>$3.99</td><td>GPU clusters, on-demand. $3.19 if reserved 181+ days.</td></tr>
+<tr><td><a href="https://lambda.ai/pricing">Lambda</a></td><td>$4.29</td><td>1 GPU. $3.99 per GPU on an 8x instance. Plus tax.</td></tr>
+<tr><td><a href="https://nebius.com/prices">Nebius</a></td><td>$4.50</td><td>HGX H100, on-demand</td></tr>
+<tr><td><a href="https://www.coreweave.com/pricing">CoreWeave</a></td><td>$6.16</td><td>8-GPU HGX H100 at $49.24/hr, divided by 8 (our math)</td></tr>
+</tbody></table>
+<p class="note">All pages read October 26, 2026, about 09:00 to 10:00 CET. Vast numbers come from its public offer search (<a href="https://console.vast.ai/api/v0/bundles/">console.vast.ai/api/v0/bundles</a>) at 09:06 CET: rentable, on-demand, exactly one H100 SXM. Four offers is a tiny sample, so the median can jump hour to hour. RunPod's page still says "Updated October 8, 2026".</p>
+
+<h2>What jumps out</h2>
+<ul>
+<li><b>More than 2x spread.</b> $2.69 at the low fixed price, $6.16 at the high one. Same chip, different packaging: single GPU vs 8-GPU boxes, support, network, contract terms.</li>
+<li><b>Commitment cuts the price.</b> Together lists $3.99 on demand and $3.19 for 181+ days. Lambda's 8x box is $0.30 per GPU-hour cheaper than its single GPU.</li>
+<li><b>The trade index is in the middle.</b> Ornn's $3.03 is up 6.32% over one month, per Ornn.</li>
+<li><b>Newer chips are moving faster.</b> On the same Ornn page, H200 is $6.30 (+24.02% in a month) and B200 is $9.70 (+20.65%).</li>
+</ul>
+
+<h2>Per kW: what a host could gross</h2>
+<p>Our assumptions, <b>not sourced</b>: about 1,000 W per H100 including its share of the server, so 1 GPU per kW, rented 70% of the time.</p>
+<table>
+<thead><tr><th>Rate per GPU-hour</th><th>Gross per kW per day</th></tr></thead>
+<tbody>
+<tr><td>$2.69 (RunPod Community)</td><td>$45.19</td></tr>
+<tr><td>$3.03 (Ornn index)</td><td>$50.90</td></tr>
+<tr><td>$4.29 (Lambda 1x)</td><td>$72.07</td></tr>
+<tr><td>$6.16 (CoreWeave, per GPU)</td><td>$103.49</td></tr>
+</tbody></table>
+<p>Math: rate x 24 hours x 70%. These are renter prices. A host on a marketplace keeps less after the platform's cut, and power at $0.06/kWh costs about $1.44 per kW per day. Hardware is the big cost: see the <a href="/gpu/h100/">H100 page</a> for buy price and payback.</p>
+
+<div class="callout"><b>Run your own numbers.</b> Put your rate, wattage and utilization into the calculator, or browse live offers on <a href="/go/vast?c=blog-h100-oct26&amp;p=callout" rel="sponsored nofollow">Vast.ai</a> (affiliate link).<br><a class="btn" href="/?gpuw=1000&amp;rate=3.03&amp;gprice=36125&amp;util=70">Open the per-kW calculator <span aria-hidden="true">→</span></a></div>
+
+<p class="note">Last week's H200, A100 and RTX 4090 prices: <a href="/blog/gpu-rental-prices-h100-h200-a100-rtx-4090-october-2026/">GPU rental prices (Oct 21)</a>. How we calculate: <a href="/methodology/">methodology</a>. Prices change constantly; this post won't. Nothing here is financial advice.</p>
