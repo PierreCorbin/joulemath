@@ -66,20 +66,17 @@
 </form>
 </div></details>
 <section class="fleet-teaser" aria-labelledby="ft-head">
-  <div style="display:flex;flex-wrap:wrap;gap:.5rem 1rem;align-items:center;justify-content:space-between">
-    <div>
-      <div class="eyebrow" style="margin-bottom:.2rem">Real-Hardware Telemetry &middot; 90d Lookback + 36m Real Return</div>
-      <h2 id="ft-head">Benchmark Your Real Machines (BTC Payout Address or Vast.ai Machine ID)</h2>
-    </div>
-    <a class="btn-sm" href="/fleet/">Open pre-loaded 4-unit sample fleet &rarr;</a>
+  <div style="display:flex;flex-wrap:wrap;gap:.4rem 1rem;align-items:center;justify-content:space-between">
+    <h2 id="ft-head">Already Running Hardware? Check Your Fleet</h2>
+    <a class="btn-sm" href="/fleet/">View 4-unit demo fleet &rarr;</a>
   </div>
-  <p>Already mining Bitcoin or hosting GPUs on Vast.ai? Paste a BTC payout address or Vast.ai <code>machine_id</code> below to audit your past 90-day net revenue and project 3-year purchasing power after electricity, hardware depreciation, and CPI/M2 debasement.</p>
+  <p>Paste a Bitcoin payout address, a Vast.ai machine ID, or both to see 90-day output and a 3-year projection.</p>
   <form class="fleet-teaser-form" action="/fleet/" method="get">
-    <input type="text" name="btc" placeholder="Paste Bitcoin mining payout address (bc1q..., 1..., 3...)" aria-label="Bitcoin mining payout address">
-    <input type="text" name="vast" placeholder="Or Vast.ai machine_id (e.g. 142194, 153411)" aria-label="Vast.ai machine ID">
-    <button type="submit" class="btn">Audit My Fleet &rarr;</button>
+    <input type="text" name="btc" placeholder="1. On-chain BTC payout address (bc1q..., 1..., 3...)" aria-label="Bitcoin mining payout address">
+    <input type="text" name="vast" placeholder="2. Vast.ai Machine ID (e.g. 142194)" aria-label="Vast.ai machine ID">
+    <button type="submit" class="btn">Check Fleet &rarr;</button>
   </form>
-  <p class="note" style="margin:0;font-size:.78rem"><b>&#128274; Zero server storage:</b> We never store your Bitcoin addresses, Vast.ai machine IDs, or fleet inputs on any server or database. Your inputs stay in your browser (<code>localStorage</code>), BTC lookups go straight from your browser to <code>mempool.space</code>, and our entire codebase is open source on <a href="https://github.com/PierreCorbin/joulemath" target="_blank" rel="noopener">GitHub</a>.</p>
+  <p class="note" style="margin:0;font-size:.76rem">&#128274; <b>Browser-only (<code>localStorage</code>).</b> Nothing is sent to a database; BTC lookups go straight to <code>mempool.space</code>. <a href="https://github.com/PierreCorbin/joulemath" target="_blank" rel="noopener">Open source on GitHub</a>.</p>
 </section>
 <section id="where" class="where" aria-labelledby="where-h"><h2 id="where-h">Where to run this</h2><p class="note" id="where-lead">Providers for each side, with prices we checked and cited. Not a ranking.</p><div class="where-g">
 <div class="card wpan" data-side="m"><h3><i class="dot-m"></i>Bitcoin mining: hosting and machines <span class="fit" hidden>fits your result</span></h3><ul class="plist">
