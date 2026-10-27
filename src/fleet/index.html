@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f7f7f5" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0d0e11" media="(prefers-color-scheme: dark)">
+<script>try{var t=localStorage.getItem('jm-theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="preload" href="/fonts/inter-var-latin.woff2" as="font" type="font/woff2" crossorigin>
+<title>Fleet Check: Benchmark Your BTC Mining Addresses &amp; Vast.ai GPU Rigs | joulemath</title>
+<meta name="description" content="Paste your Bitcoin mining payout addresses and Vast.ai machine IDs to benchmark past 90-day realized output and 36-month projected returns after electricity, hardware depreciation, and CPI or M2 monetary debasement.">
+<link rel="canonical" href="https://joulemath.com/fleet/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="joulemath">
+<meta property="og:title" content="Fleet Check: Benchmark Your BTC Mining Addresses &amp; Vast.ai GPU Rigs">
+<meta property="og:description" content="90-day on-chain BTC payout history + live Vast.ai machine occupancy + 36-month real purchasing power projection after power, depreciation, and inflation.">
+<meta property="og:url" content="https://joulemath.com/fleet/">
+<meta property="og:image" content="https://joulemath.com/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"JouleMath Fleet Check","url":"https://joulemath.com/fleet/","applicationCategory":"FinanceApplication","operatingSystem":"All","description":"Benchmark real Bitcoin mining payout addresses (via mempool.space) and Vast.ai GPU rigs (by machine_id) over the past 90 days and next 36 months, adjusted for electricity, hardware depreciation, CPI inflation, and M2 monetary debasement."}</script>
+</head>
+<body>
+<header class="site-head">
+  <div class="wrap">
+    <a class="logo" href="/"><img src="/logo-64.png" width="26" height="26" alt="" aria-hidden="true">joulemath</a>
+    <button class="theme-btn" id="theme" type="button" aria-label="Toggle theme">
+      <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
+    <nav class="nav" aria-label="Main">
+      <a href="/">Mine vs AI</a>
+      <a href="/fleet/" aria-current="page">Fleet check</a>
+      <a href="/mining-calculator/">ASIC calculator</a>
+      <a href="/guides/">Guides</a>
+      <a href="/blog/">Blog</a>
+      <a href="/reports/">Reports</a>
+      <a href="/about/">About</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero" style="max-width:920px">
+    <div class="eyebrow">Real-Hardware Telemetry &middot; 90d Lookback + 36m Real Return</div>
+    <h1>Fleet Check: Your BTC Miners &amp; AI GPUs on One Timeline</h1>
+    <p class="lead" style="max-width:820px">Paste your Bitcoin mining payout addresses and Vast.ai machine IDs to reconcile what your kilowatts actually earned over the past 90 days and project 36-month net returns after electricity, hardware depreciation, and dollar debasement.</p>
+  </section>
+
+  <!-- Prominent Privacy & Open-Source Disclaimer -->
+  <aside class="priv-banner" aria-label="Privacy and Open-Source Guarantee">
+    <div style="flex:1;min-width:280px">
+      <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:.25rem">
+        <span class="priv-badge">&#128274; Zero Server Storage</span>
+        <b>Privacy &amp; Open-Source Guarantee: Your Fleet Inputs Stay in Your Browser</b>
+      </div>
+      <ul>
+        <li><b>No database or KV storage:</b> We never store your Bitcoin addresses, Vast.ai machine IDs, or power rates on any server or database.</li>
+        <li><b>Direct browser lookups:</b> Your fleet list is saved only in your own browser's <code>localStorage</code>. Bitcoin transaction lookups go straight from your browser to <a href="https://mempool.space" target="_blank" rel="noopener">mempool.space</a>, and Vast.ai bundle lookups pass through a stateless read-only proxy that logs nothing.</li>
+        <li><b>100% open source &amp; verifiable:</b> The entire JouleMath site and backend code are public on GitHub at <a href="https://github.com/PierreCorbin/joulemath" target="_blank" rel="noopener">github.com/PierreCorbin/joulemath</a> so you can audit how every request works yourself.</li>
+      </ul>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:.4rem;align-items:flex-end;justify-content:center">
+      <button type="button" class="btn-sm danger" id="btn-clear-top" title="Remove any saved addresses or machine IDs from this browser">Clear saved fleet from browser</button>
+      <a class="note" href="https://github.com/PierreCorbin/joulemath" target="_blank" rel="noopener" style="font-size:.78rem">Inspect source on GitHub &rarr;</a>
+    </div>
+  </aside>
+
+  <!-- Active Fleet Bar -->
+  <div class="fleet-bar" id="fleet-status-bar">
+    <div class="fleet-bar-left">
+      <span class="dot" style="width:8px;height:8px;border-radius:50%;background:var(--good);display:inline-block"></span>
+      <b id="fleet-mode-label">Pre-Loaded Sample Operator Fleet</b>
+      <span class="note" id="fleet-summary-pill">(2 OCEAN BTC payout addresses + 2 live Vast.ai GPU rigs &middot; 69.2 kW total)</span>
+    </div>
+    <div class="fleet-bar-actions">
+      <a href="#fleet-inputs" class="btn-sm primary">+ Edit / Paste Your Fleet</a>
+      <button type="button" class="btn-sm" id="btn-refresh-live" title="Re-fetch latest on-chain payouts from mempool.space and live GPU occupancy from Vast.ai">&#8635; Refresh live feeds</button>
+      <button type="button" class="btn-sm" id="btn-copy-link" title="Copy a shareable URL with current fleet parameters">Copy share link</button>
+      <button type="button" class="btn-sm" id="btn-reset-sample" title="Load the default 4-unit sample operator fleet">Load sample fleet</button>
+    </div>
+  </div>
+
+  <!-- Top 4 KPI Cards -->
+  <section class="kpi-grid" aria-label="Fleet Key Performance Indicators">
+    <article class="kpi-card">
+      <div class="k-top"><span>1. Past 90d Realized Output</span><span class="badge btc" id="kpi1-badge">On-Chain + Live</span></div>
+      <div class="k-val" id="kpi-90d-net">$123,700</div>
+      <div class="k-sub" id="kpi-90d-sub">Combined 90d net after $9,120 power bill</div>
+      <div class="k-foot" id="kpi-90d-foot">BTC mined: 1.7148 BTC ($122.4k spot) &middot; GPU net: $10,420</div>
+    </article>
+
+    <article class="kpi-card">
+      <div class="k-top"><span>2. 3-Year Projected Net Return</span><span class="badge gpu" id="kpi2-badge">Real Terms</span></div>
+      <div class="k-val" id="kpi-36m-real">$412,600</div>
+      <div class="k-sub" id="kpi-36m-nom">Nominal 36m net: $448,900 (after power &amp; capex write-down)</div>
+      <div class="k-foot" id="kpi-36m-foot">CPI-adjusted (3.1%/yr) &middot; M2 debasement-adjusted: $374,200</div>
+    </article>
+
+    <article class="kpi-card">
+      <div class="k-top"><span>3. Cash-Flow vs Upside Split</span><span class="badge bm">Two-Lens View</span></div>
+      <div class="k-val" id="kpi-split-val">59% BTC / 41% AI</div>
+      <div class="k-sub" id="kpi-split-sub">AI GPUs pay steady monthly USD; held BTC drives 3-yr equity</div>
+      <div class="k-foot" id="kpi-split-foot">Monthly GPU cash flow: $6,240/mo &middot; Held BTC at Y3: $312k</div>
+    </article>
+
+    <article class="kpi-card">
+      <div class="k-top"><span>4. Depreciation &amp; Debasement Drag</span><span class="badge bm">36m Haircut</span></div>
+      <div class="k-val neg" id="kpi-drag-val">-$198,400</div>
+      <div class="k-sub" id="kpi-drag-sub">-$162,100 hardware write-down &amp; -$36,300 inflation drag</div>
+      <div class="k-foot" id="kpi-drag-foot">ASICs: 3-yr linear (100% written off) &middot; GPUs: 4-yr linear (75% written off)</div>
+    </article>
+  </section>
+
+  <!-- Main Interactive Grid: Left = Projection Sliders, Right = Timeline Chart + Scrubber -->
+  <section class="fleet-main" aria-label="Projection Controls and Timeline">
+    <!-- Left Column: Sliders & Macro Controls -->
+    <div class="card slider-stack">
+      <div class="card-h"><i class="m"></i><span>3-Year BTC Price &amp; Debasement Controls</span></div>
+
+      <div class="scen" style="margin:0 0 .35rem">
+        <span class="note" style="font-size:.78rem">Trajectory presets:</span>
+        <div class="chips" role="group" aria-label="BTC trajectory presets">
+          <button type="button" class="fp-chip" data-fp="default" aria-pressed="true">Base ($100k&rarr;$180k)</button>
+          <button type="button" class="fp-chip" data-fp="flat" aria-pressed="false">Flat Spot</button>
+          <button type="button" class="fp-chip" data-fp="bull" aria-pressed="false">Bull ($125k&rarr;$250k)</button>
+          <button type="button" class="fp-chip" data-fp="bear" aria-pressed="false">Bear ($55k&rarr;$85k)</button>
+        </div>
+      </div>
+
+      <div class="slider-row">
+        <div class="s-head"><label for="sl-btc-y1">Year 1 Target BTC Price (Month 12)</label><b id="val-btc-y1">$100,000</b></div>
+        <input id="sl-btc-y1" type="range" min="40000" max="250000" step="2500" value="100000">
+        <div class="s-ticks"><span>$40k</span><span>$100k</span><span>$175k</span><span>$250k</span></div>
+      </div>
+
+      <div class="slider-row">
+        <div class="s-head"><label for="sl-btc-y2">Year 2 Target BTC Price (Month 24)</label><b id="val-btc-y2">$135,000</b></div>
+        <input id="sl-btc-y2" type="range" min="40000" max="350000" step="2500" value="135000">
+        <div class="s-ticks"><span>$40k</span><span>$135k</span><span>$240k</span><span>$350k</span></div>
+      </div>
+
+      <div class="slider-row">
+        <div class="s-head"><label for="sl-btc-y3">Year 3 Target BTC Price (Month 36)</label><b id="val-btc-y3">$180,000</b></div>
+        <input id="sl-btc-y3" type="range" min="40000" max="500000" step="5000" value="180000">
+        <div class="s-ticks"><span>$40k</span><span>$180k</span><span>$340k</span><span>$500k</span></div>
+      </div>
+
+      <hr style="border:0;border-top:1px solid var(--line);margin:.2rem 0">
+
+      <div class="field">
+        <span><span>Purchasing Power Deflator</span><a class="how" href="/methodology/#fleet-debasement">methodology</a></span>
+        <div class="seg" role="radiogroup" aria-label="Purchasing power discount basis">
+          <label><input type="radio" name="deflator" value="cpi" checked><span>CPI Inflation</span></label>
+          <label><input type="radio" name="deflator" value="m2"><span>M2 Debasement</span></label>
+        </div>
+      </div>
+
+      <div class="slider-row">
+        <div class="s-head"><label for="sl-cpi">Annual US CPI-U Inflation Rate</label><b id="val-cpi">3.1%/yr</b></div>
+        <input id="sl-cpi" type="range" min="0" max="10" step="0.1" value="3.1">
+        <div class="s-ticks"><span>0%</span><span>3.1% (BLS)</span><span>6%</span><span>10%</span></div>
+      </div>
+
+      <div class="slider-row">
+        <div class="s-head"><label for="sl-m2">Annual M2 Monetary Supply Expansion</label><b id="val-m2">7.0%/yr</b></div>
+        <input id="sl-m2" type="range" min="2" max="14" step="0.2" value="7.0">
+        <div class="s-ticks"><span>2%</span><span>7.0% (long-run M2)</span><span>10%</span><span>14%</span></div>
+      </div>
+
+      <div class="debase-box" id="debase-explain">
+        At <b>3.1% CPI</b>, $100 earned at Month 36 buys <b>$91.25</b> of today's goods; at <b>7.0% M2 debasement</b>, it represents <b>$81.63</b> in real purchasing power.
+      </div>
+
+      <div class="field">
+        <label for="sel-diff"><span>Bitcoin Network Difficulty &amp; Halving Model</span></label>
+        <div class="ig">
+          <select id="sel-diff" style="width:100%;border:0;background:transparent;color:var(--text);font:inherit;font-size:.86rem;padding:.55rem .65rem;outline:none">
+            <option value="0.02" selected>+2.0%/mo drift + Apr 2028 halving (Base)</option>
+            <option value="0.03">+3.0%/mo drift + Apr 2028 halving (Aggressive)</option>
+            <option value="0.01">+1.0%/mo drift + Apr 2028 halving (Conservative)</option>
+            <option value="0">0.0%/mo flat difficulty + Apr 2028 halving</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Combined Timeline SVG Chart + Interactive Scrubber -->
+    <div class="card chart-card">
+      <div class="chart-head">
+        <div>
+          <h2>Cumulative Fleet Trajectory: Past 90 Days (-3m) to Year 3 (+36m)</h2>
+          <p class="note" style="margin:.15rem 0 0">Left of the vertical <b>Today</b> marker is realized 90-day performance; right is the 36-month projection after power and hardware write-down.</p>
+        </div>
+        <div class="legend">
+          <span><i style="background:var(--accent)"></i>Held BTC Net Equity</span>
+          <span><i style="background:var(--gpu)"></i>AI GPU Net Cash Flow</span>
+          <span><i style="background:var(--good)"></i>Combined Nominal</span>
+          <span><i style="background:var(--text);border:1px dashed var(--muted)"></i>Real Purchasing Power</span>
+        </div>
+      </div>
+
+      <div class="chart-svg-wrap">
+        <svg id="fleet-chart-svg" viewBox="0 0 720 310" role="img" aria-label="Fleet cumulative return timeline from -3 months to +36 months"></svg>
+      </div>
+
+      <!-- Interactive Timeline Scrubber -->
+      <div class="scrubber-box">
+        <div class="scrubber-top">
+          <div>
+            <b>Timeline Scrubber: Inspect Any Month (-3m to +36m)</b>
+            <span class="note" style="margin-left:.35rem">Drag to update chart cursor &amp; per-machine table below</span>
+          </div>
+          <span class="m-pill" id="scrubber-pill">Month +36 (Year 3 End)</span>
+        </div>
+        <input id="sl-scrubber" type="range" min="-3" max="36" step="1" value="36" aria-label="Inspect timeline month from -3 to +36" style="width:100%;accent-color:var(--accent);cursor:pointer">
+        <div class="s-ticks" style="display:flex;justify-content:space-between;font-size:.72rem;color:var(--faint)">
+          <span>-3m (90d ago)</span>
+          <span>0m (Today)</span>
+          <span>+12m (Year 1)</span>
+          <span>+18m (Apr '28 Halving)</span>
+          <span>+24m (Year 2)</span>
+          <span>+36m (Year 3)</span>
+        </div>
+        <div class="scrubber-readout">
+          <div>
+            <span>Horizon Window</span>
+            <b id="scr-window">+36 Months (Proj)</b>
+          </div>
+          <div>
+            <span>BTC Price / Sats-TH</span>
+            <b id="scr-btc">$180,000 &middot; 13 sats</b>
+          </div>
+          <div>
+            <span>Nominal Net Equity</span>
+            <b id="scr-nominal">$448,900</b>
+          </div>
+          <div>
+            <span id="scr-real-label">Real Return (CPI Adj)</span>
+            <b id="scr-real">$412,600</b>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Fleet Input Panel: Multi-BTC Address + Multi-Vast Machine ID -->
+  <section id="fleet-inputs" style="scroll-margin-top:75px;margin:0 0 1.25rem" aria-label="Configure Your Fleet">
+    <div class="card">
+      <div style="display:flex;flex-wrap:wrap;gap:.5rem 1rem;align-items:center;justify-content:space-between;margin-bottom:.5rem">
+        <div class="card-h" style="margin:0"><i class="m"></i><i class="g"></i><span>Configure Your Fleet (Bitcoin Payout Addresses &amp; Vast.ai Machine IDs)</span></div>
+        <div style="display:flex;gap:.45rem;flex-wrap:wrap">
+          <button type="button" class="btn-sm danger" id="btn-clear-inputs">Clear saved fleet from browser</button>
+          <button type="button" class="btn-sm" id="btn-restore-sample">Restore sample fleet</button>
+        </div>
+      </div>
+
+      <!-- Inline Privacy Notice right on the fleet input box -->
+      <div class="priv-inline">
+        <b>&#128274; Privacy &amp; Open-Source Note:</b> We never store your Bitcoin addresses, Vast.ai machine IDs, or fleet inputs on any server or database. Your inputs stay in your browser (<code>localStorage</code>), and BTC lookups go straight from your browser to <code>mempool.space</code>. The entire site and code are open source on GitHub (<a href="https://github.com/PierreCorbin/joulemath" target="_blank" rel="noopener">github.com/PierreCorbin/joulemath</a>) so you can verify how it works yourself.
+      </div>
+
+      <div class="fleet-config">
+        <!-- Left: BTC Payout Addresses -->
+        <div>
+          <h3 style="font-size:.98rem;margin:0 0 .25rem;display:flex;align-items:center;justify-content:space-between">
+            <span><span class="dot-m"></span>Bitcoin Mining Payout Addresses</span>
+            <span class="note" style="font-weight:500;font-size:.76rem">Direct browser fetch via mempool.space</span>
+          </h3>
+          <p class="note" style="margin:0 0 .5rem;font-size:.8rem">Paste one or more pool payout addresses (<code>bc1...</code>, <code>1...</code>, <code>3...</code>). We sum confirmed incoming payouts over the last 90 days (excluding self-spend change outputs) and infer active TH/s &amp; power draw, or let you override hardware specs.</p>
+
+          <div class="item-list" id="btc-item-list"></div>
+
+          <form id="form-add-btc" class="add-row" autocomplete="off">
+            <input type="text" id="in-btc-addr" placeholder="Paste BTC payout address (bc1q..., 1..., 3...)" aria-label="Bitcoin mining payout address" required>
+            <input type="number" id="in-btc-kwh" class="sm-in" step="0.005" min="0" max="0.50" value="0.060" title="Electricity rate in $/kWh" aria-label="Electricity rate in dollars per kWh">
+            <button type="submit" class="btn-sm primary">+ Add BTC Address</button>
+          </form>
+          <div class="note" id="btc-add-msg" style="margin-top:.3rem;font-size:.77rem">Tip: Try another real OCEAN miner address such as <code>3NwAtXhvfJ8Vz5xzwuZ2DTuUv6CGuELWa1</code> or <code>bc1qg44j55hhq77uw2zltxpyx86ntm36zcnqve783c</code>.</div>
+        </div>
+
+        <!-- Right: Vast.ai GPU Machine IDs -->
+        <div>
+          <h3 style="font-size:.98rem;margin:0 0 .25rem;display:flex;align-items:center;justify-content:space-between">
+            <span><span class="dot-g"></span>Vast.ai GPU Machine IDs</span>
+            <span class="note" style="font-weight:500;font-size:.76rem">Live bundle lookup by machine_id</span>
+          </h3>
+          <p class="note" style="margin:0 0 .5rem;font-size:.8rem">Enter one or more Vast.ai <code>machine_id</code> numbers (found on your Vast host dashboard or CLI). We pull GPU model, total vs occupied GPUs, per-GPU hourly rate, reliability score, and compare against marketplace medians.</p>
+
+          <div class="item-list" id="vast-item-list"></div>
+
+          <form id="form-add-vast" class="add-row" autocomplete="off">
+            <input type="text" id="in-vast-id" placeholder="Enter Vast.ai machine_id (e.g. 291940 or 525275)" aria-label="Vast.ai machine ID" required>
+            <input type="number" id="in-vast-kwh" class="sm-in" step="0.005" min="0" max="0.50" value="0.065" title="Electricity rate in $/kWh" aria-label="GPU electricity rate in dollars per kWh">
+            <button type="submit" class="btn-sm primary">+ Add Vast Machine</button>
+          </form>
+          <div class="note" id="vast-add-msg" style="margin-top:.3rem;font-size:.77rem">Tip: Try real Vast.ai machine IDs <code>291940</code> (8x H100 SXM in Utah) or <code>525275</code> (4x RTX 5090 in Sweden).</div>
+        </div>
+      </div>
+
+      <!-- 1-Click Benchmark Comparison Toggle Bar -->
+      <div class="bm-toggle-bar" id="bm-toggle-bar">
+        <div>
+          <b id="bm-toggle-title">Power-Matched Cross-Benchmark:</b>
+          <span id="bm-toggle-desc">Compare your fleet against an equivalent power-matched AI GPU rig or Antminer S21 XP mining deployment at the same kW load.</span>
+        </div>
+        <label style="display:inline-flex;align-items:center;gap:.45rem;font-weight:600;cursor:pointer;white-space:nowrap">
+          <input type="checkbox" id="chk-benchmark" style="width:16px;height:16px;accent-color:var(--gpu)">
+          <span id="bm-toggle-label">Include power-matched benchmark row</span>
+        </label>
+      </div>
+    </div>
+  </section>
+
+  <!-- Per-Machine / Per-Address Breakdown Table -->
+  <section class="card" style="margin:0 0 1.5rem" aria-label="Per-Machine and Per-Address Breakdown">
+    <div style="display:flex;flex-wrap:wrap;gap:.5rem 1rem;align-items:baseline;justify-content:space-between;margin-bottom:.4rem">
+      <div>
+        <h2 style="margin:0;font-size:1.15rem">Per-Machine &amp; Per-Address Breakdown (<span id="tbl-horizon-label">at Month +36</span>)</h2>
+        <p class="note" style="margin:.15rem 0 0">Every Bitcoin payout address and Vast.ai machine is listed separately alongside your aggregate fleet total. Move the Timeline Scrubber above to inspect any month from <code>-3m</code> to <code>+36m</code>.</p>
+      </div>
+      <span class="note" id="tbl-basis-note" style="font-size:.78rem">Real purchasing power discounted at 3.1%/yr CPI</span>
+    </div>
+
+    <div class="fleet-tbl-wrap">
+      <table class="fleet-tbl" id="fleet-breakdown-table">
+        <thead>
+          <tr>
+            <th>Unit / Address &amp; Hardware</th>
+            <th>Power &amp; Rate</th>
+            <th>Past 90d Realized Net</th>
+            <th id="th-proj-gross">Horizon Gross (<span class="m-lbl">+36m</span>)</th>
+            <th id="th-proj-power">Power Bill (<span class="m-lbl">+36m</span>)</th>
+            <th id="th-proj-depr">Capex Write-Down</th>
+            <th id="th-proj-nom">Nominal Net (<span class="m-lbl">+36m</span>)</th>
+            <th id="th-proj-real">Real Purchasing Power</th>
+          </tr>
+        </thead>
+        <tbody id="fleet-tbody"></tbody>
+        <tfoot id="fleet-tfoot"></tfoot>
+      </table>
+    </div>
+
+    <p class="note" style="margin:.65rem 0 0">
+      <b>Methodology &amp; accounting notes:</b>
+      1. <b>Hardware depreciation:</b> AI GPUs depreciate linearly over <b>48 months (4 years)</b> per <a href="/methodology/#sources-gpu">CoreWeave FY2025 10-K</a>; Bitcoin ASICs depreciate linearly over <b>36 months (3 years)</b> per <a href="/methodology/#sources-mining">CleanSpark FY2025 10-K</a>.
+      2. <b>Vast.ai host net payout:</b> Vast.ai takes 0% host fee since June 2024; renter bundle prices are ~25% above host payout (host receives ~80% of listed renter <code>dph_base</code>, see <a href="/guides/rent-out-your-gpu/">Rent Out Your GPU</a>).
+      3. <b>Bitcoin difficulty &amp; halving:</b> Forward monthly BTC production applies your selected monthly difficulty drift and halves block subsidy from 3.125 to 1.5625 BTC at Month +18 (April 2028, block 1,050,000).
+      4. <b>Inflation &amp; monetary debasement:</b> Real purchasing power discounts future cash flows and held-BTC equity by <code>(1 + r)^(t/12)</code> using either US BLS CPI-U (3.1% default) or US Federal Reserve H.6 M2 money supply growth (7.0% long-run CAGR, see <a href="/methodology/#fleet-debasement">methodology</a>).
+    </p>
+  </section>
+
+  <!-- Natural Flash Lead Handoff CTA -->
+  <section class="cta" aria-label="Treasury and Accounting Handoff">
+    <div>
+      <div class="eyebrow" style="color:#ffb45c;margin-bottom:.3rem">BTC + Fiat Treasury Automation</div>
+      <h2>Reconciling Mining Payouts, Vast.ai GPU Income, and Power Bills?</h2>
+      <p>Operators running both Bitcoin ASICs and AI GPUs juggle on-chain BTC payouts, USD hosting deposits, and monthly utility invoices. Use Flash to automate BTC-to-fiat treasury settlements, invoicing, and multi-wallet accounting in one place.</p>
+    </div>
+    <a class="btn" href="/go/flash?c=fleet&amp;p=reconcile" target="_blank" rel="noopener">Automate Fleet Treasury with Flash &rarr;</a>
+  </section>
+
+  <!--signup-->
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p><b>joulemath.com</b>. Numbers are estimates, not financial advice.</p>
+    <p>Live data from <a href="https://mempool.space/docs/api">mempool.space</a>, <a href="https://www.coingecko.com/en/api">CoinGecko</a>, and <a href="https://vast.ai">Vast.ai</a>.</p>
+    <p><a href="/calculators/">Calculators</a> &middot; <a href="/fleet/">Fleet check</a> &middot; <a href="/methodology/">Methodology</a> &middot; <a href="/blog/rss.xml">RSS</a> &middot; <a href="https://github.com/PierreCorbin/joulemath">Source on GitHub</a></p>
+    <p class="disc">Some links are affiliate links. If you sign up through them, joulemath may earn a commission at no extra cost to you.</p>
+  </div>
+</footer>
+<script src="/js/theme.js" defer></script>
+<script src="/js/fleet.js" defer></script>
+</body>
+</html>

@@ -73,7 +73,7 @@ ${body}
 <table><thead><tr><th>Power price</th><th>Revenue / day</th><th>Power / day</th><th>Profit / day</th><th>Profit / 30 days</th></tr></thead><tbody>${tbl}</tbody></table>
 <p class="note">${dataLine} Revenue is gross: no pool fee, downtime, hosting markup or hardware cost. Assumes the machine runs at spec 24 hours a day (our assumption). Figures update when the site is rebuilt.</p>
 ${slots}
-<div class="callout"><b>Use your own numbers.</b> Pool fee, live price and your exact power cost are all inputs in the ASIC calculator, which pulls fresh data every time you load it.<br><a class="btn" href="/mining-calculator/">Open the ASIC calculator <span aria-hidden="true">→</span></a></div>
+<div class="callout"><b>Use your own numbers or paste your payout address.</b> Pool fee, live price and your exact power cost are all inputs in the ASIC calculator, or paste your Bitcoin mining payout address in <a href="/fleet/">Fleet Check</a> to reconcile your actual 90-day on-chain payouts.<br><a class="btn" href="/mining-calculator/">Open the ASIC calculator <span aria-hidden="true">→</span></a> <a class="btn ghost" href="/fleet/" style="margin-left:.4rem">Benchmark your payout address <span aria-hidden="true">→</span></a></div>
 <p>Wondering whether the same kilowatts would earn more renting GPUs? Try the <a href="/">mine vs AI per-kW calculator</a>. Other models: ${others}, or see <a href="/asic/">all ASICs</a>.</p>
 <!--signup--></article>
 <section class="cta"><div><h2>Already mining?</h2><p>Track your real per-site numbers (uptime, power cost, curtailment, payouts) instead of estimates.</p></div><a class="btn" rel="nofollow" href="/go/flash?c=asic-model&amp;p=cta">See Flash for miners <span aria-hidden="true">→</span></a></section>`;
@@ -85,7 +85,7 @@ ${slots}
 <p class="lead">Daily revenue, profit at $0.05/kWh and break-even power price for popular Antminer and WhatsMiner models, using one live hashprice for all of them so they compare fairly.</p>
 <table><thead><tr><th>Model</th><th>TH/s</th><th>W</th><th>J/TH</th><th>Revenue / day</th><th>Profit / day at $0.05</th><th>Break-even $/kWh</th></tr></thead><tbody>${rows.map(r=>`<tr><td><a href="${r.url}">${r.m.name}</a></td><td>${r.m.th}</td><td>${r.m.w.toLocaleString('en-US')}</td><td>${r.m.jth}</td><td>${$(r.rev)}</td><td>${$(r.p05)}</td><td>$${r.be.toFixed(3)}</td></tr>`).join('')}</tbody></table>
 <p class="note">${dataLine} Specs from each manufacturer, linked on each model page. Gross revenue, no pool fee or hardware cost.</p>
-<p>For your own power price and pool fee, use the <a href="/mining-calculator/">ASIC calculator</a>.</p><!--signup--></div>`;
+<p>For your own power price and pool fee, use the <a href="/mining-calculator/">ASIC calculator</a>, or paste your Bitcoin payout address into <a href="/fleet/">Fleet Check</a> to benchmark your last 90 days of on-chain payouts against AI GPU rigs.</p><!--signup--></div>`;
   fs.writeFileSync('dist/asic/index.html',page({title:'Bitcoin ASIC profitability by model (live hashprice) | joulemath',desc:'Antminer S21 XP, S21 Pro, S21, S19 XP, S19k Pro and WhatsMiner M60S, M66S, M63S, M70S: daily profit and break-even power price from live hashprice.',url:'/asic/',ld:{"@context":"https://schema.org","@type":"CollectionPage","name":"Bitcoin ASIC profitability by model","url":SITE+'/asic/'},body}));
   console.log('asic: hashprice',hp.toFixed(4),'pages',MODELS.length);
   return {hp,btc,eurPerUsd:pr.EUR/pr.USD,when,iso,dataLine,page};
