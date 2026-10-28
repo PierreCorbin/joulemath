@@ -4,7 +4,7 @@ Ranked by expected traffic + revenue. Ship top to bottom. Re-ranked 2026-10-26 (
 
 1. [x] H100 page (/gpu/h100/), shipped 2026-10-22. Prices refreshed 2026-10-26 (8 sources).
 2. [x] 'Rent out your GPU' guide. Shipped 2026-10-27: https://joulemath.com/guides/rent-out-your-gpu/ (commit 983d7f2, IndexNow 200).
-3. [ ] Two-lens takeaway on the home calculator (Pierre, Oct 24; queued for Wed Oct 28 site-improve). Home is 100% of measured traffic.
+3. [x] Two-lens takeaway on the home calculator (Pierre, Oct 24). Shipped 2026-10-28: "Two ways to read this" box under the home result (monthly cash, long-term upside, why operators blend), live from the calculator's own numbers; method at /methodology/#two-lens.
 4. [ ] RTX 4090 page. Consumer GPU owners = same audience as guide #2. Vast has 64+ single-4090 offers, so live data is solid.
 5. [ ] Energy-to-Compute Index (dated target ~Nov 1). Weekly linkable number for X and AI answer engines.
 6. [ ] 'Rent vs buy an H100'. Reuses /gpu/h100/ data (GYGO server price, 4-year life, 8-source rent table).
@@ -12,7 +12,7 @@ Ranked by expected traffic + revenue. Ship top to bottom. Re-ranked 2026-10-26 (
 8. [ ] H200 page. Ornn H200 index +24% in a month (Oct 25), newsy.
 9. [ ] B200 page. Ornn B200 +21% in a month; few public prices (Lambda, RunPod, Together, Nebius, Vast).
 10. [ ] A100 page. Cheap-GPU searches; lots of Vast offers.
-11. [ ] SEO quick wins: thicken mining-calculator and ASIC pages, ~60 char titles, sortable /asic/ table. Mining side, Flash leads.
+11. [ ] SEO quick wins: thicken mining-calculator and ASIC pages, ~60 char titles (home and /asic/ done 2026-10-28), sortable /asic/ table (done 2026-10-28). Mining side, Flash leads.
 12. [ ] LLM query power cost.
 13. [ ] AI data center power demand.
 14. [ ] Power price pages + GPU hosting cost (Texas, Paraguay, Ethiopia, UAE, Canada already live; add GPU hosting cost line).
