@@ -68,9 +68,23 @@ function calc(){const o=document.getElementById('out');if(!L||!L.btcPerTHDay||!L
  const mEq=`${v('jth')===13.5?`${fmt(th/270,0)} mining machines`:fmt(th,0)+' TH/s'}${rent?'':hosted?', hosted':', your site'}`,gEq=`${n} AI GPU${n===1?'':'s'}${rent?'':hosted?', in a data center':', your site'}`;
  const hv=DG&&DG.toH!=null?` The reward halves in about ${fmt(DG.toH/365,1)} years (block 1,050,000).`:'',dTxt=v2('dmode')==='trend'&&DG?`Difficulty: last-12-month trend, ${DG.g>=0?'+':''}${fmt(DG.g*100,1)}% a year (mempool.space), assumed to continue.${hv}`:`Difficulty: held flat at today's level (default, more conservative); switch to the last-12-month trend in Change assumptions${DG?`, which is ${DG.g>=0?'+':''}${fmt(DG.g*100,1)}% a year`:''}.${hv}`;
  {const w=document.getElementById('where'),a=rent?m.atNet:mP,b=rent?g.atNet:gP2;if(w&&isFinite(a)&&isFinite(b)){const top=a>=b?'m':'g',g2=w.querySelector('.where-g'),pm=w.querySelector('[data-side=m]'),pg=w.querySelector('[data-side=g]');if(top==='m')g2.prepend(pm);else g2.prepend(pg);w.querySelectorAll('.wpan').forEach(e=>{const on=e.dataset.side===top;e.classList.toggle('on',on);e.querySelector('.fit').hidden=!on;});const l=document.getElementById('where-lead');if(l)l.textContent=`With these assumptions ${top==='m'?'mining comes':'AI GPUs come'} out ahead, so that side is first. Change the inputs and it can flip. Not a ranking; prices are cited.`;}}
+ // Two lenses (Pierre, Oct 24): monthly fiat cash vs long-term held-BTC upside. Uses only numbers computed above.
+ let lens='';
+ if(rent){lens=`<li><b>Monthly cash:</b> GPUs earn fiat from renters every month. Mining earns BTC, which you sell to pay the bills or keep.</li><li><b>Long-term upside:</b> mined BTC you keep rises or falls with the BTC price.</li><li><b>Why operators blend:</b> GPU cash pays the power bill, so mined BTC does not have to be sold when the price is weak.</li>`;}
+ else{const bill=(m.pow+m.host)*30.4,gc=g.op*30.4,mc=m.op*30.4;
+  const l1=H?`If you keep every coin, mining brings in no cash and costs ${money(s,bill,0)}/mo in ${hosted?'hosting':'power and hosting'}. GPUs bring in ${K0(gc)}/mo after power and colo. ${gc>0?'<b>GPUs win monthly cash.</b>':'Neither side brings in cash here.'}`
+   :`Selling every coin at today's price, mining brings in ${K0(mc)}/mo after ${hosted?'hosting':'power and hosting'}, GPUs ${K0(gc)}/mo after power and colo. ${Math.max(mc,gc)>0?`<b>${gc>=mc?'GPUs win':'Mining wins'} monthly cash.</b>`:'Neither side brings in cash here.'}`;
+  const l2=H?`Hold to year ${fmt(m.life,0)} and sell at ${money(s,m.endB,0)}: mining ${K0(mP)} vs GPUs ${K0(gP2)} over their lives. Holding only pays if BTC is above ${money(s,(H.fiat+m.cap)/H.st,0)} when you sell. ${mP>gP2?'<b>Holding mined BTC wins here.</b>':'<b>GPUs still win here</b>; try a higher BTC price above.'}`
+   :`Mining's upside comes from keeping the BTC. Pick "Hold until year ${fmt(m.life,0)}" above and set a BTC price to test it.`;
+  const cov=bill>0&&gc>0?gc/bill*100:null;
+  const l3=cov==null?'At these inputs GPUs make no cash after power and colo, so they cannot carry the mining bill.'
+   :`At these inputs, GPU cash covers ${cov>=1000?'more than 10x':fmt(cov,0)+'%'} of the mining bill. Run both and ${cov>=100?'the bill is paid':'part of the bill is paid'} without selling mined BTC at a weak price. Split the money 50/50 and this ratio stays about the same.`;
+  lens=`<li><b>Monthly cash (paying the bills):</b> ${l1}</li><li><b>Long-term upside:</b> ${l2}</li><li><b>Why operators blend:</b> ${l3}</li>`;}
+ const lensH=`<div class="lens" id="lens"><h3>Two ways to read this</h3><ul>${lens}</ul><p class="note">${rent?'':'Cash is before the cost of the machines. '}<a class="how" href="/methodology/#two-lens">how</a></p></div>`;
  o.innerHTML=`<p class="headline">${ver}</p>
  <div class="sum">${card('Bitcoin mining','dot-m',m,mEq,mP,!!H)}${card('AI GPU rental','dot-g',g,gEq,gP2,false)}</div>
  ${H?`<p class="note" style="margin:0">${fmt(H.st,2)} BTC mined, worth ${money(s,H.val,0)}. <a class="how" href="/methodology/#hodl">how</a> Past performance is not a guarantee.</p>`:''}
+ ${lensH}
  <details class="full-num"><summary>What changes the answer</summary><ul class="tips"><li>${tips.join('</li><li>')}</li></ul></details>
  <details class="full-num"><summary>How this is calculated</summary><div class="note">
  <p>${sz}${left>1?`. GPUs come in whole units, so ${money(s,left,0)} is left unspent`:''}. Profit = income minus power, hosting${tax?', tax':''} and the machines, over their life (mining ${fmt(v('alife'),1)} yrs, GPUs ${fmt(v('glife'),1)} yrs). Selling values each day's BTC at today's price. Both modes use the same BTC output: ${dTxt}</p>
