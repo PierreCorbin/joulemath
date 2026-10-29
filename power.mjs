@@ -90,7 +90,7 @@ ${blocks}
 <p class="lead">Industrial electricity prices from public sources for well-known mining places, and what 1 kW nets mining vs renting GPUs at each one.</p>
 <table><thead><tr><th>Place</th><th>Industrial $/kWh</th><th>Mining net / kW / day</th><th>GPU net / kW / day</th><th>Source</th></tr></thead><tbody>${rows.flatMap(({c,url,res})=>res.map((r,i)=>`<tr><td>${i?'':`<a href="${url}">${c.name}</a>`}</td><td>$${r.p.toFixed(4)}${res.length>1?` (${i?'high':'low'})`:''}</td><td class="${cls(r.m.net)}">${$(r.m.net)}</td><td class="${cls(r.g.net)}">${$(r.g.net)}</td><td>${i?'':`<a href="${c.src[0].url}">${esc(c.src[0].name.split(',')[0])}</a>`}</td></tr>`)).join('')}</tbody></table>
 <p class="note">${assume} ${dataLine} ${fxNote} Price dates and full sources are on each page.</p>
-<p>Got your own power price? Put it in the <a href="/">mine vs AI calculator</a> or the <a href="/mining-calculator/">ASIC calculator</a>.</p><!--signup--></div>`;
+<p>Got your own power price? Put it in the <a href="/">mine vs AI calculator</a> or the <a href="/mining-calculator/">ASIC calculator</a><a href="/gpu/">GPUs</a>.</p><!--signup--></div>`;
   fs.writeFileSync('dist/power-prices/index.html',page({title:'Industrial power prices for Bitcoin mining by country | joulemath',desc:'Sourced industrial electricity prices for Texas, Paraguay, Ethiopia, the UAE and Quebec, and what 1 kW nets mining vs renting GPUs at each.',url:'/power-prices/',ld:{"@context":"https://schema.org","@type":"CollectionPage","name":"Industrial power prices for Bitcoin mining by country","url":SITE+'/power-prices/'},body}));
   console.log('power: pages',PLACES.length);
 }
