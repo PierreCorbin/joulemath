@@ -71,6 +71,7 @@ export async function buildPower({hp,eurPerUsd,when,dataLine,page}){
 <p><a class="btn" href="${calcUrl(r.p)}">Open the calculator at $${r.p.toFixed(4)}/kWh <span aria-hidden="true">→</span></a></p>`).join('\n');
     const r0=res[0],w=r0.g.net>=r0.m.net?'GPU rental':'mining';
     const title=`${c.name} industrial electricity price and what 1 kW earns`;
+    const seoTitle=`${c.short} industrial power price and what 1 kW earns`;
     const desc=`${c.name}: industrial power at ${res.map(r=>'$'+r.p.toFixed(3)).join(' to ')}/kWh (${c.src[0].name.split(',')[0]}). What 1 kW nets mining with an S21 XP at live hashprice vs renting out H100 GPUs.`;
     const body=`<article class="prose post"><p class="eyebrow"><a href="/power-prices/">Power prices</a></p><h1>${esc(c.name)}: industrial power price and what 1 kW earns</h1>
 <p class="lead">${esc(c.intro)}</p>
@@ -84,7 +85,7 @@ ${blocks}
 <p>Other places: ${PLACES.filter(o=>o!==c).map(o=>`<a href="/power-prices/${o.slug}/">${o.short}</a>`).join(' · ')}, or see <a href="/power-prices/">all power prices</a>. Per-model numbers are on the <a href="/asic/">ASIC pages</a>.</p>
 <!--signup--></article>`;
     const ld={"@context":"https://schema.org","@type":"WebPage","name":title,"description":desc,"url":SITE+url,"breadcrumb":{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Power prices","item":SITE+'/power-prices/'},{"@type":"ListItem","position":2,"name":c.name,"item":SITE+url}]}};
-    fs.mkdirSync('dist'+url,{recursive:true});fs.writeFileSync('dist'+url+'index.html',page({title:`${title} | joulemath`,desc,url,ld,body}));
+    fs.mkdirSync('dist'+url,{recursive:true});fs.writeFileSync('dist'+url+'index.html',page({title:`${seoTitle} | joulemath`,desc,url,ld,body}));
   }
   const body=`<div class="prose post"><p class="eyebrow">Power prices</p><h1>Industrial power prices for Bitcoin mining, by country</h1>
 <p class="lead">Industrial electricity prices from public sources for well-known mining places, and what 1 kW nets mining vs renting GPUs at each one.</p>

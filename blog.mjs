@@ -30,11 +30,11 @@ ${scripts}<script src="/js/theme.js" defer></script>
     const ld={"@context":"https://schema.org","@type":"Article","headline":meta.title,"description":meta.description,"datePublished":meta.date,"dateModified":meta.updated||meta.date,"author":{"@type":"Organization","name":"joulemath","url":SITE+'/'},"publisher":{"@type":"Organization","name":"joulemath","url":SITE+'/'},"mainEntityOfPage":SITE+url};
     const body=`<article class="prose post"><p class="eyebrow"><a href="/blog/">Blog</a> · <time datetime="${meta.date}">${fmtDate(meta.date)}</time></p><h1>${esc(meta.title)}</h1>
 ${html}</article>`;
-    fs.writeFileSync(`${dir}/${slug}/index.html`,page({title:`${meta.title} | joulemath`,desc:meta.description,url,type:'article',ld,body}).replace('<meta property="og:type" content="article">',`<meta property="og:type" content="article"><meta property="article:published_time" content="${meta.date}">`));
+    fs.writeFileSync(`${dir}/${slug}/index.html`,page({title:`${meta.seo_title||meta.title} | joulemath`,desc:meta.description,url,type:'article',ld,body}).replace('<meta property="og:type" content="article">',`<meta property="og:type" content="article"><meta property="article:published_time" content="${meta.date}">`));
     fs.rmSync(f);}
   posts.sort((a,b)=>b.date.localeCompare(a.date));
   const list=posts.map(p=>`<li class="post-item"><time datetime="${p.date}">${fmtDate(p.date)}</time><h2><a href="${p.url}">${esc(p.title)}</a></h2><p>${esc(p.description)}</p></li>`).join('\n');
-  fs.writeFileSync(`${dir}/index.html`,page({title:'Blog | joulemath',desc:'Notes on what a kilowatt earns: Bitcoin mining, GPU rental and the numbers behind them.',url:'/blog/',type:'website',
+  fs.writeFileSync(`${dir}/index.html`,page({title:'Blog: mining and AI GPU economics, sourced | joulemath',desc:'Notes on what a kilowatt earns: Bitcoin mining, GPU rental prices, miners moving into AI, and the sourced numbers behind them.',url:'/blog/',type:'website',
     ld:{"@context":"https://schema.org","@type":"Blog","name":"joulemath blog","url":SITE+'/blog/'},
     body:`<div class="hero"><div class="eyebrow">Blog</div><h1>Notes on what a kilowatt earns</h1><p class="lead">Short write-ups using live data and public pricing pages, with every figure linked to its source. <a href="/blog/rss.xml">RSS feed</a>.</p></div><ul class="post-list">${list}</ul>`}));
   const rss=`<?xml version="1.0" encoding="UTF-8"?>
