@@ -1,21 +1,27 @@
+# joulemath.com: every content page is open to all crawlers, search and AI alike.
+# Only /go/ (tracked outbound affiliate redirects) and /api/ (form and event endpoints) are blocked. Those are not pages.
 User-agent: *
 Allow: /
 Disallow: /go/
+Disallow: /api/
 
+# Named crawlers get the same rules, listed so nobody has to guess. A named group replaces the * group for that bot.
+User-agent: Googlebot
+User-agent: Bingbot
 User-agent: GPTBot
-Allow: /
-Disallow: /go/
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
 User-agent: ClaudeBot
-Allow: /
-Disallow: /go/
+User-agent: Claude-SearchBot
+User-agent: Claude-User
 User-agent: PerplexityBot
-Allow: /
-Disallow: /go/
+User-agent: Perplexity-User
 User-agent: Google-Extended
-Allow: /
-Disallow: /go/
+User-agent: Applebot
+User-agent: Applebot-Extended
 User-agent: CCBot
 Allow: /
 Disallow: /go/
+Disallow: /api/
 
 Sitemap: https://joulemath.com/sitemap.xml

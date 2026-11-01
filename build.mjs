@@ -1,7 +1,18 @@
-import fs from 'fs';import path from 'path';import {buildBlog} from './blog.mjs';import {buildAsic} from './asic.mjs';import {buildPower} from './power.mjs';import {buildGpu} from './gpu.mjs';
-fs.rmSync('dist',{recursive:true,force:true});fs.cpSync('src','dist',{recursive:true});buildBlog();{const a=await buildAsic();buildGpu(a);await buildPower(a);}
+import fs from 'fs';import path from 'path';import {buildBlog} from './blog.mjs';import {buildAsic} from './asic.mjs';import {buildPower} from './power.mjs';import {buildGpu} from './gpu.mjs';import {buildGuide} from './guides.mjs';import {MODELS} from './asic.mjs';import {PLACES} from './power.mjs';
+fs.rmSync('dist',{recursive:true,force:true});fs.cpSync('src','dist',{recursive:true});buildBlog();{const a=await buildAsic();buildGpu(a);await buildPower(a);buildGuide(a);}
 const pages=[];(function w(d){for(const f of fs.readdirSync(d)){const p=path.join(d,f);if(fs.statSync(p).isDirectory())w(p);else if(f==='index.html')pages.push('/'+path.relative('dist',path.dirname(p)).replace(/^$/,'')+(d==='dist'?'':'/'));}})('dist');
 const urls=pages.map(u=>u.replace('//','/'));
+// Homepage "Explore" block: plain links to every hub and detail page, so no page depends on one hub for its only internal link.
+{const h1=u=>{const m=fs.readFileSync('dist'+u+'index.html','utf8').match(/<h1[^>]*>([\s\S]*?)<\/h1>/);return m?m[1].replace(/<[^>]+>/g,'').trim():u;};
+ const li=(u,t)=>`<li><a href="${u}">${t}</a></li>`;
+ const blog=urls.filter(u=>/^\/blog\/.+\//.test(u)),guides=urls.filter(u=>/^\/guides\/.+\//.test(u));
+ const col=(t,items)=>`<div><h3>${t}</h3><ul>${items.join('')}</ul></div>`;
+ const ex=`<section class="explore" aria-labelledby="explore-h"><h2 id="explore-h">Explore the numbers</h2><div class="explore-grid">${[
+  col('AI GPUs',[li('/gpu/','All GPUs'),li('/gpu/h100/','NVIDIA H100 rent and profit per kW'),li('/gpu/rtx-4090/','RTX 4090 rent, power and payback'),li('/guides/rent-out-your-gpu/','Rent out your GPU: what it earns'),li('/fleet/','Fleet Check for Vast.ai rigs and BTC payouts')]),
+  col('Bitcoin ASICs',[li('/asic/','All ASICs compared'),...MODELS.map(m=>li(`/asic/${m.slug}/`,m.name))]),
+  col('Power prices',[li('/power-prices/','All power prices'),...PLACES.map(c=>li(`/power-prices/${c.slug}/`,c.short))]),
+  col('Guides and blog',[...guides.filter(u=>!u.includes('rent-out')).map(u=>li(u,h1(u))),...blog.map(u=>li(u,h1(u))),li('/methodology/','Methodology and sources')])].join('')}</div></section>`;
+ const f='dist/index.html';const hh=fs.readFileSync(f,'utf8');if(!hh.includes('<!--explore-->'))throw new Error('no explore marker');fs.writeFileSync(f,hh.replace('<!--explore-->',ex));}
 // Newsletter box. Hidden until the SUBSCRIBERS KV binding exists on the Pages project; flip NEWSLETTER to true then.
 const NEWSLETTER=true;
 const signup=c=>`<form class="signup" method="post" action="/api/subscribe"${NEWSLETTER?'':' hidden'}><b>Weekly energy-to-compute data, free</b><p class="note" style="margin:.2rem 0 0">Hashprice, GPU rent per kW and the deals behind them, once a week. Unsubscribe any time.</p><div class="row"><input type="email" name="email" required placeholder="you@example.com" aria-label="Email"><input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true"><input type="hidden" name="src" value="${c}"><button class="btn" type="submit">Subscribe</button></div><p class="signup-msg" aria-live="polite"></p></form>`;
@@ -11,7 +22,7 @@ for(const u of urls){const f='dist'+u+'index.html';let h=fs.readFileSync(f,'utf8
 // Sitemap lastmod = last git commit touching the page's source (its src dir or file, plus the generator that renders it), not the build date.
 import {execFileSync} from 'child_process';
 const gitDate=fs2=>{try{return execFileSync('git',['log','-1','--format=%cs','--',...fs2],{encoding:'utf8'}).trim();}catch(e){return '';}};
-const srcFor=u=>{const f=[u==='/'?'src/index.html':'src'+u];if(u.startsWith('/blog/'))f.push('blog.mjs');if(u.startsWith('/asic/'))f.push('asic.mjs');if(u.startsWith('/power-prices/'))f.push('power.mjs');if(u.startsWith('/gpu/'))f.push('gpu.mjs');return f.filter(x=>fs.existsSync(x));};
+const srcFor=u=>{const f=[u==='/'?'src/index.html':'src'+u];if(u.startsWith('/blog/'))f.push('blog.mjs');if(u.startsWith('/asic/'))f.push('asic.mjs');if(u.startsWith('/power-prices/'))f.push('power.mjs');if(u.startsWith('/gpu/'))f.push('gpu.mjs');if(u==='/gpu/rtx-4090/')f.push('gpu4090.mjs');if(u==='/guides/is-bitcoin-mining-profitable-2026/')f.push('guides.mjs');return f.filter(x=>fs.existsSync(x));};
 const lastmod=u=>{const f=srcFor(u);return (f.length&&gitDate(f))||new Date().toISOString().slice(0,10);};
 // FAQPage JSON-LD built only from answers already on the page (text copied from the rendered HTML, never written here).
 const txt=h=>h.replace(/<\/(li|p|h[1-6])>/g,' ').replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim().replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"');
@@ -22,7 +33,8 @@ const FAQ={'/methodology/':h=>[['What is the break-even power price?',/<h3 id="b
  '/guides/rent-out-your-gpu/':h=>[['What does renting out your GPU mean?','faq-what'],['How much can you make renting out an RTX 4090?','faq-earn'],['Is renting out an RTX 3090 worth it?','faq-3090'],['Which platform is best for a home GPU?','faq-platform'],['Can I game while my GPU is rented?','faq-gaming'],['Does a GPU earn more per kW than Bitcoin mining?','faq-vs-btc']].map(([q,id])=>[q,after(h,new RegExp(`<h3 id="${id}">[^<]*</h3>`))]),
  '/':h=>[['What does it take to rent GPUs to AI or mine Bitcoin?',after(h,/<h2>Who can actually do this<\/h2>/)?.replace(/ More on what each takes$/,'')]]};
 for(const u of urls){const f='dist'+u+'index.html';let h=fs.readFileSync(f,'utf8');let qa=null;
- if(FAQ[u])qa=FAQ[u](h);else if(/^\/asic\/[^/]+\/$/.test(u)){const m=h.match(/<h1>([^<]+) profitability<\/h1>/),a=h.match(/<p>(At the hashprice below, one [\s\S]*?)<\/p>/);if(m&&a)qa=[[`How much does the ${txt(m[1])} make a day, and what is its break-even power price?`,txt(a[1])]];}
+ // ASIC, power price and the mining guide pages write their own FAQPage JSON-LD in their generators.
+ if(FAQ[u])qa=FAQ[u](h);
  if(!qa)continue;qa=qa.filter(([q,a])=>a);if(!qa.length)continue;
  const ld={"@context":"https://schema.org","@type":"FAQPage","mainEntity":qa.map(([q,a])=>({"@type":"Question","name":q,"acceptedAnswer":{"@type":"Answer","text":a}}))};
  fs.writeFileSync(f,h.replace('</head>',`<script type="application/ld+json">${JSON.stringify(ld).replace(/</g,'\\u003c')}</script></head>`));}

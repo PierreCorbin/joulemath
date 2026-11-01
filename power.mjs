@@ -49,18 +49,16 @@ function perKw(p,hp,d=DEF){
 const $=(n,d=2)=>(n<0?'-$':'$')+Math.abs(n).toFixed(d);
 const cls=n=>n>=0?'pos':'neg';
 async function boc(){const r=await fetch('https://www.bankofcanada.ca/valet/observations/FXUSDCAD/json?recent=1');if(!r.ok)throw new Error('Bank of Canada '+r.status);const o=(await r.json()).observations[0];return {rate:+o.FXUSDCAD.v,date:o.d};}
-export async function buildPower({hp,eurPerUsd,when,dataLine,page}){
+export async function buildPower({hp,eurPerUsd,when,dataLine,page,updated}){
   const usdcad=await boc();
   const calcUrl=p=>`/?price=${p.toFixed(4).replace(/0+$/,'').replace(/\.$/,'')}&amp;kw=${DEF.kw}`;
   const FX={EUR:1/eurPerUsd,AED:1/3.6725,CAD:1/usdcad.rate};const usdOf=x=>x.usd??x.amt*FX[x.cur];
   const fxNote=`Currency conversion: AED at the official peg of 3.6725 per USD; CAD at ${usdcad.rate} per USD, the <a href="https://www.bankofcanada.ca/rates/exchange/daily-exchange-rates/">Bank of Canada</a> daily rate for ${usdcad.date}.`;
   const assume=`Per 1 kW of facility power, using the <a href="/">mine vs AI calculator</a>'s default inputs: Antminer S21 XP efficiency (${DEF.jth} J/TH) at $${DEF.thprice}/TH, ${DEF.poolfee}% pool fee, ${DEF.alife}-year ASIC life; H100 GPUs at ${DEF.gpuw} W, $${DEF.rate}/GPU-hour, ${DEF.util}% utilization, $${DEF.gprice.toLocaleString('en-US')} per GPU over ${DEF.glife} years; PUE ${DEF.pue}. Hardware and rental figures are sourced in the <a href="/methodology/#sources-mining">methodology</a>. Worked out at ${DEF.kw} kW and divided by ${DEF.kw}, because GPUs come in whole units. No taxes or hosting fees.`;
   fs.mkdirSync('dist/power-prices',{recursive:true});
-  const rows=[];
-  for(const c of PLACES){
-    const url=`/power-prices/${c.slug}/`;
-    const res=c.prices.map(x=>{const p=usdOf(x);return {...x,p,...perKw(p,hp)};});
-    rows.push({c,url,res});
+  const rows=PLACES.map(c=>({c,url:`/power-prices/${c.slug}/`,res:c.prices.map(x=>{const p=usdOf(x);return {...x,p,...perKw(p,hp)};})}));
+  const plain=h=>h.replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim();
+  for(const {c,url,res} of rows){
     const priceTxt=x=>x.cur?`${x.cur} ${x.amt.toFixed(4)}/kWh (about $${x.p.toFixed(4)})`:`$${x.p.toFixed(4)}/kWh`;
     const blocks=res.map(r=>`<h3>At ${priceTxt(r)}${res.length>1?': '+esc(r.label.split(', ').pop()):''}</h3>
 <table><thead><tr><th>Per kW per day</th><th>Mining (S21 XP)</th><th>GPU rent (H100)</th></tr></thead><tbody>
@@ -73,25 +71,41 @@ export async function buildPower({hp,eurPerUsd,when,dataLine,page}){
     const title=`${c.name} industrial electricity price and what 1 kW earns`;
     const seoTitle=`${c.short} industrial power price and what 1 kW earns`;
     const desc=`${c.name}: industrial power at ${res.map(r=>'$'+r.p.toFixed(3)).join(' to ')}/kWh (${c.src[0].name.split(',')[0]}). What 1 kW nets mining with an S21 XP at live hashprice vs renting out H100 GPUs.`;
-    const body=`<article class="prose post"><p class="eyebrow"><a href="/power-prices/">Power prices</a></p><h1>${esc(c.name)}: industrial power price and what 1 kW earns</h1>
-<p class="lead">${esc(c.intro)}</p>
-<h2>The price</h2><ul>${res.map(r=>`<li><b>${esc(r.label)}:</b> ${priceTxt(r)}</li>`).join('')}</ul>
+    const inName=c.slug==='uae'?'the UAE':c.short, atLead=res.length>1?'At the low end':'At that price';
+    const verdict=r=>r.m.net>=0?`mining keeps about ${$(r.m.net)} a day per kW after power and hardware`:`mining loses about ${$(-r.m.net)} a day per kW after power and hardware`;
+    const cmpRows=rows.map(o=>{const r=o.res[0];return `<tr${o.c===c?' class="hl"':''}><td>${o.c===c?`<b>${o.c.short}</b>`:`<a href="${o.url}">${o.c.short}</a>`}</td><td>$${r.p.toFixed(4)}</td><td class="${cls(r.m.net)}">${$(r.m.net)}</td><td class="${cls(r.g.net)}">${$(r.g.net)}</td></tr>`;}).join('');
+    const srcName=c.src[0].name.split(',')[0];
+    // FAQ answers: plain text from the sourced price above and the calculator math on this page. Same text in the page and in FAQPage JSON-LD.
+    const faq=[
+     ['faq-price',`What is the industrial electricity price in ${inName}?`,`${res.map(r=>`${r.label}: ${plain(priceTxt(r))}`).join('. ')}. Source: ${srcName}. ${plain(c.caveat)}`],
+     ['faq-mining',`Is ${c.slug==='uae'?'UAE':c.short} power cheap enough for Bitcoin mining?`,`At ${plain(priceTxt(r0))}, ${verdict(r0)}, using an Antminer S21 XP at today's hashprice of ${$(hp,4)} per TH/s per day and the calculator's default hardware cost and pool fee.`],
+     ['faq-gpu',`Does renting out GPUs beat Bitcoin mining in ${inName}?`,`At ${plain(priceTxt(r0))}, renting out H100 GPUs nets about ${$(r0.g.net)} a day per kW vs ${$(r0.m.net)} for mining, so ${w} comes out ahead on these assumptions. GPU rental needs data-center grade power, cooling and customers, so it is not open to every site.`]];
+    const body=`<article class="prose post"><p class="eyebrow"><a href="/power-prices/">Power prices</a> · ${updated}</p><h1>${esc(c.name)}: industrial power price and what 1 kW earns</h1>
+<p class="lead"><b>Short answer:</b> industrial power in ${esc(inName)} runs about <b>${res.map(r=>'$'+r.p.toFixed(3)).join(' to ')}/kWh</b> (<a href="${c.src[0].url}">${esc(srcName)}</a>). ${atLead} ${verdict(r0)}, vs <b>${$(r0.g.net)}</b> a day renting out H100 GPUs, so ${w} comes out ahead.</p>
+<p>${esc(c.intro)}</p>
+<h2 id="price">What is the industrial electricity price in ${esc(inName)}?</h2><ul>${res.map(r=>`<li><b>${esc(r.label)}:</b> ${priceTxt(r)}</li>`).join('')}</ul>
 <p>${c.caveat}</p>
-<h2>What 1 kW earns at this price</h2>
+<h2 id="per-kw">What does 1 kW earn in ${esc(inName)}, mining vs renting GPUs?</h2>
 <p>At the first price above, ${w} nets more per kW: <b>${$(r0.m.net)}</b> a day mining vs <b>${$(r0.g.net)}</b> renting GPUs, after power and hardware.</p>
 ${blocks}
 <p class="note">${assume} ${dataLine}${res.some(r=>r.cur)?' '+fxNote:''}</p>
-<h2>Sources</h2><ul>${c.src.map(s=>`<li><a href="${s.url}">${esc(s.name)}</a>: ${esc(s.note)}</li>`).join('')}</ul>
-<p>Other places: ${PLACES.filter(o=>o!==c).map(o=>`<a href="/power-prices/${o.slug}/">${o.short}</a>`).join(' · ')}, or see <a href="/power-prices/">all power prices</a>. Per-model numbers are on the <a href="/asic/">ASIC pages</a>.</p>
+<h2 id="compare">How does ${esc(inName)} compare with other mining places?</h2>
+<table><thead><tr><th>Place</th><th>Industrial $/kWh</th><th>Mining net / kW / day</th><th>GPU net / kW / day</th></tr></thead><tbody>${cmpRows}</tbody></table>
+<p class="note">Same assumptions for every place. Where a source gives a range, the low end is shown here.</p>
+<h2 id="faq">FAQ</h2>
+${faq.map(([id,q,a])=>`<h3 id="${id}">${esc(q)}</h3>\n<p>${esc(a)}</p>`).join('\n')}
+<h2 id="sources">Sources</h2><ul>${c.src.map(s=>`<li><a href="${s.url}">${esc(s.name)}</a>: ${esc(s.note)}</li>`).join('')}</ul>
+<p>Other places: ${PLACES.filter(o=>o!==c).map(o=>`<a href="/power-prices/${o.slug}/">${o.short}</a>`).join(' · ')}, or see <a href="/power-prices/">all power prices</a>. Per-model numbers are on the <a href="/asic/">ASIC pages</a>, and GPU rent per kW is on the <a href="/gpu/h100/">H100</a> and <a href="/gpu/rtx-4090/">RTX 4090</a> pages.</p>
 <!--signup--></article>`;
-    const ld={"@context":"https://schema.org","@type":"WebPage","name":title,"description":desc,"url":SITE+url,"breadcrumb":{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Power prices","item":SITE+'/power-prices/'},{"@type":"ListItem","position":2,"name":c.name,"item":SITE+url}]}};
+    const ld={"@context":"https://schema.org","@graph":[{"@type":"WebPage","name":title,"description":desc,"url":SITE+url,"breadcrumb":{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Power prices","item":SITE+'/power-prices/'},{"@type":"ListItem","position":2,"name":c.name,"item":SITE+url}]}},
+     {"@type":"FAQPage","mainEntity":faq.map(([,q,a])=>({"@type":"Question","name":q,"acceptedAnswer":{"@type":"Answer","text":a}}))}]};
     fs.mkdirSync('dist'+url,{recursive:true});fs.writeFileSync('dist'+url+'index.html',page({title:`${seoTitle} | joulemath`,desc,url,ld,body}));
   }
-  const body=`<div class="prose post"><p class="eyebrow">Power prices</p><h1>Industrial power prices for Bitcoin mining, by country</h1>
+  const body=`<div class="prose post"><p class="eyebrow">Power prices · ${updated}</p><h1>Industrial power prices for Bitcoin mining, by country</h1>
 <p class="lead">Industrial electricity prices from public sources for well-known mining places, and what 1 kW nets mining vs renting GPUs at each one.</p>
 <table><thead><tr><th>Place</th><th>Industrial $/kWh</th><th>Mining net / kW / day</th><th>GPU net / kW / day</th><th>Source</th></tr></thead><tbody>${rows.flatMap(({c,url,res})=>res.map((r,i)=>`<tr><td>${i?'':`<a href="${url}">${c.name}</a>`}</td><td>$${r.p.toFixed(4)}${res.length>1?` (${i?'high':'low'})`:''}</td><td class="${cls(r.m.net)}">${$(r.m.net)}</td><td class="${cls(r.g.net)}">${$(r.g.net)}</td><td>${i?'':`<a href="${c.src[0].url}">${esc(c.src[0].name.split(',')[0])}</a>`}</td></tr>`)).join('')}</tbody></table>
 <p class="note">${assume} ${dataLine} ${fxNote} Price dates and full sources are on each page.</p>
-<p>Got your own power price? Put it in the <a href="/">mine vs AI calculator</a> or the <a href="/mining-calculator/">ASIC calculator</a><a href="/gpu/">GPUs</a>.</p><!--signup--></div>`;
+<p>Got your own power price? Put it in the <a href="/">mine vs AI calculator</a> or the <a href="/mining-calculator/">ASIC calculator</a>. GPU rent per kW is on the <a href="/gpu/">GPU pages</a>.</p><!--signup--></div>`;
   fs.writeFileSync('dist/power-prices/index.html',page({title:'Industrial power prices for Bitcoin mining by country | joulemath',desc:'Sourced industrial electricity prices for Texas, Paraguay, Ethiopia, the UAE and Quebec, and what 1 kW nets mining vs renting GPUs at each.',url:'/power-prices/',ld:{"@context":"https://schema.org","@type":"CollectionPage","name":"Industrial power prices for Bitcoin mining by country","url":SITE+'/power-prices/'},body}));
   console.log('power: pages',PLACES.length);
 }

@@ -111,7 +111,8 @@ ${pbTbl}
 <h3 id="faq-vs-btc">Does a rented RTX 4090 beat Bitcoin mining per kW?</h3><p>On gross revenue per kW, yes: about ${$(salKw)} per kW per day on Salad versus about ${$(btcKw)} for a kW of S21 XP at the current hashprice. But the GPU kW costs far more hardware money and only earns when someone wants it.</p>
 <p>Related: <a href="/gpu/h100/">H100 rent price per kW</a> · <a href="/guides/rent-out-your-gpu/">rent out your GPU</a> · <a href="/">mine vs AI calculator</a> · <a href="/calculators/">all calculators</a> · <a href="/methodology/#sources-gpu">GPU defaults and sources</a> · <a href="/asic/">ASIC profitability by model</a>.</p>
 <p class="note">Prices change constantly; this page is updated by hand. Nothing here is financial advice.</p>
-<!--signup--></article>`;
+<!--signup--></article>
+<section class="cta"><div><h2>Renting out GPUs?</h2><p>Flash handles the books and payments for GPU and AI compute providers, including Vast.ai accounting.</p></div><a class="btn" rel="nofollow" href="/go/flash?c=gpu-rtx-4090&amp;p=cta&amp;op=ai_gpu">See Flash for compute providers <span aria-hidden="true">→</span></a></section>`;
   const ld={"@context":"https://schema.org","@type":"WebPage","name":title,"description":desc,"url":SITE+url,"datePublished":'2026-10-29',"dateModified":'2026-10-29',"breadcrumb":{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"GPUs","item":SITE+'/gpu/'},{"@type":"ListItem","position":2,"name":"NVIDIA RTX 4090","item":SITE+url}]}};
   fs.mkdirSync('dist'+url,{recursive:true});fs.writeFileSync('dist'+url+'index.html',a.page({title:`${title} | joulemath`,desc,url,ld,body}));
   return url;

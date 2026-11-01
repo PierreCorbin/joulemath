@@ -57,36 +57,58 @@ ${body}
   const slots=`<!-- affiliate slots: fill with a disclosed link to activate --><div class="aff-slot" data-slot="asic-seller"></div><div class="aff-slot" data-slot="hosting"></div>`;
   fs.mkdirSync('dist/asic',{recursive:true});
   const rows=[];
-  for(const m of MODELS){
-    const url=`/asic/${m.slug}/`, rev=m.th*hp, kwh=m.w/1000*24, be=rev/kwh;
+  const day=now.toLocaleDateString('en-US',{timeZone:'UTC',year:'numeric',month:'long',day:'numeric'});
+  const updated=`Last updated <time datetime="${iso}">${day}</time>`;
+  // Every model's revenue and break-even at the same live hashprice, so each page can show where it ranks.
+  const all=MODELS.map(m=>{const rev=m.th*hp,kwh=m.w/1000*24;return {m,url:`/asic/${m.slug}/`,rev,kwh,be:rev/kwh,p05:rev-kwh*0.05};});
+  const byEff=[...all].sort((a,b)=>a.m.jth-b.m.jth);
+  for(const r0 of all){
+    const {m,url,rev,kwh,be,p05}=r0;
     const tbl=PRICES.map(p=>{const c=kwh*p,pr=rev-c;return `<tr${p===0.05?' class="hl"':''}><td>$${p.toFixed(2)}</td><td>${$(rev)}</td><td>${$(c)}</td><td><b>${$(pr)}</b></td><td>${$(pr*30,0)}</td></tr>`;}).join('');
-    const p05=rev-kwh*0.05;
     rows.push({m,url,rev,be,p05});
-    const others=MODELS.filter(o=>o!==m).slice(0,4).map(o=>`<a href="/asic/${o.slug}/">${o.name}</a>`).join(' · ');
+    const rank=byEff.indexOf(r0)+1, n=MODELS.length;
+    const cmp=byEff.map(o=>`<tr${o===r0?' class="hl"':''}><td>${o===r0?`<b>${o.m.name}</b>`:`<a href="${o.url}">${o.m.name}</a>`}</td><td>${o.m.th}</td><td>${o.m.w.toLocaleString('en-US')}</td><td>${o.m.jth}</td><td>${$(o.rev)}</td><td>$${o.be.toFixed(3)}</td></tr>`).join('');
     const title=`${m.name} profitability at $0.05/kWh`;
     const desc=`${m.name} (${m.th} TH/s, ${m.w.toLocaleString('en-US')} W, ${m.jth} J/TH): daily revenue, power cost and profit at $0.03 to $0.10/kWh from live hashprice. Break-even about $${be.toFixed(3)}/kWh.`;
-    const body=`<article class="prose post"><p class="eyebrow"><a href="/asic/">ASIC profitability</a></p><h1>${esc(m.name)} profitability</h1>
-<p class="lead">${esc(m.intro)}</p>
+    // FAQ answers: plain text built only from the manufacturer spec above and the live hashprice. Same text goes on the page and into FAQPage JSON-LD.
+    const faq=[
+     ['faq-day',`How much does the ${m.name} make per day?`,`At a hashprice of ${$(hp,4)} per TH/s per day, one ${m.name} (${m.th} TH/s) grosses about ${$(rev)} a day before power. At $0.05/kWh it keeps about ${$(p05)} a day after the power bill, or about ${$(p05*30,0)} over 30 days.`],
+     ['faq-power',`How much electricity does the ${m.name} use?`,`${m.maker} lists it at ${m.w.toLocaleString('en-US')} W, so it uses about ${kwh.toFixed(1)} kWh a day running 24 hours. At $0.05/kWh that's about ${$(kwh*0.05)} a day of power.`],
+     ['faq-breakeven',`What power price does the ${m.name} need to be profitable?`,`Below about $${be.toFixed(3)}/kWh at today's hashprice. That's its daily revenue (${$(rev)}) divided by its daily energy use (${kwh.toFixed(1)} kWh). Pool fees aren't included, so if your pool charges one the real line is a bit lower.`],
+     ['faq-rank',`Is the ${m.name} efficient compared with other ASICs?`,`At ${m.jth} J/TH it ranks ${rank} of ${n} on efficiency among the Antminer and WhatsMiner models we track (lower J/TH is better). The most efficient here is the ${byEff[0].m.name} at ${byEff[0].m.jth} J/TH.`],
+     ['faq-left-out','What do these numbers leave out?','Pool fees, downtime, hosting markups and the price of the machine itself. They also hold difficulty and the BTC price where they are today, and both move. Use the ASIC calculator for your own pool fee and power price.']];
+    const body=`<article class="prose post"><p class="eyebrow"><a href="/asic/">ASIC profitability</a> · ${updated}</p><h1>${esc(m.name)} profitability</h1>
+<p class="lead"><b>Short answer:</b> one ${esc(m.name)} grosses about <b>${$(rev)}</b> a day at today's hashprice, keeps about <b>${$(p05)}</b> a day at $0.05/kWh, and stops making money above about <b>$${be.toFixed(3)}/kWh</b>. Specs from the <a href="${m.url}">${m.src}</a>, hashprice from the <a href="https://mempool.space/docs/api">mempool.space API</a>.</p>
+<p>${esc(m.intro)}</p>
 <ul><li><b>Hashrate:</b> ${m.th} TH/s</li><li><b>Power:</b> ${m.w.toLocaleString('en-US')} W</li><li><b>Efficiency:</b> ${m.jth} J/TH</li><li><b>Source:</b> <a href="${m.url}">${m.src}</a>, accessed October 21, 2026.${m.maker==='MicroBT'?' The shop lists hashrate and J/TH; the wattage is our arithmetic (TH/s × J/TH).':''}</li></ul>
-<h2>Daily profit by power price</h2>
+<h2 id="daily-profit">How much does the ${esc(m.name)} make a day at different power prices?</h2>
 <p>At the hashprice below, one ${esc(m.name)} grosses about <b>${$(rev)}</b> a day. At $0.05/kWh it nets about <b>${$(p05)}</b> a day, and it breaks even at about <b>$${be.toFixed(3)}/kWh</b>.</p>
 <table><thead><tr><th>Power price</th><th>Revenue / day</th><th>Power / day</th><th>Profit / day</th><th>Profit / 30 days</th></tr></thead><tbody>${tbl}</tbody></table>
 <p class="note">${dataLine} Revenue is gross: no pool fee, downtime, hosting markup or hardware cost. Assumes the machine runs at spec 24 hours a day (our assumption). Figures update when the site is rebuilt.</p>
+<h2 id="break-even">What is the ${esc(m.name)} break-even power price?</h2>
+<p>Break-even is daily revenue divided by daily energy use. The ${esc(m.name)} burns ${m.w.toLocaleString('en-US')} W × 24 h = about ${kwh.toFixed(1)} kWh a day, and grosses about ${$(rev)}, so it breaks even at about <b>$${be.toFixed(3)}/kWh</b>. Pay more than that for power and the bill is bigger than the revenue.</p>
+<h2 id="compare">How does the ${esc(m.name)} compare with other ASICs?</h2>
+<p>Same live hashprice for every machine, sorted by efficiency (lowest J/TH first). The ${esc(m.name)} ranks <b>${rank} of ${n}</b>.</p>
+<table><thead><tr><th>Model</th><th>TH/s</th><th>W</th><th>J/TH</th><th>Revenue / day</th><th>Break-even $/kWh</th></tr></thead><tbody>${cmp}</tbody></table>
+<p class="note">Specs from each manufacturer, linked on each model page. Gross revenue, no pool fee or hardware cost.</p>
 ${slots}
+<h2 id="faq">FAQ</h2>
+${faq.map(([id,q,a])=>`<h3 id="${id}">${esc(q)}</h3>\n<p>${esc(a)}</p>`).join('\n')}
 <div class="callout"><b>Use your own numbers or paste your payout address.</b> Pool fee, live price and your exact power cost are all inputs in the ASIC calculator, or paste your Bitcoin mining payout address in <a href="/fleet/">Fleet Check</a> to reconcile your actual 90-day on-chain payouts.<br><a class="btn" href="/mining-calculator/">Open the ASIC calculator <span aria-hidden="true">→</span></a> <a class="btn ghost" href="/fleet/" style="margin-left:.4rem">Benchmark your payout address <span aria-hidden="true">→</span></a></div>
-<p>Wondering whether the same kilowatts would earn more renting GPUs? Try the <a href="/">mine vs AI per-kW calculator</a>. Other models: ${others}, or see <a href="/asic/">all ASICs</a>.</p>
+<p>Wondering whether the same kilowatts would earn more renting GPUs? Try the <a href="/">mine vs AI per-kW calculator</a>, or see what an <a href="/gpu/h100/">H100</a> or <a href="/gpu/rtx-4090/">RTX 4090</a> earns per kW. What power costs in big mining places: <a href="/power-prices/">industrial power prices</a>. Learn the math: <a href="/guides/is-bitcoin-mining-profitable-2026/">is Bitcoin mining profitable in 2026?</a> Or see <a href="/asic/">all ASICs</a>.</p>
 <!--signup--></article>
 <section class="cta"><div><h2>Already mining?</h2><p>Track your real per-site numbers (uptime, power cost, curtailment, payouts) instead of estimates.</p></div><a class="btn" rel="nofollow" href="/go/flash?c=asic-model&amp;p=cta">See Flash for miners <span aria-hidden="true">→</span></a></section>`;
-    const ld={"@context":"https://schema.org","@type":"WebPage","name":title,"description":desc,"url":SITE+url,"dateModified":iso,"breadcrumb":{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ASIC profitability","item":SITE+'/asic/'},{"@type":"ListItem","position":2,"name":m.name,"item":SITE+url}]}};
+    const ld={"@context":"https://schema.org","@graph":[{"@type":"WebPage","name":title,"description":desc,"url":SITE+url,"dateModified":iso,"breadcrumb":{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ASIC profitability","item":SITE+'/asic/'},{"@type":"ListItem","position":2,"name":m.name,"item":SITE+url}]}},
+     {"@type":"FAQPage","mainEntity":faq.map(([,q,a])=>({"@type":"Question","name":q,"acceptedAnswer":{"@type":"Answer","text":a}}))}]};
     fs.mkdirSync('dist'+url,{recursive:true});fs.writeFileSync('dist'+url+'index.html',page({title:`${title} | joulemath`,desc,url,ld,body}));
   }
   rows.sort((a,b)=>b.be-a.be);
-  const body=`<div class="prose post"><p class="eyebrow">ASIC profitability</p><h1>Bitcoin ASIC profitability by model</h1>
+  const body=`<div class="prose post"><p class="eyebrow">ASIC profitability · ${updated}</p><h1>Bitcoin ASIC profitability by model</h1>
 <p class="lead">Daily revenue, profit at $0.05/kWh and break-even power price for popular Antminer and WhatsMiner models, using one live hashprice for all of them so they compare fairly.</p>
 <table class="sortable"><caption class="note">Tap a column header to sort.</caption><thead><tr><th>Model</th><th>TH/s</th><th>W</th><th>J/TH</th><th>Revenue / day</th><th>Profit / day at $0.05</th><th aria-sort="descending">Break-even $/kWh</th></tr></thead><tbody>${rows.map(r=>`<tr><td><a href="${r.url}">${r.m.name}</a></td><td data-v="${r.m.th}">${r.m.th}</td><td data-v="${r.m.w}">${r.m.w.toLocaleString('en-US')}</td><td data-v="${r.m.jth}">${r.m.jth}</td><td data-v="${r.rev}">${$(r.rev)}</td><td data-v="${r.p05}">${$(r.p05)}</td><td data-v="${r.be}">$${r.be.toFixed(3)}</td></tr>`).join('')}</tbody></table><script src="/js/sort.js" defer></script>
 <p class="note">${dataLine} Specs from each manufacturer, linked on each model page. Gross revenue, no pool fee or hardware cost.</p>
-<p>For your own power price and pool fee, use the <a href="/mining-calculator/">ASIC calculator</a><a href="/gpu/">GPUs</a>, or paste your Bitcoin payout address into <a href="/fleet/">Fleet Check</a> to benchmark your last 90 days of on-chain payouts against AI GPU rigs.</p><!--signup--></div>`;
+<p>For your own power price and pool fee, use the <a href="/mining-calculator/">ASIC calculator</a>, or paste your Bitcoin payout address into <a href="/fleet/">Fleet Check</a> to benchmark your last 90 days of on-chain payouts against AI GPU rigs. To see what the same kilowatts earn renting GPUs, try the <a href="/gpu/">GPU pages</a>. Power costs by country are on the <a href="/power-prices/">power prices</a> page.</p><!--signup--></div>`;
   fs.writeFileSync('dist/asic/index.html',page({title:'Bitcoin ASIC profitability by model, live | joulemath',desc:'Antminer S21 XP, S21 Pro, S21, S19 XP, S19k Pro and WhatsMiner M60S, M66S, M63S, M70S: daily profit and break-even power price from live hashprice.',url:'/asic/',ld:{"@context":"https://schema.org","@type":"CollectionPage","name":"Bitcoin ASIC profitability by model","url":SITE+'/asic/'},body}));
   console.log('asic: hashprice',hp.toFixed(4),'pages',MODELS.length);
-  return {hp,btc,eurPerUsd:pr.EUR/pr.USD,when,iso,dataLine,page};
+  return {hp,btc,D,reward,eurPerUsd:pr.EUR/pr.USD,when,iso,day,updated,dataLine,page,models:all};
 }
