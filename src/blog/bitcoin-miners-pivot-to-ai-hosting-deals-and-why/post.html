@@ -1,9 +1,10 @@
-<!--meta {"title": "Bitcoin miners pivoting to AI: the deals, the money per kW, and why", "description": "TeraWulf, Hut 8, Core Scientific, Cipher and IREN have signed billions in AI hosting deals. Here is who signed what, what it works out to per kW, and why power is the reason.", "date": "2026-10-21", "seo_title": "Bitcoin miners pivot to AI: deals and money per kW"} -->
-<p class="lead">The biggest listed Bitcoin miners are turning into AI landlords. Here are the deals they announced, what each one works out to per kilowatt, and why miners ended up holding exactly what AI companies are short of.</p>
+<!--meta {"title": "Bitcoin miners pivoting to AI: the deals, the money per kW, and why", "description": "TeraWulf, Hut 8, Core Scientific, Cipher and IREN have signed billions in AI hosting deals. Here is who signed what, what it works out to per kW, and why power is the reason.", "date": "2026-10-21", "updated": "2026-11-01", "seo_title": "Bitcoin miners pivot to AI: deals and money per kW"} -->
+<p class="lead"><b>Short answer:</b> five listed Bitcoin miners (TeraWulf, Hut 8, Core Scientific, Cipher and IREN) have announced AI deals with headline values of $5.5 billion to $19 billion each, about $58 billion added together. The four leases work out to roughly <b>$4.65 to $6.49 per IT kW per day</b>, vs about <b>$2.82 per kW per day</b> gross from mining with an Antminer S21 XP on October 21, 2026. The reason is power: miners already hold the big grid connections AI data centers need. Every figure is linked to the company release or filing below.</p>
+<p>The biggest listed Bitcoin miners are turning into AI landlords. Here are the deals they announced, what each one works out to per kilowatt, and why miners ended up holding exactly what AI companies are short of.</p>
 
 <p>Every deal figure below comes from the company's own press release or SEC filing, linked inline and accessed October 21, 2026. The per-kW numbers are our arithmetic on those figures, and we show how we got them.</p>
 
-<h2>Who signed what</h2>
+<h2 id="deals">Which Bitcoin miners signed AI hosting deals?</h2>
 <ul>
 <li><b>TeraWulf and Anthropic.</b> On July 6, 2026 TeraWulf announced a 20-year lease with Anthropic for about 401 MW of critical IT load at its Justified Data campus in Hawesville, Kentucky. It expects about $19 billion of contracted lease revenue over the initial term, with capacity coming online from the second half of 2027 and the full 401 MW by early 2028 (<a href="https://investors.terawulf.com/news-events/press-releases/detail/142/terawulf-announces-anthropic-lease-at-justified-data-campus-and-sale-of-majority-interest-in-abernathy-joint-venture-to-fluidstack">TeraWulf press release</a>; <a href="https://investors.terawulf.com/sec-filings/all-sec-filings/content/0001104659-26-080583/0001104659-26-080583.pdf">8-K</a>).</li>
 <li><b>Hut 8 and an unnamed tenant.</b> On July 20, 2026 Hut 8 signed a second 15-year, $9.8 billion lease for 352 MW of IT capacity at its Beacon Point campus in Nueces County, Texas. The tenant is described only as "high-investment-grade" and is the same one that signed Phase 1, so it now holds 704 MW there. Hut 8 says its whole AI portfolio is 949 MW of contracted IT capacity and $26.6 billion of base-term contract value (<a href="https://www.prnewswire.com/news-releases/hut-8-fully-commercializes-1-gw-beacon-point-ai-data-center-campus-with-second-352-mw-it-lease-bringing-campus-level-base-term-contract-value-to-19-6-billion-302829514.html">Hut 8 press release</a>).</li>
@@ -12,7 +13,7 @@
 <li><b>IREN and Microsoft.</b> IREN took a different route. It is not just leasing space. It signed a five-year GPU cloud contract with Microsoft worth about $9.7 billion, running NVIDIA GB300s in about 200 MW of critical IT load at Childress, Texas, and agreed to buy the GPUs and equipment from Dell for about $5.8 billion (<a href="https://iren.gcs-web.com/news-releases/news-release-details/iren-secures-97bn-ai-cloud-contract-microsoft">IREN press release</a>).</li>
 </ul>
 
-<h2>What the deals pay per kW</h2>
+<h2 id="per-kw">How much do the AI deals pay per kW?</h2>
 <p>Here is a simple way to compare them: contract value divided by years, divided by IT kilowatts. It is a flat average. It ignores rent escalators (Hut 8 cites 3% a year, Cipher's filing also shows 3%), ramp-up time and renewal options, so treat it as a rough yardstick, not what any company books in a given month.</p>
 <table>
 <thead><tr><th>Deal</th><th>Value / term / IT MW</th><th>Per IT kW per month</th><th>Per IT kW per day</th></tr></thead>
@@ -25,7 +26,7 @@
 </tbody></table>
 <p>IREN's number is not comparable to the others. It sells GPU compute, so its revenue has to pay for the GPUs it owns. The leases are mostly powered shells where the tenant brings the chips.</p>
 
-<h2>Compare that with mining the same kW</h2>
+<h2 id="vs-mining">Does AI hosting pay more than mining the same kW?</h2>
 <p>From the <a href="https://mempool.space/docs/api">mempool.space API</a> at about 20:13 CEST on October 21, 2026: BTC at $84,655, difficulty at 140.58 T, and an average of 3.1409 BTC per block across the last 144 blocks. That gives a hashprice of about <b>$0.0380 per TH/s per day</b> (formula in our <a href="/methodology/">methodology</a>).</p>
 <p>A kilowatt of Antminer S21 XP at Bitmain's listed 13.5 J/TH (<a href="https://support.bitmain.com/hc/en-us/articles/35383015643673-S21-XP-Specifications">spec sheet</a>) is about 74 TH/s, so it grosses about <b>$2.82 per kW per day</b> before pool fees and before paying for the power. The lease numbers above are $4.65 to $6.49 per IT kW per day.</p>
 <p>That is not apples to apples, and it is worth being honest about why:</p>
@@ -36,7 +37,7 @@
 </ul>
 <p>So the pitch is not "AI pays 2x". It is "AI pays steady, long-dated rent from big-name tenants, if you can build to their spec".</p>
 
-<h2>Why miners, of all people</h2>
+<h2 id="why">Why are Bitcoin miners the ones getting AI deals?</h2>
 <p>The short answer is power. Mining sites were picked for cheap, large grid connections, and that is the scarce part of an AI data center. The companies say it themselves:</p>
 <ul>
 <li>Hut 8 calls its approach "power-first" and notes Beacon Point was first underwritten "on a speed-to-power thesis" for its Bitcoin mining affiliate before it was leased to an AI tenant. The site's full 1,000 MW is secured under an interconnection agreement with AEP Texas (<a href="https://www.prnewswire.com/news-releases/hut-8-fully-commercializes-1-gw-beacon-point-ai-data-center-campus-with-second-352-mw-it-lease-bringing-campus-level-base-term-contract-value-to-19-6-billion-302829514.html">Hut 8</a>).</li>
@@ -45,11 +46,32 @@
 </ul>
 <p>The ASICs themselves are not part of the deal. They cannot run AI workloads. What gets sold is the land, the substation, the interconnect and the team that knows how to energize a site fast.</p>
 
-<h2>What to watch</h2>
+<h2 id="watch">What should you watch next?</h2>
 <ul>
 <li><b>Delivery dates.</b> Most of this capacity is not live yet. TeraWulf's Kentucky campus ramps through early 2028, and Hut 8's Phase 2 first data hall is expected in Q2 2028.</li>
 <li><b>Unnamed tenants.</b> Hut 8's Beacon Point tenant and Core Scientific's "Neocloud" are not named in the filings we read.</li>
 <li><b>What happens to the hashrate.</b> Every MW that moves to AI is a MW that stops mining. If enough of it moves, difficulty growth slows, which helps whoever is still mining.</li>
+</ul>
+
+<h2 id="faq">FAQ</h2>
+<h3 id="faq-who">Which Bitcoin miners have AI hosting deals?</h3>
+<p>TeraWulf (Anthropic, about 401 MW, about $19 billion over 20 years), Hut 8 (an unnamed investment-grade tenant, 352 MW, $9.8 billion over 15 years for Phase 2), Core Scientific (AMD and a "Neocloud", about 530 MW, more than $14 billion over 15 years), Cipher (AWS, 216 MW of IT load, about $5.5 billion over 15 years) and IREN (Microsoft, a five-year GPU cloud contract worth about $9.7 billion). Sources are linked in the deal list above.</p>
+<h3 id="faq-per-kw">How much does an AI hosting lease pay per kW?</h3>
+<p>As a flat average of contract value over the term and IT capacity, the four leases work out to about $141 to $197 per IT kW per month, or $4.65 to $6.49 per IT kW per day. That ignores rent escalators, ramp-up and renewals, so it is a rough yardstick.</p>
+<h3 id="faq-vs-mining">Does AI hosting earn more than Bitcoin mining?</h3>
+<p>Per kW, the lease rent is higher than the about $2.82 per kW per day an Antminer S21 XP grossed at the October 21, 2026 hashprice, and rent is mostly net of power while mining still pays the power bill. But leasing needs a real data center: IREN estimates $14 to 16 million of capex per MW of IT load for its Horizon buildings.</p>
+<h3 id="faq-asics">Can Bitcoin mining ASICs run AI workloads?</h3>
+<p>No. ASICs only do Bitcoin's hashing. What miners bring to AI deals is the land, the substation, the grid interconnect and a team that can energize a site fast.</p>
+<h3 id="faq-when">When do these AI data centers come online?</h3>
+<p>Mostly not yet. TeraWulf's Kentucky capacity comes online from the second half of 2027 with the full 401 MW by early 2028, Hut 8's Phase 2 first data hall is expected in Q2 2028, and Cipher's AWS rent was targeted to start in October 2026.</p>
+
+<h2 id="related">Related numbers on joulemath</h2>
+<ul>
+<li><a href="/blog/hashprice-vs-gpu-rent-what-1-kw-earns-this-week/">Hashprice vs GPU rent: what 1 kW earns</a></li>
+<li><a href="/gpu/h100/">H100 rent price and profit per kW</a>, and <a href="/gpu/">all AI GPUs</a></li>
+<li><a href="/asic/antminer-s21-xp/">Antminer S21 XP profitability at today's hashprice</a>, or <a href="/asic/">compare all ASICs</a></li>
+<li><a href="/power-prices/united-states-texas/">Texas (ERCOT) industrial power price</a> and <a href="/power-prices/">other mining places</a></li>
+<li><a href="/guides/is-bitcoin-mining-profitable-2026/">Is Bitcoin mining profitable in 2026?</a></li>
 </ul>
 
 <div class="callout"><b>Run your own site's numbers.</b> Plug in your power price and ASIC efficiency, and compare mining with GPU rental per kW, using live hashprice.<br><a class="btn" href="/">Open the per-kW calculator <span aria-hidden="true">→</span></a></div>

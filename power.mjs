@@ -95,7 +95,7 @@ ${blocks}
 <h2 id="faq">FAQ</h2>
 ${faq.map(([id,q,a])=>`<h3 id="${id}">${esc(q)}</h3>\n<p>${esc(a)}</p>`).join('\n')}
 <h2 id="sources">Sources</h2><ul>${c.src.map(s=>`<li><a href="${s.url}">${esc(s.name)}</a>: ${esc(s.note)}</li>`).join('')}</ul>
-<p>Other places: ${PLACES.filter(o=>o!==c).map(o=>`<a href="/power-prices/${o.slug}/">${o.short}</a>`).join(' · ')}, or see <a href="/power-prices/">all power prices</a>. Per-model numbers are on the <a href="/asic/">ASIC pages</a>, and GPU rent per kW is on the <a href="/gpu/h100/">H100</a> and <a href="/gpu/rtx-4090/">RTX 4090</a> pages.</p>
+<p>Other places: ${PLACES.filter(o=>o!==c).map(o=>`<a href="/power-prices/${o.slug}/">${o.short}</a>`).join(' · ')}, or see <a href="/power-prices/">all power prices</a>. Per-model numbers are on the <a href="/asic/">ASIC pages</a>, and GPU rent per kW is on the <a href="/gpu/h100/">H100</a> and <a href="/gpu/rtx-4090/">RTX 4090</a> pages. What big miners get for leasing their sites to AI instead: <a href="/blog/bitcoin-miners-pivot-to-ai-hosting-deals-and-why/">the AI hosting deals, per kW</a>.</p>
 <!--signup--></article>`;
     const ld={"@context":"https://schema.org","@graph":[{"@type":"WebPage","name":title,"description":desc,"url":SITE+url,"breadcrumb":{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Power prices","item":SITE+'/power-prices/'},{"@type":"ListItem","position":2,"name":c.name,"item":SITE+url}]}},
      {"@type":"FAQPage","mainEntity":faq.map(([,q,a])=>({"@type":"Question","name":q,"acceptedAnswer":{"@type":"Answer","text":a}}))}]};

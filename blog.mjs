@@ -28,7 +28,7 @@ ${scripts}<script src="/js/theme.js" defer></script>
     const raw=fs.readFileSync(f,'utf8');const m=raw.match(/^<!--meta\s*([\s\S]*?)-->/);if(!m)throw new Error('no meta in '+f);
     const meta=JSON.parse(m[1]);const html=raw.slice(m[0].length).trim();const url=`/blog/${slug}/`;posts.push({...meta,slug,url});
     const ld={"@context":"https://schema.org","@type":"Article","headline":meta.title,"description":meta.description,"datePublished":meta.date,"dateModified":meta.updated||meta.date,"author":{"@type":"Organization","name":"joulemath","url":SITE+'/'},"publisher":{"@type":"Organization","name":"joulemath","url":SITE+'/'},"mainEntityOfPage":SITE+url};
-    const body=`<article class="prose post"><p class="eyebrow"><a href="/blog/">Blog</a> · <time datetime="${meta.date}">${fmtDate(meta.date)}</time></p><h1>${esc(meta.title)}</h1>
+    const body=`<article class="prose post"><p class="eyebrow"><a href="/blog/">Blog</a> · <time datetime="${meta.date}">${fmtDate(meta.date)}</time>${meta.updated&&meta.updated!==meta.date?` · Last updated <time datetime="${meta.updated}">${fmtDate(meta.updated)}</time>`:''}</p><h1>${esc(meta.title)}</h1>
 ${html}</article>`;
     fs.writeFileSync(`${dir}/${slug}/index.html`,page({title:`${meta.seo_title||meta.title} | joulemath`,desc:meta.description,url,type:'article',ld,body}).replace('<meta property="og:type" content="article">',`<meta property="og:type" content="article"><meta property="article:published_time" content="${meta.date}">`));
     fs.rmSync(f);}
@@ -36,7 +36,7 @@ ${html}</article>`;
   const list=posts.map(p=>`<li class="post-item"><time datetime="${p.date}">${fmtDate(p.date)}</time><h2><a href="${p.url}">${esc(p.title)}</a></h2><p>${esc(p.description)}</p></li>`).join('\n');
   fs.writeFileSync(`${dir}/index.html`,page({title:'Blog: mining and AI GPU economics, sourced | joulemath',desc:'Notes on what a kilowatt earns: Bitcoin mining, GPU rental prices, miners moving into AI, and the sourced numbers behind them.',url:'/blog/',type:'website',
     ld:{"@context":"https://schema.org","@type":"Blog","name":"joulemath blog","url":SITE+'/blog/'},
-    body:`<div class="hero"><div class="eyebrow">Blog</div><h1>Notes on what a kilowatt earns</h1><p class="lead">Short write-ups using live data and public pricing pages, with every figure linked to its source. <a href="/blog/rss.xml">RSS feed</a>.</p></div><ul class="post-list">${list}</ul>`}));
+    body:`<div class="hero"><div class="eyebrow">Blog</div><h1>Notes on what a kilowatt earns</h1><p class="lead">Short write-ups using live data and public pricing pages, with every figure linked to its source. <a href="/blog/rss.xml" rel="alternate" type="application/rss+xml">RSS feed</a>.</p></div><ul class="post-list">${list}</ul>`}));
   const rss=`<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>joulemath blog</title><link>${SITE}/blog/</link><description>Notes on what a kilowatt earns.</description><language>en</language><atom:link href="${SITE}/blog/rss.xml" rel="self" type="application/rss+xml"/>
 ${posts.map(p=>`<item><title>${esc(p.title)}</title><link>${SITE}${p.url}</link><guid>${SITE}${p.url}</guid><pubDate>${new Date(p.date+'T12:00:00Z').toUTCString()}</pubDate><description>${esc(p.description)}</description></item>`).join('\n')}
