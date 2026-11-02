@@ -92,3 +92,5 @@ GPU first (main push):
 ASIC:
 - [ ] Breakeven electricity by miner table; S19j Pro page; S21 XP Hyd page
 - [ ] Hashprice today live page; ASIC payback/ROI calculator; used ASIC payback; difficulty sensitivity guide; post-2028-halving toggle
+
+- [ ] Switch Cloudflare Web Analytics from lite to full mode (approved in week 2 plan; EU visits likely undercounted). Do on Wed site-improve.
