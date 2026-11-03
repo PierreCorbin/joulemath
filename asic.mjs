@@ -258,6 +258,25 @@ ${cq.map(([id,q,a])=>`<h3 id="${id}">${esc(q)}</h3>\n<p>${esc(a)}</p>`).join('\n
    const snap=`<b>Today:</b> hashprice is ${$(hp,4)} per TH/s per day. An ${esc(xp.m.name)} grosses about ${$(xp.rev)} a day, keeps about ${$(xp.p05)} at $0.05/kWh and breaks even at about $${xp.be.toFixed(3)}/kWh. An ${esc(ex.m.name)} breaks even at about $${ex.be.toFixed(3)}/kWh.`;
    for(const [k,v] of [['<!--calc-ld-->',`<script type="application/ld+json">${JSON.stringify(ld)}</script>`],['<!--calc-date-->',updated],['<!--calc-snap-->',snap],['<!--calc-models-->',opts],['<!--calc-body-->',body]]){if(!h.includes(k))throw new Error('calc marker '+k);h=h.replace(k,v);}
    fs.writeFileSync(f,h);}
+  // /methodology/: short answer, live worked example and TechArticle JSON-LD.
+  {const f='dist/methodology/index.html';let h=fs.readFileSync(f,'utf8');
+   const ex=all.find(a=>a.m.slug==='antminer-s21-xp'),btcTh=86400e12/(D*2**32)*reward,P=0.06,fee=ex.rev*0.02,cost=ex.kwh*P,net=ex.rev-fee-cost;
+   const ans=`<b>Short answer:</b> hashprice = 86,400 × 10<sup>12</sup> ÷ (difficulty × 2<sup>32</sup>) × block reward × BTC price, which gave <b>${$(hp,4)} per TH/s per day</b> on ${day}. A miner's daily profit is its TH/s × hashprice, less the pool fee, less watts ÷ 1000 × 24 × your power price. Break-even power price is revenue ÷ kWh a day.`;
+   const exH=`<h2 id="worked-example">Worked example: what does an ${esc(ex.m.name)} make at $0.06/kWh?</h2>
+<p>Live network numbers from ${day}: difficulty ${(D/1e12).toFixed(2)} T, ${reward.toFixed(4)} BTC average reward over the last 144 blocks, BTC at $${btc.toLocaleString('en-US')} (<a href="https://mempool.space/docs/api">mempool.space API</a>). Machine: ${esc(ex.m.name)}, ${ex.m.th} TH/s at ${ex.m.w.toLocaleString('en-US')} W (<a href="${ex.url}">specs and source</a>).</p>
+<table><thead><tr><th>Step</th><th>Math</th><th>Result</th></tr></thead><tbody>
+<tr><td>BTC per TH/s per day</td><td>86,400 × 10<sup>12</sup> ÷ (${(D/1e12).toFixed(2)} T × 2<sup>32</sup>) × ${reward.toFixed(4)}</td><td>${(btcTh*1e8).toFixed(1)} sats</td></tr>
+<tr><td>Hashprice</td><td>${(btcTh*1e8).toFixed(1)} sats × $${btc.toLocaleString('en-US')}</td><td>${$(hp,4)} / TH/s / day</td></tr>
+<tr><td>Revenue</td><td>${ex.m.th} TH/s × ${$(hp,4)}</td><td>${$(ex.rev)} / day</td></tr>
+<tr><td>Pool fee (2%)</td><td>${$(ex.rev)} × 0.02</td><td>−${$(fee)}</td></tr>
+<tr><td>Power</td><td>${ex.m.w.toLocaleString('en-US')} W ÷ 1000 × 24 h × $0.06</td><td>−${$(cost)}</td></tr>
+<tr><td><b>Profit</b></td><td></td><td><b>${$(net)} / day</b></td></tr>
+<tr><td>Break-even power price</td><td>${$(ex.rev-fee)} ÷ ${ex.kwh.toFixed(1)} kWh</td><td>$${((ex.rev-fee)/ex.kwh).toFixed(3)} / kWh</td></tr></tbody></table>
+<p>That is before the cost of the machine. Try other models and prices in the <a href="/mining-calculator/">ASIC miner profitability calculator</a>, see every model side by side on the <a href="/asic/">ASIC profitability page</a>, or check what power costs in mining countries on the <a href="/power-prices/">industrial power prices</a> page. This example is rebuilt daily.</p>`;
+   const ld={"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"How to calculate Bitcoin mining profitability, hashprice and GPU rent per kW","url":SITE+'/methodology/',"dateModified":iso,"author":{"@type":"Organization","name":"joulemath","url":SITE+'/'},"publisher":{"@type":"Organization","name":"joulemath","url":SITE+'/'},"about":["Hashprice","Bitcoin mining profitability","GPU rental"]},
+    {"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":SITE+'/'},{"@type":"ListItem","position":2,"name":"Methodology","item":SITE+'/methodology/'}]}]};
+   for(const [k,v] of [['<!--meth-ld-->',`<script type="application/ld+json">${JSON.stringify(ld)}</script>`],['<!--meth-date-->',updated],['<!--meth-answer-->',ans],['<!--meth-example-->',exH]]){if(!h.includes(k))throw new Error('meth marker '+k);h=h.replace(k,v);}
+   fs.writeFileSync(f,h);}
   console.log('asic: hashprice',hp.toFixed(4),'pages',MODELS.length);
   return {hp,btc,D,reward,eurPerUsd:pr.EUR/pr.USD,when,iso,day,updated,dataLine,page,models:all};
 }
