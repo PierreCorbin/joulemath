@@ -22,7 +22,7 @@ for(const u of urls){const f='dist'+u+'index.html';let h=fs.readFileSync(f,'utf8
 // Sitemap lastmod = last git commit touching the page's source (its src dir or file, plus the generator that renders it), not the build date.
 import {execFileSync} from 'child_process';
 const gitDate=fs2=>{try{return execFileSync('git',['log','-1','--format=%cs','--',...fs2],{encoding:'utf8'}).trim();}catch(e){return '';}};
-const srcFor=u=>{const f=[u==='/'?'src/index.html':'src'+u];if(u.startsWith('/blog/'))f.push('blog.mjs');if(u.startsWith('/asic/'))f.push('asic.mjs');if(u.startsWith('/power-prices/'))f.push('power.mjs');if(u.startsWith('/gpu/'))f.push('gpu.mjs');if(u==='/gpu/rtx-4090/')f.push('gpu4090.mjs');if(u==='/guides/is-bitcoin-mining-profitable-2026/')f.push('guides.mjs');return f.filter(x=>fs.existsSync(x));};
+const srcFor=u=>{const f=[u==='/'?'src/index.html':'src'+u];if(u.startsWith('/blog/'))f.push('blog.mjs');if(u.startsWith('/asic/')||u==='/mining-calculator/')f.push('asic.mjs');if(u.startsWith('/power-prices/'))f.push('power.mjs');if(u.startsWith('/gpu/'))f.push('gpu.mjs');if(u==='/gpu/rtx-4090/')f.push('gpu4090.mjs');if(u==='/guides/is-bitcoin-mining-profitable-2026/')f.push('guides.mjs');return f.filter(x=>fs.existsSync(x));};
 const lastmod=u=>{const f=srcFor(u);return (f.length&&gitDate(f))||new Date().toISOString().slice(0,10);};
 // FAQPage JSON-LD built only from answers already on the page (text copied from the rendered HTML, never written here).
 const txt=h=>h.replace(/<\/(li|p|h[1-6])>/g,' ').replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim().replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"');

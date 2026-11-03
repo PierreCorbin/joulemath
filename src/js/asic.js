@@ -18,4 +18,9 @@ function calc(){const o=document.getElementById('out');if(!L||!L.btcPerTHDay||!L
  <tr><td><b>Profit</b></td><td class="${cls(prof)}"><b>${money(s,prof)}</b></td><td class="${cls(prof)}"><b>${money(s,prof*30)}</b></td></tr></table>`;}
 F.addEventListener('input',e=>{if(e.target.name==='preset'){if(e.target.value){const[a,b]=e.target.value.split(',');th.value=a;w.value=b;}}
  else if(e.target.id==='th'||e.target.id==='w'){document.getElementById('preset').checked=true;}calc();});
+const M=document.getElementById('model');
+function load(slug,scroll){if(!M)return;const o=[...M.options].find(x=>x.dataset.slug===slug);if(!o)return;M.value=o.value;const[a,b]=o.value.split(',');th.value=a;w.value=b;document.getElementById('preset').checked=true;calc();if(scroll)F.scrollIntoView({behavior:'smooth',block:'start'});}
+if(M)M.addEventListener('change',()=>{if(M.value){const[a,b]=M.value.split(',');th.value=a;w.value=b;document.getElementById('preset').checked=true;calc();}});
+const fromHash=s=>{const m=location.hash.match(/^#m-([a-z0-9-]+)$/);if(m)load(m[1],s);};
+addEventListener('hashchange',()=>fromHash(true));fromHash(false);
 getLive().then(d=>{L=d;calc();});
