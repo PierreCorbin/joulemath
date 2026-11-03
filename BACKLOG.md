@@ -27,6 +27,7 @@ Done since Oct 26 (git log):
 - [x] ~60 char titles site-wide, fuller metas, build-generated /llms.txt (Oct 30, d0ea0bd).
 - [x] robots.txt opened to search + AI crawlers (only /go/ and /api/ blocked), AEO on ASIC model, power and mining guide pages, Flash GPU/Vast.ai CTA on /gpu/, /gpu/h100/, /gpu/rtx-4090/, rent-out guide, Fleet Check (Nov 1, 29efff8).
 - [x] AEO pass on miners-to-AI post, 301 www to apex, RSS noindex (Nov 1, 71e0b13).
+- [x] Antminer S19j Pro page /asic/antminer-s19j-pro/ (Nov 3, 03b3216): "Is the Antminer S19j Pro still profitable in 2026?", verdict vs sourced power prices, used price payback vs S19 XP and S21 XP (ING Mining eBay 90-day medians to Oct 30), 2028 halving break-even, Bitmain bins table, FAQPage. Picked over #5 to support the ASIC calculator cluster (SEO & AEO Desk ASIC gap #1). Dated short answers on all ASIC model pages. #5 Rent vs buy an H100 stays next in line for content.
 - Old item "SEO quick wins" folded into #1 to #3.
 
 Recurring: weekly AI post (Mon). Oct 26 shipped "What an H100 hour costs across 7 clouds".
@@ -90,7 +91,8 @@ GPU first (main push):
 - [ ] Self-hosted LLM cost per 1M tokens vs API break-even
 - [ ] GPU rental vs mining per kWh for home hosts guide
 ASIC:
-- [ ] Breakeven electricity by miner table; S19j Pro page; S21 XP Hyd page
+- [x] S19j Pro page (shipped Nov 3, /asic/antminer-s19j-pro/)
+- [ ] Breakeven electricity by miner table (mostly covered by /asic/ hub and mining guide tables); S21 XP Hyd page
 - [ ] Hashprice today live page; ASIC payback/ROI calculator; used ASIC payback; difficulty sensitivity guide; post-2028-halving toggle
 
 - [ ] Switch Cloudflare Web Analytics from lite to full mode (approved in week 2 plan; EU visits likely undercounted). Do on Wed site-improve.
