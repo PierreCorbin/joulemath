@@ -2,10 +2,10 @@
 
 Ranked by expected traffic + revenue. Ship top to bottom. Re-ranked 2026-11-02 (see "Week of Nov 2" below). Rule: queries and pages already getting impressions first, then the AI plan with GPU/Vast pages pushed up (Flash Vast.ai integration live Nov 1, GPU is the main push).
 
-1. [ ] /mining-calculator/ AEO pass. Top impressions page (65 impressions through Oct 28; queries "asic profit calculator" 11, "asic profitability calculator" 9). Today it has 2 H2s and no FAQPage. Add sourced short answer up top, question H2s, FAQ + FAQPage JSON-LD, 9-model compare table, last-updated date, links to every /asic/ model page.
-2. [ ] S19 XP + ASIC model pages, round 2. "antminer s19 xp profitability" had 8 impressions, /asic/antminer-s19-xp/ 20. Round 1 shipped 2026-11-01 (29efff8: short answer, question H2s, compare table, FAQ). Next: break-even by power price table and S19 XP vs S21 XP "upgrade or keep" section with payback.
+1. [x] (shipped 2026-11-03, 8ff2910) /mining-calculator/ AEO pass. Top impressions page (65 impressions through Oct 28; queries "asic profit calculator" 11, "asic profitability calculator" 9). Today it has 2 H2s and no FAQPage. Add sourced short answer up top, question H2s, FAQ + FAQPage JSON-LD, 9-model compare table, last-updated date, links to every /asic/ model page.
+2. [x] (shipped 2026-11-03, 8ff2910: per-model used price, upgrade and payback sections; S19 XP break-even by place on /power-prices/, 871f881) S19 XP + ASIC model pages, round 2. "antminer s19 xp profitability" had 8 impressions, /asic/antminer-s19-xp/ 20. Round 1 shipped 2026-11-01 (29efff8: short answer, question H2s, compare table, FAQ). Next: break-even by power price table and S19 XP vs S21 XP "upgrade or keep" section with payback.
 3. [ ] GSC follow-up on the 7 robots-blocked + 12 crawled-not-indexed pages. Code fixes shipped 2026-11-01 (29efff8 robots.txt and thin pages, 71e0b13 www 301 and RSS noindex). Still open: "Validate fix" in Search Console, request indexing for /mining-calculator/, /asic/antminer-s19-xp/, /gpu/, /gpu/h100/, /gpu/rtx-4090/. Indexing report still dated Oct 23 (22 indexed / 42 not).
-4. [ ] /gpu/ hub AEO pass. No FAQPage, 2 H2s. Add short answer with today's one-GPU-hour table (Vast median, RunPod, Lambda, Ornn), question H2s, FAQ schema. Flash GPU/Vast.ai CTA already live (29efff8).
+4. [x] (shipped 2026-11-03, 0c69822) /gpu/ hub AEO pass. No FAQPage, 2 H2s. Add short answer with today's one-GPU-hour table (Vast median, RunPod, Lambda, Ornn), question H2s, FAQ schema. Flash GPU/Vast.ai CTA already live (29efff8).
 5. [ ] 'Rent vs buy an H100'. Reuses /gpu/h100/ data (GYGO $289,000 8x server, Ornn H100 $3.02 settled Nov 1, payback ~24 months at 70% rented, our math in data/snapshots/2026-11-02.md).
 6. [ ] A100 page. 33 single-GPU Vast offers on Nov 2 (median $0.80 SXM4, $0.74 PCIe); Ornn A100 +19.1% in a month. Cheap-GPU searches.
 7. [ ] H200 page. Ornn $6.21 vs RunPod $3.59 vs Vast $3.29 (Nov 2): big spread, newsy.
@@ -16,6 +16,12 @@ Ranked by expected traffic + revenue. Ship top to bottom. Re-ranked 2026-11-02 (
 12. [ ] LLM query power cost.
 13. [ ] AI data center power demand.
 14. [ ] GPU hosting cost line on power price pages (AEO pass on the 5 power pages done 2026-11-01, 29efff8).
+
+Shipped 2026-11-03 SEO/AEO run (Pierre: "improve it all so we rank higher"):
+- [x] 8ff2910 calculator + ASIC cluster AEO. 871f881 power prices: Quebec "Hydro-Quebec Rate CB" title/FAQ, ASIC-by-place tables, hub short answer + break-even + FAQ schema. 2c7242e /methodology/ "how to calculate mining profitability and hashprice", live worked example, TechArticle. d64fc39 rent-out guide Nov 3 prices. 0c69822 /gpu/ hub + H100 Nov 3 prices and FAQ. 2ba9901 Oct GPU post Nov 3 update. cd388d9 pivot post Nov 3 update (Cipher Q3 first AI rent). dd59828 Breadcrumb schema sitewide, WebSite+Organization on home, joulemath.pages.dev 301 to apex, preview hosts noindex.
+- [x] All 34 sitemap URLs 200 live with no em dashes; IndexNow pinged (200).
+- [ ] Pierre: GSC "Request indexing" for the list in the Nov 3 report, then "Validate fix" on crawled-not-indexed.
+- Note: the /go/flash and /go/vast 504s in Cloudflare analytics are earlyHintsCache prefetches (origin status 0), not real visitors; every eyeball request got its 302. Filter on requestSource=eyeball.
 
 Done since Oct 26 (git log):
 - [x] H100 page (Oct 22), prices refreshed Oct 26; blog "What an H100 hour costs across 7 clouds" (Oct 26, 0a3a0a1/8224ea3).
