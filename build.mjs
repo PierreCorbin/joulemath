@@ -39,6 +39,13 @@ for(const u of urls){const f='dist'+u+'index.html';let h=fs.readFileSync(f,'utf8
  if(!qa)continue;qa=qa.filter(([q,a])=>a);if(!qa.length)continue;
  const ld={"@context":"https://schema.org","@type":"FAQPage","mainEntity":qa.map(([q,a])=>({"@type":"Question","name":q,"acceptedAnswer":{"@type":"Answer","text":a}}))};
  fs.writeFileSync(f,h.replace('</head>',`<script type="application/ld+json">${JSON.stringify(ld).replace(/</g,'\\u003c')}</script></head>`));}
+// BreadcrumbList JSON-LD for pages whose generator does not write one (names come from the page h1 and fixed hub labels), plus WebSite + Organization on the home page.
+{const HUB={'blog':'Blog','guides':'Guides','gpu':'AI GPUs','asic':'Bitcoin ASICs','power-prices':'Power prices'};const J=o=>`<script type="application/ld+json">${JSON.stringify(o).replace(/</g,'\\u003c')}</script>`;
+ for(const u of urls){const f='dist'+u+'index.html';let h=fs.readFileSync(f,'utf8');if(h.includes('name="robots" content="noindex'))continue;
+  if(u==='/'){if(!h.includes('"@type":"WebSite"'))fs.writeFileSync(f,h.replace('</head>',J({"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://joulemath.com/#website","name":"joulemath","url":"https://joulemath.com/","publisher":{"@id":"https://joulemath.com/#org"}},{"@type":"Organization","@id":"https://joulemath.com/#org","name":"joulemath","url":"https://joulemath.com/","logo":"https://joulemath.com/icon-512.png"}]})+'</head>'));continue;}
+  if(h.includes('BreadcrumbList'))continue;const seg=u.split('/').filter(Boolean);const h1=txt((h.match(/<h1[^>]*>([\s\S]*?)<\/h1>/)||[])[1]||'');if(!h1)continue;
+  const items=[['Home','/']];if(seg.length>1&&HUB[seg[0]])items.push([HUB[seg[0]],'/'+seg[0]+'/']);items.push([h1,u]);
+  fs.writeFileSync(f,h.replace('</head>',J({"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":items.map(([n,l],i)=>({"@type":"ListItem","position":i+1,"name":n,"item":"https://joulemath.com"+l}))})+'</head>'));}}
 const indexable=urls.filter(u=>!fs.readFileSync('dist'+u+'index.html','utf8').includes('name="robots" content="noindex'));
 fs.writeFileSync('dist/sitemap.xml',`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${indexable.map(u=>`<url><loc>https://joulemath.com${u}</loc><lastmod>${lastmod(u)}</lastmod></url>`).join('\n')}\n</urlset>\n`);
 // llms.txt for AI answer engines: every indexable page with its own title and meta description (nothing written here beyond section names).
