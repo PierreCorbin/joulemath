@@ -1,5 +1,5 @@
 // Client-side sort for table.sortable. Header text becomes a button; aria-sort marks the active column.
-document.querySelectorAll('table.sortable').forEach(t=>{const ths=[...t.tHead.rows[0].cells],tb=t.tBodies[0];
+document.querySelectorAll('table.sortable').forEach(t=>{const hint=t.querySelector('.sort-hint');if(hint)hint.hidden=false;const ths=[...t.tHead.rows[0].cells],tb=t.tBodies[0];
  ths.forEach((th,i)=>{const b=document.createElement('button');b.type='button';b.className='sort-b';b.textContent=th.textContent;th.textContent='';th.appendChild(b);
   b.addEventListener('click',()=>{const asc=th.getAttribute('aria-sort')==='descending'||(th.getAttribute('aria-sort')!=='ascending'&&i===0);
    ths.forEach(x=>x.removeAttribute('aria-sort'));th.setAttribute('aria-sort',asc?'ascending':'descending');
