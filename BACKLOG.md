@@ -99,6 +99,12 @@ GPU first (main push):
 ASIC:
 - [x] S19j Pro page (shipped Nov 3, /asic/antminer-s19j-pro/)
 - [ ] Breakeven electricity by miner table (mostly covered by /asic/ hub and mining guide tables); S21 XP Hyd page
-- [ ] Hashprice today live page; ASIC payback/ROI calculator; used ASIC payback; difficulty sensitivity guide; post-2028-halving toggle
+- [ ] Hashprice today live page; ASIC payback/ROI calculator; used ASIC payback (partly done Nov 4: used-value table on /asic/); difficulty sensitivity guide; post-2028-halving toggle
 
-- [ ] Switch Cloudflare Web Analytics from lite to full mode (approved in week 2 plan; EU visits likely undercounted). Do on Wed site-improve.
+- [ ] Switch Cloudflare Web Analytics from lite to full mode (approved in week 2 plan; EU visits likely undercounted). Checked Nov 4 via the Cloudflare MCP: joulemath.com RUM site (site tag bd7a52a2787e422e8b6bcd73af52607b) still has lite: true, so EU visitors are still excluded. Not flipped on Nov 4 (verify-only run). Fix: PUT /accounts/{account}/rum/site_info/bd7a52a2787e422e8b6bcd73af52607b with lite:false, auto_install:true, or Web Analytics > joulemath.com > Edit > untick "Exclude EU visitor data".
+
+### Nov 4 site-improve (shipped, commits 3083ca9, 3837e0a)
+- [x] /asic/ hub: Flash miners CTA, question H2 over the sortable table (sort hint only with JS), sourced lead, hydro/immersion and used-value sections, 5 FAQs in FAQPage
+- [x] Thickened crawled-not-indexed pages: M63S and M66S (per-MW cost and earnings, payback vs MicroBT 1-year warranty), S19k Pro (per-MW used comparison, more Bitmain specs, Secure Boot note); same-family links on every model page; /mining-calculator/ links into them
+- [x] GPU and Vast.ai accounting Flash CTA added to home and the three GPU blog posts (/gpu/, /gpu/h100/, /gpu/rtx-4090/, rent-out guide and /fleet/ already had it)
+- [ ] Check GSC around Nov 11 for whether M63S, M66S, S19k Pro and S19 XP moved from crawled-not-indexed to indexed
