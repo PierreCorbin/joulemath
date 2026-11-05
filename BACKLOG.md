@@ -7,7 +7,7 @@ Ranked by expected traffic + revenue. Ship top to bottom. Re-ranked 2026-11-02 (
 3. [ ] GSC follow-up on the 7 robots-blocked + 12 crawled-not-indexed pages. Code fixes shipped 2026-11-01 (29efff8 robots.txt and thin pages, 71e0b13 www 301 and RSS noindex). Still open: "Validate fix" in Search Console, request indexing for /mining-calculator/, /asic/antminer-s19-xp/, /gpu/, /gpu/h100/, /gpu/rtx-4090/. Indexing report still dated Oct 23 (22 indexed / 42 not).
 4. [x] (shipped 2026-11-03, 0c69822) /gpu/ hub AEO pass. No FAQPage, 2 H2s. Add short answer with today's one-GPU-hour table (Vast median, RunPod, Lambda, Ornn), question H2s, FAQ schema. Flash GPU/Vast.ai CTA already live (29efff8).
 5. [ ] 'Rent vs buy an H100'. Reuses /gpu/h100/ data (GYGO $289,000 8x server, Ornn H100 $3.02 settled Nov 1, payback ~24 months at 70% rented, our math in data/snapshots/2026-11-02.md).
-6. [ ] A100 page. 33 single-GPU Vast offers on Nov 2 (median $0.80 SXM4, $0.74 PCIe); Ornn A100 +19.1% in a month. Cheap-GPU searches.
+6. [x] (shipped 2026-11-05, COMMIT) /gpu/a100/ NVIDIA A100 rent price. Vast median $0.80 SXM / $0.71 PCIe (10:09 CET), RunPod Community $1.39/$1.19 (page Updated Nov 4), Ornn A100 $1.07 settled Nov 4 (+16.3% 1M). Content ship Thu Nov 5 (GPU day; Nov 3 was S19j Pro ASIC).
 7. [ ] H200 page. Ornn $6.21 vs RunPod $3.59 vs Vast $3.29 (Nov 2): big spread, newsy.
 8. [ ] RTX 5090 page (new). Vast 64+ offers, median $0.64 (64 cheapest, Nov 2); the 5090 vs 4090 X card got 40 impressions Nov 1. Same template as /gpu/rtx-4090/, Vast host payback angle.
 9. [ ] B200 page. Ornn $9.44 (+19.8% 1M); Lambda $6.69 to $6.99, RunPod $5.98, only 1 open Vast offer Nov 2.
