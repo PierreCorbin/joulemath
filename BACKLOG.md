@@ -90,7 +90,7 @@ Ranking reasoning:
 ### SEO & AEO Desk gaps (AEO check Nov 2, full notes in /workspace/seo/joulemath/aeo-check-2026-11-02.md)
 No AI citations yet; Google top 10 none; web search #1 for S19 XP, S21 XP, mine-vs-rent. Gap is authority and indexing, plus missing multi-provider price tables on GPU pages.
 GPU first (main push):
-- [x] (shipped 2026-11-06) Dated multi-provider price table on /gpu/h100/ and /gpu/rtx-4090/ (getdeploying-style). Fresh Nov 6 reads: Vast H100 SXM median $3.67 (5 offers, thin), 4090 $0.43 (64), Ornn H100 $3.13 settled Nov 5, Salad 4090 $0.2428 (Oct 30-Nov 5). Hub table refreshed same day. Commit hash filled after push.
+- [x] (shipped 2026-11-06) Dated multi-provider price table on /gpu/h100/ and /gpu/rtx-4090/ (getdeploying-style). Fresh Nov 6 reads: Vast H100 SXM median $3.67 (5 offers, thin), 4090 $0.43 (64), Ornn H100 $3.13 settled Nov 5, Salad 4090 $0.2428 (Oct 30-Nov 5). Hub table refreshed same day. Commit da83dba.
 - [ ] Vast.ai host earnings calculator (rate x utilization minus 25% cut minus power)
 - [ ] /gpu/rtx-5090/, /gpu/h200/, /gpu/b200/ rental price pages
 - [ ] Electricity cost per GPU hour calculator
@@ -102,6 +102,10 @@ ASIC:
 - [ ] Hashprice today live page; ASIC payback/ROI calculator; used ASIC payback (partly done Nov 4: used-value table on /asic/); difficulty sensitivity guide; post-2028-halving toggle
 
 - [x] Switch Cloudflare Web Analytics from lite to full mode. Done Nov 4 ~11:15 CET via the Cloudflare MCP (ruleset lite: false, auto_install true). Page load counts from Nov 4 include EU visitors, so compare with care.
+
+### Nov 6 site-improve (shipped, commit da83dba)
+- [x] Dated multi-provider price tables on /gpu/h100/, /gpu/rtx-4090/, and /gpu/ hub (Vast 11:12 CET, RunPod page Nov 4, Ornn settled Nov 5, Lambda published list, Salad earning-rates.json Nov 6). A100 page left on Nov 5 figures aside from the H100 cross-link.
+- CF Web Analytics still lite:false (confirmed, not changed).
 
 ### Nov 4 site-improve (shipped, commits 3083ca9, 3837e0a)
 - [x] /asic/ hub: Flash miners CTA, question H2 over the sortable table (sort hint only with JS), sourced lead, hydro/immersion and used-value sections, 5 FAQs in FAQPage
