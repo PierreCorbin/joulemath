@@ -90,7 +90,7 @@ Ranking reasoning:
 ### SEO & AEO Desk gaps (AEO check Nov 2, full notes in /workspace/seo/joulemath/aeo-check-2026-11-02.md)
 No AI citations yet; Google top 10 none; web search #1 for S19 XP, S21 XP, mine-vs-rent. Gap is authority and indexing, plus missing multi-provider price tables on GPU pages.
 GPU first (main push):
-- [ ] Dated multi-provider price table on /gpu/h100/ and /gpu/rtx-4090/ (getdeploying-style)
+- [x] (shipped 2026-11-06) Dated multi-provider price table on /gpu/h100/ and /gpu/rtx-4090/ (getdeploying-style). Fresh Nov 6 reads: Vast H100 SXM median $3.67 (5 offers, thin), 4090 $0.43 (64), Ornn H100 $3.13 settled Nov 5, Salad 4090 $0.2428 (Oct 30-Nov 5). Hub table refreshed same day. Commit hash filled after push.
 - [ ] Vast.ai host earnings calculator (rate x utilization minus 25% cut minus power)
 - [ ] /gpu/rtx-5090/, /gpu/h200/, /gpu/b200/ rental price pages
 - [ ] Electricity cost per GPU hour calculator

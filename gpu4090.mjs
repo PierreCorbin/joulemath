@@ -9,22 +9,22 @@ const VAST='https://console.vast.ai/api/v0/bundles/', RP='https://www.runpod.io/
 const VASTA='https://vast.ai/article/how-much-money-can-you-earn-renting-out-your-gpu-on-vast-ai';
 const GS='https://gpusold.com/gpu/rtx-4090-24', PW='https://www.pcprice.watch/search/RTX4090/US/GPU', GP='https://www.getpcparts.com/market-prices/gpu-graphics-cards/rtx-4090', RB='https://rackbites.com/gpu/rtx-4090-24gb';
 const EIA='https://www.eia.gov/electricity/monthly/epm_table_grapher.php?t=table_5_06_a', EU='https://ec.europa.eu/eurostat/databrowser/view/nrg_pc_204/default/table', ECB='https://data.ecb.europa.eu/data/datasets/EXR/EXR.D.USD.EUR.SP00.A';
-const VQ='Vast.ai public API, Oct 29, 2026, 10:07 CET';
+const VQ='Vast.ai public API, Nov 6, 2026, 11:12 CET';
 // What renters pay, USD per GPU-hour, one RTX 4090.
 const RENT=[
- ['Vast.ai marketplace, all offers (low / median / high)',VAST,VQ,'$0.32 / $0.48 / $0.87','64 rentable on-demand single-GPU offers (API returns 64, a sample)'],
- ['Vast.ai marketplace, verified hosts only',VAST,VQ,'$0.40 / $0.51 / $0.87','40 of the 64 offers'],
- ['RunPod Community Cloud',RP,'Page "Updated October 8, 2026", read Oct 29, 2026','$0.34','On-demand pod, 24 GB'],
+ ['Vast.ai marketplace, all offers (low / median / high)',VAST,VQ,'$0.14 / $0.43 / $0.53','64 rentable on-demand single-GPU offers (API returns 64, the cheapest sample)'],
+ ['Vast.ai marketplace, verified hosts only',VAST,VQ,'$0.29 / $0.44 / $0.53','28 of the 64 offers'],
+ ['RunPod Community Cloud',RP,'Page "Updated November 4, 2026", read Nov 6, 2026','$0.34','On-demand pod, 24 GB'],
  ['RunPod Secure Cloud',RP,'Same page','$0.89','Pod in RunPod data centers'],
  ['RunPod Serverless, 24 GB 4090 tier',RP,'Same page','$1.10','Billed while a worker runs'],
- ['SaladCloud, Lowest priority',SC,'Read Oct 29, 2026','$0.160','Batch tier, can be interrupted; unchanged on Nov 1'],
- ['SaladCloud, High priority',SC,'Read Oct 29, 2026; this price starts Nov 1, 2026','$0.440','Not preempted by other jobs'],
+ ['SaladCloud, Lowest priority',SC,'Read Nov 6, 2026','$0.160','Batch tier, can be interrupted'],
+ ['SaladCloud, High priority',SC,'Read Nov 6, 2026','$0.440','Not preempted by other jobs'],
 ];
 // Our assumptions (same as /guides/rent-out-your-gpu/): whole PC = 450 W card + 150 W, 100 W idle on Vast.
 const CARDW=450, PCW=600, IDLEW=100;
 const US=0.1816, EUR=0.2832, FX=1.1188, EUP=EUR*FX; // EIA Aug 2026; Eurostat H1 2026; ECB Oct 26, 2026
-const SAL=0.2725;            // Salad avg earnings per switched-on hour, RTX 4090, Oct 22 to 28, 2026
-const VMED=0.483, VCUT=1.25, VHOST=VMED/VCUT; // Vast renter median / 1.25 = rough host rate
+const SAL=0.2428;            // Salad avg earnings per switched-on hour, RTX 4090, Oct 30 to Nov 5, 2026
+const VMED=0.427, VCUT=1.25, VHOST=VMED/VCUT; // Vast renter median / 1.25 = rough host rate
 const USED=[['$2,436',2436,'pcprice.watch 90-day sold median'],['$3,093',3093,'gpusold.com 14-day sold median']];
 export function build4090(a){
   const H=720; // 30 days
@@ -42,12 +42,12 @@ export function build4090(a){
   const salUS=net(sc[0],US), salEU=net(sc[0],EUP);
   const btcKw=1000/13.5*a.hp, salKw=SAL*24/(PCW/1000);
   const hrsRP=3093/0.34, hrsV=3093/VMED;
-  const calc=`/?gpuw=600&amp;rate=0.483&amp;gprice=3093&amp;util=50`;
+  const calc=`/?gpuw=600&amp;rate=0.427&amp;gprice=3093&amp;util=50`;
   const url='/gpu/rtx-4090/';
   const title='RTX 4090 rental price, power cost and payback (2026)';
-  const desc='RTX 4090 rent prices on Vast.ai, RunPod and SaladCloud, used card prices, power cost per hour and how long a 4090 takes to pay back renting out. Every figure sourced and dated.';
+  const desc='RTX 4090 rent price on Nov 6, 2026: Vast.ai median $0.43, RunPod Community $0.34, SaladCloud $0.16 to $0.44. Used card prices, power cost and payback. Every figure sourced and dated.';
   const body=`<article class="prose post"><p class="eyebrow"><a href="/gpu/">GPUs</a></p><h1>RTX 4090: rent price, power cost and payback</h1>
-<p class="lead">Renting a 4090 costs about $0.32 to $0.89 an hour. Renting yours out keeps roughly ${$0(salUS)} a month at US power and ${$0(salEU)} at EU power. A used card now sells for about $2,300 to $3,100, so buying one just to rent it out takes years to pay back.</p>
+<p class="lead"><b>Short answer:</b> on November 6, 2026 one RTX 4090 rented for a median <b>$0.43 an hour on Vast.ai</b> (64 offers) and <b>$0.34 on RunPod Community</b>. SaladCloud listed $0.16 (Lowest) to $0.44 (High). Renting yours out keeps roughly ${$0(salUS)} a month at US power and ${$0(salEU)} at EU power. A used card still sells for about $2,300 to $3,100, so buying one just to rent it out takes years to pay back.</p>
 <h2>Specs that matter for the money</h2>
 <table><thead><tr><th></th><th>RTX 4090</th></tr></thead><tbody>
 <tr><td>Total graphics power</td><td>450 W</td></tr>
@@ -64,13 +64,13 @@ export function build4090(a){
 <table><thead><tr><th>Where</th><th>Date</th><th>Price per GPU-hour</th><th>Notes</th></tr></thead><tbody>
 ${RENT.map(([n,u,d,p,x])=>`<tr><td><a href="${u}">${n}</a></td><td>${d}</td><td>${p}</td><td>${x}</td></tr>`).join('\n')}
 </tbody></table>
-<p class="note">These are what renters pay. Our Vast query: rentable, not rented, on-demand, exactly one RTX 4090, Vast's default order. Vast is a live market, so these move by the hour. Earlier snapshots: <a href="/blog/gpu-rental-prices-h100-h200-a100-rtx-4090-october-2026/">Oct 21 GPU rental prices</a>.</p>
+<p class="note">These are what renters pay. Our Vast query: rentable, not rented, on-demand, exactly one RTX 4090, ordered by price. The API returns at most 64 offers, so the median is of the cheapest sample. Vast is a live market, so these move by the hour. Earlier snapshots: <a href="/blog/gpu-rental-prices-h100-h200-a100-rtx-4090-october-2026/">Oct 21 GPU rental prices</a>.</p>
 <p class="hint"><a href="/go/vast?c=gpu-rtx-4090&amp;p=rent" rel="sponsored nofollow">See live RTX 4090 offers on Vast.ai</a> (affiliate link, we may earn a referral fee).</p>
 <h2>What it earns if you rent yours out</h2>
 <p>Hosts get less than renters pay. Two real numbers:</p>
 <ul>
-<li><b>Salad:</b> RTX 4090 machines averaged <b>$0.2725</b> per switched-on hour for Oct 22 to 28, 2026, idle time included. The middle half of machines made $0.256 to $0.293. A job was running 97% of the time (<a href="${SER}">Salad earning rates</a>, data file <a href="${SERJ}">earning-rates.json</a> updated Oct 29, 2026, 09:08 CET).</li>
-<li><b>Vast.ai:</b> you set your price. Vast says renter prices are "typically about 25% above what hosts earn" (<a href="${VASTA}">Vast.ai host earnings article</a>). So the $0.483 median renter price is roughly <b>${$(VHOST,3)}</b> an hour to the host, only while rented. Vast does not publish occupancy.</li>
+<li><b>Salad:</b> RTX 4090 machines averaged <b>$0.2428</b> per switched-on hour for Oct 30 to Nov 5, 2026, idle time included. The middle half of machines made $0.210 to $0.277. A job was running 96% of the time (<a href="${SER}">Salad earning rates</a>, data file <a href="${SERJ}">earning-rates.json</a> updated Nov 6, 2026, 09:08 CET / 08:08 UTC).</li>
+<li><b>Vast.ai:</b> you set your price. Vast says renter prices are "typically about 25% above what hosts earn" (<a href="${VASTA}">Vast.ai host earnings article</a>). So the $0.427 median renter price is roughly <b>${$(VHOST,3)}</b> an hour to the host, only while rented. Vast does not publish occupancy.</li>
 </ul>
 <h2>Power cost per hour</h2>
 <table><thead><tr><th>Power price</th><th>Card only, 450 W</th><th>Whole PC, 600 W</th><th>PC, 30 days at full load</th></tr></thead><tbody>
@@ -81,7 +81,7 @@ ${perHr}
 <table><thead><tr><th>Scenario</th><th>Gross / month</th><th>Power used</th><th>Net, US power</th><th>Net, EU power</th></tr></thead><tbody>
 ${netTbl}
 </tbody></table>
-<p class="note">Method (ours): 30 days. Salad: $0.2725 × 720 hours, PC at 600 W every hour. Vast: ${$(VHOST,3)} host rate × rented hours, 600 W while rented, 100 W idle (our guess). Rented share is our assumption. Before card wear, internet, platform payout fees and tax.</p>
+<p class="note">Method (ours): 30 days. Salad: $0.2428 × 720 hours, PC at 600 W every hour. Vast: ${$(VHOST,3)} host rate × rented hours, 600 W while rented, 100 W idle (our guess). Rented share is our assumption. Before card wear, internet, platform payout fees and tax.</p>
 <h2>Payback if you buy a card to rent out</h2>
 <p>Used RTX 4090 prices, all from US eBay data:</p>
 <table><thead><tr><th>Source</th><th>Date</th><th>Price</th><th>What it measures</th></tr></thead><tbody>
@@ -97,23 +97,23 @@ ${pbTbl}
 <p class="note">Payback months = card price ÷ net per month from the table above. Inputs and method are ours. It assumes you already have the rest of the PC, rates stay flat, and the card is worth nothing at the end. A used 4090 still resells for real money, so the true picture is better than this; a rate drop makes it worse.</p>
 <p>Short version: if you already own a 4090, renting it out is extra cash on top of a card you paid for. Buying one just to rent out is roughly a one-to-four year bet on rates holding up.</p>
 <h2>Rent one or buy one?</h2>
-<p>If you only need the GPU for AI work, $3,093 buys about ${Math.round(hrsRP).toLocaleString('en-US')} hours on RunPod Community at $0.34, or about ${Math.round(hrsV).toLocaleString('en-US')} hours at the $0.483 Vast median, before you pay a cent of power. That is about 9 to 12 months of nonstop use. Owning wins if you also game on it or keep it busy for years.</p>
+<p>If you only need the GPU for AI work, $3,093 buys about ${Math.round(hrsRP).toLocaleString('en-US')} hours on RunPod Community at $0.34, or about ${Math.round(hrsV).toLocaleString('en-US')} hours at the $0.427 Vast median, before you pay a cent of power. That is about 9 to 12 months of nonstop use. Owning wins if you also game on it or keep it busy for years.</p>
 <h2>Rent out vs mining, per kW</h2>
-<p>A 4090 is not a Bitcoin miner; Bitcoin runs on ASICs. The fair comparison is what a kilowatt earns. A 600 W 4090 PC on Salad at $0.2725 an hour grosses about <b>${$(salKw)}</b> per kW per day. A kW of Antminer S21 XP (13.5 J/TH, <a href="https://support.bitmain.com/hc/en-us/articles/35383015643673-S21-XP-Specifications">Bitmain</a>) grosses about <b>${$(btcKw)}</b> a day at the current hashprice. ${a.dataLine}</p>
+<p>A 4090 is not a Bitcoin miner; Bitcoin runs on ASICs. The fair comparison is what a kilowatt earns. A 600 W 4090 PC on Salad at $0.2428 an hour grosses about <b>${$(salKw)}</b> per kW per day. A kW of Antminer S21 XP (13.5 J/TH, <a href="https://support.bitmain.com/hc/en-us/articles/35383015643673-S21-XP-Specifications">Bitmain</a>) grosses about <b>${$(btcKw)}</b> a day at the current hashprice. ${a.dataLine}</p>
 <p>The GPU kW wins on gross, but it costs about ${$0(3093/(PCW/1000))} in used cards per kW and depends on someone wanting the card. An ASIC earns every hour it is on. More on both in the <a href="/guides/rent-out-your-gpu/">rent out your GPU guide</a>.</p>
-<div class="callout"><b>Run your own numbers or check a live Vast.ai machine.</b> The calculator is preloaded with 600 W, the $0.483 Vast median, $3,093 per card and 50% utilization. Already hosting? Enter your Vast.ai <code>machine_id</code> in <a href="/fleet/">Fleet Check</a> to see live occupancy and 36-month net returns. Stored only in your browser.<br><a class="btn" href="${calc}">Open the per-kW calculator <span aria-hidden="true">→</span></a> <a class="btn ghost" href="/fleet/" style="margin-left:.4rem">Benchmark Vast.ai machine ID <span aria-hidden="true">→</span></a></div>
+<div class="callout"><b>Run your own numbers or check a live Vast.ai machine.</b> The calculator is preloaded with 600 W, the $0.427 Vast median, $3,093 per card and 50% utilization. Already hosting? Enter your Vast.ai <code>machine_id</code> in <a href="/fleet/">Fleet Check</a> to see live occupancy and 36-month net returns. Stored only in your browser.<br><a class="btn" href="${calc}">Open the per-kW calculator <span aria-hidden="true">→</span></a> <a class="btn ghost" href="/fleet/" style="margin-left:.4rem">Benchmark Vast.ai machine ID <span aria-hidden="true">→</span></a></div>
 <h2>FAQ</h2>
-<h3 id="faq-rent">How much does it cost to rent an RTX 4090?</h3><p>About $0.32 to $0.89 per hour for one card. On October 29, 2026 the Vast.ai median was $0.483 across 64 offers, RunPod Community Cloud listed $0.34 and Secure Cloud $0.89. SaladCloud's interruptible Lowest tier is $0.16.</p>
-<h3 id="faq-earn">How much can an RTX 4090 earn if I rent it out?</h3><p>Salad's 4090 machines averaged $0.2725 per switched-on hour for Oct 22 to 28, 2026, about ${$0(sc[0][1])} a month. After power for a 600 W PC that is about ${$0(salUS)} at the US average price and ${$0(salEU)} at the EU average.</p>
+<h3 id="faq-rent">How much does it cost to rent an RTX 4090?</h3><p>About $0.14 to $0.89 per hour for one card. On November 6, 2026 the Vast.ai median was $0.43 across 64 offers ($0.14 to $0.53), RunPod Community Cloud listed $0.34 and Secure Cloud $0.89. SaladCloud's interruptible Lowest tier is $0.16.</p>
+<h3 id="faq-earn">How much can an RTX 4090 earn if I rent it out?</h3><p>Salad's 4090 machines averaged $0.2428 per switched-on hour for Oct 30 to Nov 5, 2026, about ${$0(sc[0][1])} a month. After power for a 600 W PC that is about ${$0(salUS)} at the US average price and ${$0(salEU)} at the EU average.</p>
 <h3 id="faq-power">How much power does an RTX 4090 use?</h3><p>NVIDIA lists 450 W total graphics power, 19 W idle and 315 W average while gaming, with an 850 W power supply. A whole PC at full load is about 600 W, which costs about ${$(PCW/1000*US,3)} an hour at the US average of 18.16 cents/kWh.</p>
 <h3 id="faq-price">How much is a used RTX 4090?</h3><p>About $2,271 to $3,093 on US eBay in late October 2026, depending on the tracker: $2,436 90-day sold median on PCPrice.Watch and $3,093 14-day sold median on GPU Sold. It launched at $1,599 in 2022.</p>
 <h3 id="faq-payback">How long does an RTX 4090 take to pay back by renting it out?</h3><p>At Salad's average rate and US average power, a $3,093 card takes about ${Math.round(3093/salUS)} months and a $2,436 card about ${Math.round(2436/salUS)} months. At EU power it is roughly ${Math.round(2436/salEU)} to ${Math.round(3093/salEU)} months. Our math, before resale value.</p>
 <h3 id="faq-vs-btc">Does a rented RTX 4090 beat Bitcoin mining per kW?</h3><p>On gross revenue per kW, yes: about ${$(salKw)} per kW per day on Salad versus about ${$(btcKw)} for a kW of S21 XP at the current hashprice. But the GPU kW costs far more hardware money and only earns when someone wants it.</p>
-<p>Related: <a href="/gpu/h100/">H100 rent price per kW</a> · <a href="/guides/rent-out-your-gpu/">rent out your GPU</a> · <a href="/">mine vs AI calculator</a> · <a href="/calculators/">all calculators</a> · <a href="/methodology/#sources-gpu">GPU defaults and sources</a> · <a href="/asic/">ASIC profitability by model</a>.</p>
-<p class="note">Prices change constantly; this page is updated by hand. Nothing here is financial advice.</p>
+<p>Related: <a href="/gpu/h100/">H100 rent price per kW</a> · <a href="/gpu/a100/">A100 rent price per kW</a> · <a href="/guides/rent-out-your-gpu/">rent out your GPU</a> · <a href="/">mine vs AI calculator</a> · <a href="/calculators/">all calculators</a> · <a href="/methodology/#sources-gpu">GPU defaults and sources</a> · <a href="/asic/">ASIC profitability by model</a>.</p>
+<p class="note">Prices change constantly; this page is updated by hand, last on November 6, 2026. Used-card prices below are still the late-October reads. Nothing here is financial advice.</p>
 <!--signup--></article>
 <section class="cta"><div><h2>Renting out GPUs?</h2><p>Flash handles the books and payments for GPU and AI compute providers, including Vast.ai accounting.</p></div><a class="btn" rel="nofollow" href="/go/flash?c=gpu-rtx-4090&amp;p=cta&amp;op=ai_gpu">See Flash for compute providers <span aria-hidden="true">→</span></a></section>`;
-  const ld={"@context":"https://schema.org","@type":"WebPage","name":title,"description":desc,"url":SITE+url,"datePublished":'2026-10-29',"dateModified":'2026-10-29',"breadcrumb":{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"GPUs","item":SITE+'/gpu/'},{"@type":"ListItem","position":2,"name":"NVIDIA RTX 4090","item":SITE+url}]}};
+  const ld={"@context":"https://schema.org","@type":"WebPage","name":title,"description":desc,"url":SITE+url,"datePublished":'2026-10-29',"dateModified":'2026-11-06',"breadcrumb":{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"GPUs","item":SITE+'/gpu/'},{"@type":"ListItem","position":2,"name":"NVIDIA RTX 4090","item":SITE+url}]}};
   fs.mkdirSync('dist'+url,{recursive:true});fs.writeFileSync('dist'+url+'index.html',a.page({title:`${title} | joulemath`,desc,url,ld,body}));
   return url;
 }
