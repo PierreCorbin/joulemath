@@ -1,6 +1,9 @@
-// POST /api/e  {event, props:{v}} -> anonymous daily counters in KV binding EVENTS.
+// POST /api/e  {event, props:{v}} -> anonymous daily counters in the plane's EVENTS KV.
 // No cookies, no IPs or personal data stored. Keys: ev:YYYY-MM-DD:event:value (kept ~400 days).
-// Fleet events strictly accept only whitelisted anonymous action names (never addresses or machine IDs).
+// signup accepts only "attempt". Saved and confirmed subscribers are counted by the subscribe handler
+// under metric: keys, which this endpoint cannot write. Fleet values are whitelisted action names.
+import {bindingsFor} from '../lib/plane.mjs';
+
 const PRESETS=['default','cheap-power','used-asics','curtailment','low-gpu-util'];
 const GO=['flash','vast'];
 const OUT=['simplemining','compass','bitmainshop','endless','runpod','lambda'];
@@ -13,17 +16,20 @@ const V={
   go:v=>GO.includes(v)?v:(/^[a-z0-9-]{1,20}$/.test(v)?'other':null),
   out:v=>OUT.includes(v)?v:null,
   fleet:v=>FLEET.includes(v)?v:null,
-  signup:()=>'submit',
+  signup:v=>v==='attempt'?'attempt':null,
 };
 const r=(s)=>new Response(null,{status:s,headers:{'Cache-Control':'no-store'}});
-// Best-effort per-isolate rate limit, kept in memory only (never persisted).
+// Best-effort per-isolate rate limit, kept in memory only (never persisted). Keyed by plane so preview traffic cannot fill the production window.
 const hits=new Map();let win=0;
-function limited(ip){const w=Math.floor(Date.now()/60000);if(w!==win){hits.clear();win=w;}const n=(hits.get(ip)||0)+1;hits.set(ip,n);return n>30;}
+function limited(plane,ip){const w=Math.floor(Date.now()/60000);if(w!==win){hits.clear();win=w;}const k=plane+':'+ip;const n=(hits.get(k)||0)+1;hits.set(k,n);return n>30;}
+export function resetEventsForTests(){hits.clear();win=0;}
 export async function onRequestPost({request,env}){
-  const kv=env.EVENTS;if(!kv)return r(503);
+  const bound=bindingsFor(request,env||{});
+  const kv=bound.events;
+  if(!kv)return r(bound.plane==='production'?503:204);
   if(request.headers.get('dnt')==='1'||request.headers.get('sec-gpc')==='1')return r(204);
   if(Number(request.headers.get('content-length')||0)>512)return r(413);
-  if(limited(request.headers.get('cf-connecting-ip')||'0'))return r(429);
+  if(limited(bound.plane,request.headers.get('cf-connecting-ip')||'0'))return r(429);
   let d;try{const t=await request.text();if(t.length>512)return r(413);d=JSON.parse(t);}catch{return r(400);}
   const ev=String(d&&d.event||''),f=V[ev];if(!f)return r(400);
   const val=f(String((d.props&&d.props.v)??'').toLowerCase().slice(0,24));if(val==null)return r(400);

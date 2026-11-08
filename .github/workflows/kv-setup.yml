@@ -1,21 +1,68 @@
+# Manual only. Creates separate preview KV namespaces and removes the production
+# SUBSCRIBERS and EVENTS bindings from the preview deployment.
+# Does not read or write keys inside those namespaces. Does not run on push.
 name: KV setup (manual)
 on: workflow_dispatch
 jobs:
   kv:
     runs-on: ubuntu-latest
     steps:
-      - name: Create SUBSCRIBERS KV namespace and bind it to the Pages project
+      - uses: actions/checkout@v4
+      - name: Bind production and preview KV namespaces separately
         env:
           T: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           A: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
-          set -e
-          api(){ curl -s -H "Authorization: Bearer $T" -H "Content-Type: application/json" "$@"; }
-          L=$(api "https://api.cloudflare.com/client/v4/accounts/$A/storage/kv/namespaces?per_page=100")
-          echo "$L" | jq -c '{success, errors}'
-          ID=$(echo "$L" | jq -r '.result[]? | select(.title=="joulemath-subscribers") | .id')
-          if [ -z "$ID" ]; then R=$(api -X POST "https://api.cloudflare.com/client/v4/accounts/$A/storage/kv/namespaces" -d '{"title":"joulemath-subscribers"}'); echo "$R" | jq -c '{success, errors}'; ID=$(echo "$R" | jq -r '.result.id // empty'); fi
-          [ -n "$ID" ] || { echo "KV namespace not available"; exit 1; }
-          echo "namespace id: $ID"
-          P=$(api -X PATCH "https://api.cloudflare.com/client/v4/accounts/$A/pages/projects/joulemath" -d "{\"deployment_configs\":{\"production\":{\"kv_namespaces\":{\"SUBSCRIBERS\":{\"namespace_id\":\"$ID\"}}},\"preview\":{\"kv_namespaces\":{\"SUBSCRIBERS\":{\"namespace_id\":\"$ID\"}}}}}")
-          echo "$P" | jq -c '{success, errors, kv: .result.deployment_configs.production.kv_namespaces}'
+          set -euo pipefail
+          test -n "$T" -a -n "$A"
+          api(){ curl -sS -H "Authorization: Bearer $T" -H "Content-Type: application/json" "$@"; }
+          ALL='[]'
+          page=1
+          while [ "$page" -le 5 ]; do
+            L=$(api "https://api.cloudflare.com/client/v4/accounts/$A/storage/kv/namespaces?per_page=100&page=$page")
+            echo "$L" | jq -e '.success == true' >/dev/null
+            ALL=$(jq -s '.[0] + (.[1].result // [])' <(printf '%s' "$ALL") <(printf '%s' "$L"))
+            n=$(echo "$L" | jq '.result | length')
+            [ "$n" -lt 100 ] && break
+            page=$((page + 1))
+          done
+          ensure_ns() {
+            title="$1"
+            id=$(echo "$ALL" | jq -r --arg t "$title" '[.[] | select(.title == $t) | .id][0] // empty')
+            if [ -z "$id" ]; then
+              R=$(api -X POST "https://api.cloudflare.com/client/v4/accounts/$A/storage/kv/namespaces" -d "$(jq -n --arg t "$title" '{title:$t}')")
+              echo "$R" | jq -c '{success, errors}' >&2
+              id=$(echo "$R" | jq -r '.result.id // empty')
+              ALL=$(echo "$ALL" | jq --arg t "$title" --arg id "$id" '. + [{title:$t, id:$id}]')
+            fi
+            [ -n "$id" ] || { echo "missing namespace: $title"; exit 1; }
+            printf '%s' "$id"
+          }
+          PROD_SUB=$(ensure_ns joulemath-subscribers)
+          PROD_EV=$(ensure_ns joulemath-events)
+          PREV_SUB=$(ensure_ns joulemath-subscribers-preview)
+          PREV_EV=$(ensure_ns joulemath-events-preview)
+          if [ "$PROD_SUB" = "$PREV_SUB" ] || [ "$PROD_EV" = "$PREV_EV" ] || [ "$PROD_SUB" = "$PROD_EV" ] || [ "$PREV_SUB" = "$PREV_EV" ] || [ "$PROD_SUB" = "$PREV_EV" ] || [ "$PROD_EV" = "$PREV_SUB" ]; then
+            echo "refusing to bind shared or swapped KV namespaces"
+            exit 1
+          fi
+          PROJ=$(api "https://api.cloudflare.com/client/v4/accounts/$A/pages/projects/joulemath")
+          echo "$PROJ" | jq -e '.success == true and .result.deployment_configs.production != null and .result.deployment_configs.preview != null' >/dev/null
+          BODY=$(echo "$PROJ" | jq -f scripts/kv-isolate.jq --arg prod_sub "$PROD_SUB" --arg prod_ev "$PROD_EV" --arg prev_sub "$PREV_SUB" --arg prev_ev "$PREV_EV")
+          echo "$BODY" | jq -e --arg ps "$PROD_SUB" --arg pe "$PROD_EV" --arg vs "$PREV_SUB" --arg ve "$PREV_EV" '
+            .deployment_configs.production.kv_namespaces.SUBSCRIBERS.namespace_id == $ps
+            and .deployment_configs.production.kv_namespaces.EVENTS.namespace_id == $pe
+            and (.deployment_configs.preview.kv_namespaces | has("SUBSCRIBERS") | not)
+            and (.deployment_configs.preview.kv_namespaces | has("EVENTS") | not)
+            and .deployment_configs.preview.kv_namespaces.SUBSCRIBERS_PREVIEW.namespace_id == $vs
+            and .deployment_configs.preview.kv_namespaces.EVENTS_PREVIEW.namespace_id == $ve
+            and ([.deployment_configs.preview.kv_namespaces[]?.namespace_id] | index($ps) == null and index($pe) == null)
+          ' >/dev/null
+          P=$(api -X PATCH "https://api.cloudflare.com/client/v4/accounts/$A/pages/projects/joulemath" -d "$BODY")
+          echo "$P" | jq -e '.success == true' >/dev/null
+          echo "$P" | jq -e --arg ps "$PROD_SUB" --arg pe "$PROD_EV" '
+            ([.result.deployment_configs.preview.kv_namespaces[]?.namespace_id] | index($ps) == null and index($pe) == null)
+          ' >/dev/null
+          echo "production SUBSCRIBERS and EVENTS bound"
+          echo "preview SUBSCRIBERS_PREVIEW and EVENTS_PREVIEW bound"
+          echo "preview shares production namespaces: no"
