@@ -1,1 +1,1 @@
-{"name":"joulemath","private":true,"scripts":{"build":"node build.mjs","preview":"npx --yes serve dist -l 4321"}}
+{"name":"joulemath","private":true,"type":"module","scripts":{"build":"node build.mjs","preview":"npx --yes serve dist -l 4321","test":"node --test --test-concurrency=1"}}

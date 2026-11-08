@@ -1,4 +1,9 @@
 # Cloudflare Pages config. KV namespace IDs are not secrets.
+# These bindings are the production namespaces (joulemath-subscribers and joulemath-events).
+# Preview hosts must not use them. Code sends preview traffic to SUBSCRIBERS_PREVIEW and
+# EVENTS_PREVIEW only, and drops it when those bindings are missing.
+# Do not point a preview deployment at the ids below.
+# .github/workflows/kv-setup.yml binds separate preview namespaces. It does not run on deploy.
 name = "joulemath"
 pages_build_output_dir = "dist"
 compatibility_date = "2026-10-21"
