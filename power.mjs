@@ -16,12 +16,21 @@ export const PLACES=[
  {slug:'paraguay',name:'Paraguay',short:'Paraguay',
   prices:[{label:'All-in industrial, low end',usd:0.040},{label:'All-in industrial, high end',usd:0.050}],
   src:[{name:'Hashrate Index, The State of Bitcoin Mining in Latin America 2026',url:'https://hashrateindex.com/blog/the-state-of-bitcoin-mining-in-latin-america-2026/',note:'ANDE\'s intensive industrial tariff (GCIE, 220 kV) is $5.27/kW-month demand plus $0.03725/kWh energy, which Hashrate Index puts at roughly $0.040 to $0.050/kWh all-in at high utilization. Published October 2026, accessed October 21, 2026.'}],
+  tariff:{demand:5.27,energy:0.03725,hours:730},
   intro:'Paraguay sells surplus hydro from the Itaipu dam to heavy industrial users, Bitcoin miners included, through the state utility ANDE.',
   caveat:'The range depends on how fully you use the contracted demand. Running flat out puts you near the low end.'},
  {slug:'ethiopia',name:'Ethiopia',short:'Ethiopia',
   prices:[{label:'Data mining tariff, daily average (July 2026 to July 2027)',usd:0.050}],
   src:[{name:'Addis Standard',url:'https://addisstandard.com/industry-insiders-say-ethiopias-new-power-tariff-a-crucial-test-for-its-crypto-mining-boom/',note:'Reports Ethiopian Electric Power\'s letter of October 27, 2025: a time-of-use tariff for data mining starting December 1, 2025, with a daily average of 4 US cents/kWh until July 2026, 5 cents the following year and 6.5 cents from July 2027 to July 2028, including 15% VAT and a 0.5% regulatory fee. Accessed October 21, 2026.'},
    {name:'FSX Business',url:'https://www.fsxbusiness.com/ethiopia-sets-3-year-tariff-for-miners',note:'Same tariff, period by period: from July 8, 2026 to July 7, 2027 peak 6.3, shoulder 5.55 and off-peak 4.65 US cents/kWh. Accessed October 21, 2026.'}],
+  sched:[{id:'tariff-steps',h2:'Will Ethiopia\'s data mining power price go up?',col:'Period',
+    rows:[['December 2025 to July 2026, daily average',0.04],['July 2026 to July 2027, daily average (today)',0.05],['July 2027 to July 2028, daily average',0.065]],
+    src:'Addis Standard (average rates, including 15% VAT and a 0.5% regulatory fee)',
+    lead:'Yes, on a published schedule. Ethiopian Electric Power\'s data mining tariff averages 4 US cents/kWh until July 2026, 5 cents the following year and 6.5 cents from July 2027 to July 2028, including 15% VAT and a 0.5% regulatory fee (Addis Standard).'},
+   {id:'tariff-tou',h2:'What are Ethiopia\'s peak and off-peak mining rates?',col:'Time of use, July 8, 2026 to July 7, 2027',
+    rows:[['Peak',0.063],['Shoulder',0.0555],['Off-peak',0.0465]],
+    src:'FSX Business (US cents/kWh per period)',
+    lead:'For the current tariff year, July 8, 2026 to July 7, 2027, FSX Business lists 6.3 cents/kWh at peak, 5.55 shoulder and 4.65 off-peak. Running only off-peak or shoulder hours would cost less than the 5 cent daily average, running only at peak would cost more.'}],
   intro:'Ethiopia has a special electricity tariff just for data mining, set by the state power company. It went from a flat rate to time-of-use pricing in December 2025.',
   caveat:'This figure includes VAT. Rates are a bit lower off-peak and higher from 6 PM to 10 PM, and an availability-based adjustment changes the bill when the utility curtails. The average steps up again to 6.5 cents in July 2027.'},
  {slug:'uae',name:'United Arab Emirates (Dubai)',short:'UAE',
@@ -83,18 +92,32 @@ export async function buildPower({hp,eurPerUsd,when,dataLine,page,updated,iso,da
     const ok=models.filter(o=>o.be>r0.p).sort((a,b)=>b.be-a.be),bad=models.filter(o=>o.be<=r0.p);
     const asicRows=[...models].sort((a,b)=>b.be-a.be).map(o=>{const pr=o.rev-o.kwh*r0.p;return `<tr><td><a href="${o.url}">${esc(o.m.name)}</a></td><td>${o.m.jth}</td><td>$${o.be.toFixed(3)}</td><td class="${cls(pr)}">${$(pr)}</td><td>${pr>0?'Yes':'No'}</td></tr>`;}).join('');
     const asicAns=`At $${r0.p.toFixed(3)}/kWh, ${ok.length} of the ${models.length} ASIC models we track cover their power bill at today's hashprice${ok.length?`: ${ok.map(o=>o.m.name).join(', ')}`:''}.${bad.length?` ${bad.length===1?'This one does':'These do'} not: ${bad.map(o=>o.m.name).join(', ')}.`:''} Gross of pool fees and hardware cost.`;
+    // Optional extra sections from sourced tariff data: a demand + energy tariff spread over load factor (Paraguay), or a dated price schedule (Ethiopia).
+    const xpm=models.find(o=>o.m.slug==='antminer-s21-xp'),s19m=models.find(o=>o.m.slug==='antminer-s19-xp');
+    const ptab=(col,list)=>`<table><thead><tr><th>${esc(col)}</th><th>$/kWh</th><th>${esc(xpm.m.name)} profit / day</th><th>${esc(s19m.m.name)} profit / day</th></tr></thead><tbody>${list.map(([l,u])=>`<tr><td>${esc(l)}</td><td>$${u.toFixed(4)}</td>${[xpm,s19m].map(o=>{const pr=o.rev-o.kwh*u;return `<td class="${cls(pr)}">${$(pr)}</td>`;}).join('')}</tr>`).join('')}</tbody></table>`;
+    const xtra=[],xfaq=[];
+    if(c.tariff){const T=c.tariff,allin=lf=>T.energy+T.demand/(T.hours*lf),lf5=T.demand/(T.hours*(0.05-T.energy));
+     const lead=`ANDE's intensive industrial tariff (GCIE, 220 kV) is $${T.demand}/kW of demand per month plus $${T.energy}/kWh of energy. Spread over ${T.hours} hours, the demand charge adds ${(T.demand/T.hours*100).toFixed(3)} cents/kWh at full load and more as your load factor drops, so the all-in price is about $${allin(1).toFixed(4)}/kWh at 100% load and about $${allin(0.5).toFixed(4)}/kWh at 50% (our arithmetic). A 5 cent all-in price matches a load factor of roughly ${Math.round(lf5*100)}%.`;
+     xtra.push(`<h2 id="tariff">How does ANDE's tariff turn into an all-in price per kWh?</h2>\n<p><b>${esc(lead)}</b></p>\n${ptab('Load factor',[1,0.9,0.8,0.7,0.6,0.5].map(lf=>[Math.round(lf*100)+'% of contracted demand used',allin(lf)]))}\n<p class="note">Tariff figures from ${esc(c.src[0].name)}. Load factor = kWh used ÷ (contracted kW × ${T.hours} hours); the ${T.hours}-hour month is our assumption. All-in = energy charge + demand charge ÷ (${T.hours} × load factor). Profit is one machine gross of pool fee and hardware cost, at the hashprice in the note above. A miner that runs flat out is near the top row; one that curtails hours pays the demand charge on fewer kWh.</p>`);
+     xfaq.push(['faq-tariff',`How does Paraguay's industrial tariff become a price per kWh?`,lead]);}
+    for(const t of c.sched||[]){
+     const cov=o=>{const bad=t.rows.find(([,u])=>o.rev-o.kwh*u<=0);return bad?`stops covering its power bill at the ${bad[0].split(',')[0]} rate ($${bad[1].toFixed(4)}/kWh)`:`covers its power bill at every rate in this table`;};
+     const ans=`${t.lead} At today's hashprice an ${xpm.m.name} breaks even at about $${xpm.be.toFixed(3)}/kWh and an ${s19m.m.name} at about $${s19m.be.toFixed(3)}/kWh before pool fee, so the ${xpm.m.name} ${cov(xpm)} and the ${s19m.m.name} ${cov(s19m)}.`;
+     xtra.push(`<h2 id="${t.id}">${esc(t.h2)}</h2>\n<p><b>${esc(ans)}</b></p>\n${ptab(t.col,t.rows)}\n<p class="note">Rates from ${esc(t.src)}; full notes in the sources below. Profit is one machine at spec, 24 hours a day, gross of pool fee and hardware cost, at the hashprice in the note above.</p>`);
+     xfaq.push([`faq-${t.id}`,t.h2,ans]);}
     // FAQ answers: plain text from the sourced price above and the calculator math on this page. Same text in the page and in FAQPage JSON-LD.
     const faq=[
      ['faq-price',`What is the industrial electricity price in ${inName}?`,`${res.map(r=>`${r.label}: ${plain(priceTxt(r))}`).join('. ')}. Source: ${srcName}. ${plain(c.caveat)}`],
      ['faq-mining',`Is ${c.slug==='uae'?'UAE':c.short} power cheap enough for Bitcoin mining?`,`At ${plain(priceTxt(r0))}, ${verdict(r0)}, using an Antminer S21 XP at today's hashprice of ${$(hp,4)} per TH/s per day and the calculator's default hardware cost and pool fee.`],
      ['faq-asics',`Which ASIC miners are profitable in ${inName}?`,asicAns],
-     ...(c.faq||[]),
+     ...(c.faq||[]),...xfaq,
      ['faq-gpu',`Does renting out GPUs beat Bitcoin mining in ${inName}?`,`At ${plain(priceTxt(r0))}, renting out H100 GPUs nets about ${$(r0.g.net)} a day per kW vs ${$(r0.m.net)} for mining, so ${w} comes out ahead on these assumptions. GPU rental needs data-center grade power, cooling and customers, so it is not open to every site.`]];
     const body=`<article class="prose post"><p class="eyebrow"><a href="/power-prices/">Power prices</a> · ${updated}</p><h1>${esc(c.h1||`${c.name}: industrial power price and what 1 kW earns`)}</h1>
 <p class="lead"><b>Short answer:</b> ${c.lead?esc(c.lead)+', or':`industrial power in ${esc(inName)} runs`} about <b>${res.map(r=>'$'+r.p.toFixed(3)).join(' to ')}/kWh</b> (<a href="${c.src[0].url}">${esc(srcName)}</a>). ${atLead} ${verdict(r0)}, vs <b>${$(r0.g.net)}</b> a day renting out H100 GPUs, so ${w} comes out ahead.</p>
 <p>${esc(c.intro)}</p>
 <h2 id="price">What is the industrial electricity price in ${esc(inName)}?</h2><ul>${res.map(r=>`<li><b>${esc(r.label)}:</b> ${priceTxt(r)}</li>`).join('')}</ul>
 <p>${c.caveat}</p>
+${xtra.join('\n')}
 <h2 id="per-kw">What does 1 kW earn in ${esc(inName)}, mining vs renting GPUs?</h2>
 <p>At the first price above, ${w} nets more per kW: <b>${$(r0.m.net)}</b> a day mining vs <b>${$(r0.g.net)}</b> renting GPUs, after power and hardware.</p>
 ${blocks}
@@ -131,7 +154,7 @@ ${faq.map(([id,q,a])=>`<h3 id="${id}">${esc(q)}</h3>\n<p>${esc(a)}</p>`).join('\
 <h2 id="break-even">Which places are cheap enough to mine Bitcoin?</h2>
 <table><thead><tr><th>Place</th><th>$/kWh</th>${[xp,s19].map(o=>`<th>${esc(o.m.name)} profit / day</th>`).join('')}</tr></thead><tbody>${flat.map(({c,url,r})=>`<tr><td><a href="${url}">${esc(c.short)}</a></td><td>$${r.p.toFixed(3)}</td>${[xp,s19].map(o=>{const pr=o.rev-o.kwh*r.p;return `<td class="${cls(pr)}">${$(pr)}</td>`;}).join('')}</tr>`).join('')}</tbody></table>
 <p class="note">One machine, gross of pool fee and hardware cost, at the hashprice above. Specs on the <a href="${xp.url}">${esc(xp.m.name)}</a> and <a href="${s19.url}">${esc(s19.m.name)}</a> pages.</p>
-<p>Got your own power price? Put it in the <a href="/">mine vs AI calculator</a> or the <a href="/mining-calculator/">ASIC miner profitability calculator</a>. GPU rent per kW is on the <a href="/gpu/">GPU rental prices</a> page, and the formulas are in the <a href="/methodology/">methodology</a>.</p>
+<p>Got your own power price? Put it in the <a href="/">mine vs AI calculator</a> or the <a href="/mining-calculator/">ASIC miner profitability calculator</a>. GPU rent per kW is on the <a href="/gpu/">GPU rental prices</a> page, and the formulas are in the <a href="/methodology/">methodology</a>. Does your price pay? <a href="/guides/is-bitcoin-mining-profitable-2026/">Is Bitcoin mining profitable in 2026?</a> has the break-even power price for every machine.</p>
 <h2 id="faq">FAQ</h2>
 ${hubFaq.map(([id,q,a])=>`<h3 id="${id}">${esc(q)}</h3>\n<p>${esc(a)}</p>`).join('\n')}<!--signup--></div>`;
   const hubLd={"@context":"https://schema.org","@graph":[{"@type":"CollectionPage","name":"Industrial electricity prices for Bitcoin mining by country","url":SITE+'/power-prices/',"dateModified":iso,"breadcrumb":{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":SITE+'/'},{"@type":"ListItem","position":2,"name":"Power prices","item":SITE+'/power-prices/'}]}},
