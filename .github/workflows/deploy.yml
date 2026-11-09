@@ -4,7 +4,7 @@ on:
     branches: [main]
   # Daily rebuild so build-time live data (ASIC hashprice, power price pages) stays fresh.
   schedule:
-    - cron: '0 5 * * *'
+    - cron: '17 4 * * *'  # off the top of the hour; GitHub delayed 0 5 runs by 6-8h (Nov 3-9)
   workflow_dispatch:
 jobs:
   deploy:
