@@ -9,7 +9,7 @@ export function onRequest({ request }) {
   const p = clean(u.searchParams.get("p"), "");
   const defaultOp = (c.includes("gpu") || c.includes("fleet")) ? "ai_gpu" : "compute";
   const op = clean(u.searchParams.get("op"), defaultOp);
-  const t = new URL("https://paywithflash.com/mining");
+  const t = new URL(op === "ai_gpu" ? "https://paywithflash.com/gpu" : "https://paywithflash.com/mining");
   t.searchParams.set("utm_source", "joulemath");
   t.searchParams.set("utm_medium", "referral");
   t.searchParams.set("utm_campaign", c);

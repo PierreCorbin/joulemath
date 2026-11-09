@@ -138,3 +138,7 @@ ASIC:
 - [x] Thickened crawled-not-indexed pages: M63S and M66S (per-MW cost and earnings, payback vs MicroBT 1-year warranty), S19k Pro (per-MW used comparison, more Bitmain specs, Secure Boot note); same-family links on every model page; /mining-calculator/ links into them
 - [x] GPU and Vast.ai accounting Flash CTA added to home and the three GPU blog posts (/gpu/, /gpu/h100/, /gpu/rtx-4090/, rent-out guide and /fleet/ already had it)
 - [ ] Check GSC around Nov 11 for whether M63S, M66S, S19k Pro and S19 XP moved from crawled-not-indexed to indexed
+
+## Nov 9 Flash GPU follow-up
+
+- [x] GPU hub, model pages, GPU blog CTAs, rent-out guide and Fleet Check explain the available Vast.ai connection, earnings/fees/payouts by machine, payments help and one-click QuickBooks sync. GPU referral links route to Flash /gpu; Fleet Check mining CTA explicitly keeps the mining route. Verified by redirect tests and full build. Flash /gpu copy update is assigned to a separate Flash Website thread.
