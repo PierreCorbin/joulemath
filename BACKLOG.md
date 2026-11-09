@@ -1,6 +1,6 @@
 # joulemath content backlog
 
-Ranked by expected traffic + revenue. Ship top to bottom. Re-ranked 2026-11-02 (see "Week of Nov 2" below). Rule: queries and pages already getting impressions first, then the AI plan with GPU/Vast pages pushed up (Flash Vast.ai integration live Nov 1, GPU is the main push).
+Ranked by expected traffic + revenue. Ship top to bottom. Re-ranked 2026-11-09 (see "Week of Nov 9" below, its PRIORITY list wins over the numbered list). Rule: queries and pages already getting impressions first, then the AI plan with GPU/Vast pages pushed up (Flash Vast.ai integration live Nov 1, GPU is the main push).
 
 1. [x] (shipped 2026-11-03, 8ff2910) /mining-calculator/ AEO pass. Top impressions page (65 impressions through Oct 28; queries "asic profit calculator" 11, "asic profitability calculator" 9). Today it has 2 H2s and no FAQPage. Add sourced short answer up top, question H2s, FAQ + FAQPage JSON-LD, 9-model compare table, last-updated date, links to every /asic/ model page.
 2. [x] (shipped 2026-11-03, 8ff2910: per-model used price, upgrade and payback sections; S19 XP break-even by place on /power-prices/, 871f881) S19 XP + ASIC model pages, round 2. "antminer s19 xp profitability" had 8 impressions, /asic/antminer-s19-xp/ 20. Round 1 shipped 2026-11-01 (29efff8: short answer, question H2s, compare table, FAQ). Next: break-even by power price table and S19 XP vs S21 XP "upgrade or keep" section with payback.
@@ -37,6 +37,32 @@ Done since Oct 26 (git log):
 - Old item "SEO quick wins" folded into #1 to #3.
 
 Recurring: weekly AI post (Mon). Oct 26 shipped "What an H100 hour costs across 7 clouds".
+
+## Week of Nov 9 (written 2026-11-09)
+
+Data, Nov 2 to 8 2026 (UTC days) plus Nov 9 to ~09:10 Warsaw. Market numbers: data/snapshots/2026-11-09.md (commit 68828ec).
+- GSC (read Nov 9, last 7 days = Nov 1 to 7): 418 impressions (week 2: 172, week 1: 136), 2 clicks (first ever), CTR 0.5%, avg position 31.8 (week 2: 60.8). 28 days: 620 impressions, 2 clicks, pos 40. Top pages: /methodology/ 140 imp pos 19.1 (1 click), /mining-calculator/ 100 pos 54.1, /guides/is-bitcoin-mining-profitable-2026/ 88 pos 17.8, Oct GPU rental blog 32 pos 66.3, /asic/ 27 pos 30.1, /asic/antminer-s19k-pro/ 18 pos 11.2, /power-prices/ethiopia/ 17 pos 8.0, /power-prices/ 16 pos 16.1, / 13 pos 23.8 (1 click), rent-out guide 9 pos 4.9, /asic/whatsminer-m66s/ 7, /gpu/h100/ 6 pos 7.2, /gpu/ 6 pos 48.2. Top queries: asic miner profitability 7, nvidia h100 rental 7, asic profit calculator 6, bitcoin mining cost per btc april 2026 6, asic profit 6, is it worth to mine bitcoin in 2026 4 (pos 43.5), asic profitability 4, miner profitability 4, mining rig rental calculator 3, asic prices 3, h200 rental price 3, h100 rental price 3. Clicks came from "bitcoin mining calculator slush pool" and "bitcoin mining profitability 2025 calculator".
+- GSC indexing (report dated Nov 6): 27 indexed (was 22) / 78 not. Crawled-not-indexed 12, validation FAILED: /asic/antminer-s19k-pro/, /asic/antminer-s21/, /asic/antminer-s21-xp/, /power-prices/paraguay/, /blog/bitcoin-miners-pivot-to-ai-hosting-deals-and-why/ plus www duplicates (www blog post, www rss, www M63S, S19k Pro, S21 Pro, S21 XP, M66S). Blocked by robots 21 (expected: /go/ and /api/, verify), alternate canonical 21, page with redirect 19 (www 301s, expected), noindex 2, duplicate 1, discovered-not-indexed 2. Note S19k Pro is "not indexed" yet shows 18 impressions at pos 11.2, so the report lags.
+- Bing Webmaster: not signed in on the box browser this week, no data.
+- Cloudflare Web Analytics (both tags, unsampled, read Nov 9 ~09:08): 88 page loads, 2 ChromeHeadless, so 86 real / 75 visits (week 2: ~19). Full mode since Nov 4 adds EU visitors, so not fully comparable. Top pages: /asic/ 28, Oct GPU blog 12, / 11, /asic/antminer-s21-xp/ 7, /methodology/ 6, rent-out guide 5, /gpu/h100/ 5. Referrers: none 74, internal 11, t.co 2, facebook 2. AEO signal: chatgpt.com 0, perplexity.ai 0, copilot 0, gemini 0.
+- Events (events-report 8): all 17 counters on Nov 4 (go:flash 6, signup:submit 18 with 0 saved, fleet 36) line up with an NL scanner burst (353 /go/flash, 254 /go/vast hits). Treat as bots. Real Flash leads this week: 0.
+- X @joulemath (read Nov 9 ~09:10): 15 followers (7 a week ago) / 114 following. 86 posts Nov 2 to 9, 1,959 impressions (week 2: 1,120), 61% from replies to other accounts (GoMining 208, EnergyCredit1 172). Best main posts: B200 GPU-hour 53, H100 list vs commit 45, B300 vs B200 44. LINK-IN-POST test: 17, 5, 5 impressions vs ~16 avg for self-reply posts, and 0 t.co visits on those days. Verdict: link in post costs reach and sent nothing; keep links in self-replies, test at most 1 a week.
+- Market: BTC $73,782 (-5.5% w/w), hashprice $0.03154/TH/day (-5.2%), retarget est -6.4% ~Fri Nov 13. Ornn H100 $3.37 (+18% 1M), H200 $6.82 (+20%), B200 $9.94 (+33%). Lambda list up Nov 16 (8x H100 $4.59/GPU-hr from $3.99).
+
+Ranking reasoning:
+- Impressions tripled and position halved, driven by the mining explainers, not the calculator: /methodology/ (pos 19) and /guides/is-bitcoin-mining-profitable-2026/ (pos 17.8) are one push from page 1, and they now carry most impressions. Cheapest win = refresh + sharpen these two (titles/metas for CTR, dated short answer with Nov numbers and the Nov 13 retarget, "cost to mine 1 BTC" section for the "mining cost per btc" query, internal links from /, /asic/, /mining-calculator/).
+- /mining-calculator/ has 100 impressions but pos 54: keep linking to it from the two pages above rather than reworking it again.
+- GPU stays the main content push (Pierre, Nov 1). GPU queries with impressions: nvidia h100 rental, h100/h200 rental price. H200 has a newsy spread (Vast $4.14 vs Ornn $6.82), so it goes next, then rent vs buy H100.
+- Indexing: thin ASIC pages (S21, S21 XP, S19k Pro) still crawled-not-indexed with failed validation. Thicken S21 and S21 XP (S21 XP is #4 by RUM loads) and make sure sitemap and canonicals point only to apex.
+- Revenue/Flash: 0 real go:* clicks. Add a bot filter to /go/ counters (skip known scanners, count only eyeball GETs with a referrer from our pages) so next week's lead number is honest.
+
+PRIORITY this week (top to bottom):
+1. [ ] Site improve Wed Nov 11: /guides/is-bitcoin-mining-profitable-2026/ and /methodology/ push to page 1 (see reasoning; Nov 9 snapshot numbers, retarget note, cost-to-mine-1-BTC section, FAQ, title/meta CTR test, internal links). Ethiopia power page is pos 8: add a short answer + ASIC break-even line if missing.
+2. [ ] Content ship Tue Nov 10: /gpu/h200/ rental price page (Vast $4.14 / RunPod $3.59 / Ornn $6.82 / Nebius list, dated table, FAQPage, Flash GPU CTA). Old #7.
+3. [ ] Content ship Thu Nov 12: 'Rent vs buy an H100' (old #5), refresh numbers from the Nov 9 snapshot incl. Lambda Nov 16 change.
+4. [ ] Site improve Fri Nov 13: thicken /asic/antminer-s21/ and /asic/antminer-s21-xp/ (post-retarget numbers), refresh /gpu/ hub and /gpu/h100/ tables (still Nov 6), add /go/ bot filter in events counting. Then RTX 5090 and B200 pages next week.
+5. [ ] Pierre or a GSC run: request indexing for /guides/is-bitcoin-mining-profitable-2026/, /asic/antminer-s21-xp/, /asic/antminer-s21/; re-run "Validate fix" on crawled-not-indexed after the Fri thickening.
+- X: week 4 drafts in /workspace/joulemath-x-drafts-week4.md (Nov 12 to 18, 14 posts, 3 LINK-IN-POST; after this week's test, cut to 1 and move the rest to self-replies). Replies keep doing most of the reach.
 
 ## Week of Nov 2 (written 2026-11-02)
 
