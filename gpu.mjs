@@ -1,5 +1,6 @@
 import { build4090 } from './gpu4090.mjs';
 import { buildA100 } from './gpuA100.mjs';
+import { buildH200 } from './gpuH200.mjs';
 // GPU pages: dist/gpu/<slug>/index.html + dist/gpu/index.html. Uses the page shell and hashprice from buildAsic.
 // Every figure below is copied from a linked source on the date given; per-kW math is ours and labeled as such.
 import fs from 'fs';
@@ -33,7 +34,7 @@ const NOW=[
 const HUB=[
  ['B300','Not checked','$6.94','$8.99','Not checked','Not checked'],
  ['B200','$7.50 (1 offer)','$5.98','$7.99','1x $7.99, 8x $7.69','$9.46'],
- ['H200','$4.34 (5 offers)','$3.59','$5.29','Not checked','$6.45'],
+ ['<a href="/gpu/h200/">H200</a>','$4.34 (5 offers)','$3.59','$5.29','Not checked','$6.45'],
  ['GH200','Not checked','Not listed','Not listed','$2.59','Not checked'],
  ['<a href="/gpu/h100/">H100 SXM</a>','$3.67 (5 offers)','$2.69','$3.99','1x $4.89, 8x $4.59','$3.13'],
  ['H100 NVL','$3.27 (7 offers)','$2.59','$3.19','Not checked','Not checked'],
@@ -100,7 +101,7 @@ ${tbl}
 <h3 id="faq-buy">How much does it cost to buy an H100?</h3><p>About $31,250 to $40,000 per GPU based on 8x server listings and estimates of $250,000 to $320,000 per server, with one listing at $289,000 on October 13, 2026.</p>
 <h3 id="faq-sxm">What is the difference between H100 SXM and PCIe?</h3><p>SXM is the server-board version with up to 700 W and 3.35 TB/s of memory bandwidth. PCIe is a card with a 350 W max TDP and 2,000 GB/s. PCIe rents for less: $1.99 vs $2.69 on RunPod Community.</p>
 <h3 id="faq-vs-btc">Does H100 rental beat Bitcoin mining per kW?</h3><p>On gross revenue per kW, yes by a wide margin at current prices. But a GPU kW needs far more hardware money and only earns when rented, while an ASIC earns every hour it is on.</p>
-<p>Related: <a href="/">mine vs AI calculator</a> · <a href="/gpu/a100/">A100 rent price per kW</a> · <a href="/guides/rent-out-your-gpu/">rent out your own GPU</a> · <a href="/gpu/rtx-4090/">RTX 4090 rent price and payback</a> · <a href="/methodology/#sources-gpu">GPU defaults and sources</a> · <a href="/asic/">ASIC profitability by model</a> · <a href="/power-prices/">industrial power prices</a>.</p>
+<p>Related: <a href="/">mine vs AI calculator</a> · <a href="/gpu/h200/">H200 rent price and H200 vs H100</a> · <a href="/gpu/a100/">A100 rent price per kW</a> · <a href="/guides/rent-out-your-gpu/">rent out your own GPU</a> · <a href="/gpu/rtx-4090/">RTX 4090 rent price and payback</a> · <a href="/methodology/#sources-gpu">GPU defaults and sources</a> · <a href="/asic/">ASIC profitability by model</a> · <a href="/power-prices/">industrial power prices</a>.</p>
 <p class="note">Prices change constantly; this page is updated by hand, last on November 6, 2026. Nothing here is financial advice.</p>
 <!--signup--></article>
 <section class="cta"><div><h2>Renting out H100s?</h2><p>Connect Vast.ai to Flash to track earnings, fees and payouts by machine. Get help with payments and sync to QuickBooks in one click.</p></div><a class="btn" rel="nofollow" href="/go/flash?c=gpu-h100&amp;p=cta&amp;op=ai_gpu">See Flash for compute providers <span aria-hidden="true">→</span></a></section>`;
@@ -119,7 +120,7 @@ ${HUB.map(r=>`<tr>${r.map((c,k)=>k?`<td>${c}</td>`:`<td><b>${c}</b></td>`).join(
 </tbody></table>
 <p class="note">What renters pay, USD per GPU-hour, read November 6, 2026. Vast.ai: our query of its public offers API at 11:12 CET, rentable, on-demand, exactly one GPU; offer counts stop at 64. RunPod: pricing page dated November 4, 2026. Lambda: on-demand, plus tax; published list says prices take effect November 16, 2026; it also lists an A100 40 GB at $1.99. Ornn: OCPI settlement prices for November 5, 2026. "Not checked" means we did not read that price, not that it does not exist.</p>
 <h2 id="pages">Which GPUs have full pages?</h2>
-<ul><li><a href="${url}">NVIDIA H100 rental price per hour</a>: SXM vs PCIe specs, Ornn, RunPod, Lambda and Vast.ai prices, and profit per kW.</li><li><a href="/gpu/a100/">NVIDIA A100 rental price per hour</a>: SXM vs PCIe specs, Ornn, RunPod, Lambda and Vast.ai prices, and profit per kW.</li><li><a href="/gpu/rtx-4090/">NVIDIA RTX 4090</a>: Vast.ai, RunPod and SaladCloud prices, used card prices, power cost and owner payback.</li></ul>
+<ul><li><a href="${url}">NVIDIA H100 rental price per hour</a>: SXM vs PCIe specs, Ornn, RunPod, Lambda and Vast.ai prices, and profit per kW.</li><li><a href="/gpu/h200/">NVIDIA H200 rental price per hour</a>: RunPod, Vast.ai, Nebius and Ornn prices, why the trade index runs higher, H200 vs H100, and profit per kW.</li><li><a href="/gpu/a100/">NVIDIA A100 rental price per hour</a>: SXM vs PCIe specs, Ornn, RunPod, Lambda and Vast.ai prices, and profit per kW.</li><li><a href="/gpu/rtx-4090/">NVIDIA RTX 4090</a>: Vast.ai, RunPod and SaladCloud prices, used card prices, power cost and owner payback.</li></ul>
 <p>Own a gaming card? <a href="/guides/rent-out-your-gpu/">What renting out an RTX 4090, 5090 or 3090 earns after power</a>. Or compare against mining in the <a href="/">per-kW calculator</a>, and see what the same kilowatts earn on the <a href="/asic/">ASIC pages</a>.</p>
 <h2 id="notes">Latest GPU price notes</h2><ul><li><a href="/blog/h100-price-per-hour-across-clouds-october-26-2026/">H100 price per hour across clouds (October 26, 2026)</a></li><li><a href="/blog/gpu-rental-prices-h100-h200-a100-rtx-4090-october-2026/">GPU rental prices: H100, H200, A100 and RTX 4090 (October 2026)</a></li><li><a href="/blog/hashprice-vs-gpu-rent-what-1-kw-earns-this-week/">Hashprice vs GPU rent: what 1 kW earns</a></li><li><a href="/blog/bitcoin-miners-pivot-to-ai-hosting-deals-and-why/">Bitcoin miners pivot to AI hosting: the deals and why</a></li></ul>
 <h2 id="faq">FAQ</h2>
@@ -131,5 +132,5 @@ ${hubFaq.map(([id,q,a])=>`<h3 id="${id}">${q}</h3>\n<p>${a}</p>`).join('\n')}
   const hubLd={"@context":"https://schema.org","@graph":[{"@type":"CollectionPage","name":"GPU rental prices per hour","url":SITE+'/gpu/',"dateModified":'2026-11-06',"breadcrumb":{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":SITE+'/'},{"@type":"ListItem","position":2,"name":"GPU rental prices","item":SITE+'/gpu/'}]}},
    {"@type":"FAQPage","mainEntity":hubFaq.map(([,q,a])=>({"@type":"Question","name":q,"acceptedAnswer":{"@type":"Answer","text":a}}))}]};
   fs.writeFileSync('dist/gpu/index.html',a.page({title:'GPU rental prices per hour (Nov 2026): H100, H200, B200, A100, RTX 4090 | joulemath',desc:'GPU rental prices per hour on Nov 6, 2026 from Vast.ai, RunPod, Lambda and the Ornn index: H100 $2.69 to $4.89, H200, B200, A100, RTX 5090, 4090 and 3090. Every price dated and linked.',url:'/gpu/',ld:hubLd,body:hubBody}));
-  build4090(a);buildA100(a);console.log('gpu: pages 4');
+  build4090(a);buildA100(a);buildH200(a);console.log('gpu: pages 5');
 }
