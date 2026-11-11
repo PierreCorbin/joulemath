@@ -23,11 +23,23 @@ const r=(s)=>new Response(null,{status:s,headers:{'Cache-Control':'no-store'}});
 const hits=new Map();let win=0;
 function limited(plane,ip){const w=Math.floor(Date.now()/60000);if(w!==win){hits.clear();win=w;}const k=plane+':'+ip;const n=(hits.get(k)||0)+1;hits.set(k,n);return n>30;}
 export function resetEventsForTests(){hits.clear();win=0;}
+// Bot filter (Nov 11, 2026): the Nov 4 counter spike lined up with a scanner burst. Real browsers send Origin on
+// sendBeacon/fetch POSTs from our pages, so count only same-host Origin (or Referer) and skip headless or bot user agents.
+// Skipped requests get a silent 204 so scanners learn nothing. Nothing about the request is stored.
+const BOT_UA=/headless|bot\b|bot\/|crawl|spider|slurp|curl|wget|python|httpx|go-http|java\/|okhttp|axios|node-fetch|undici|phantom|selenium|puppeteer|playwright|lighthouse|scan/i;
+function looksHuman(request){
+  const ua=request.headers.get('user-agent')||'';
+  if(!ua||BOT_UA.test(ua))return false;
+  const host=new URL(request.url).host;
+  const src=request.headers.get('origin')||request.headers.get('referer')||'';
+  try{return new URL(src).host===host;}catch{return false;}
+}
 export async function onRequestPost({request,env}){
   const bound=bindingsFor(request,env||{});
   const kv=bound.events;
   if(!kv)return r(bound.plane==='production'?503:204);
   if(request.headers.get('dnt')==='1'||request.headers.get('sec-gpc')==='1')return r(204);
+  if(!looksHuman(request))return r(204);
   if(Number(request.headers.get('content-length')||0)>512)return r(413);
   if(limited(bound.plane,request.headers.get('cf-connecting-ip')||'0'))return r(429);
   let d;try{const t=await request.text();if(t.length>512)return r(413);d=JSON.parse(t);}catch{return r(400);}

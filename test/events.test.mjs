@@ -25,7 +25,7 @@ function post(body, url, headers = {}) {
   const payload = JSON.stringify(body);
   return new Request(url, {
     method: 'POST',
-    headers: {'content-type': 'application/json', 'cf-connecting-ip': '203.0.113.200', ...headers},
+    headers: {'content-type': 'application/json', 'cf-connecting-ip': '203.0.113.200', 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/130.0 Safari/537.36', origin: new URL(url).origin, ...headers},
     body: payload,
   });
 }
@@ -101,4 +101,30 @@ test('preview event posts do not touch production counters', async () => {
   });
   assert.equal(still.status, 204);
   assert.equal(production.store.size, 1);
+});
+
+test('bot filter: headless, scripted and cross-site posts are not counted', async () => {
+  resetEventsForTests();
+  const events = mockKv();
+  const env = {EVENTS: events, SUBSCRIBERS: mockKv()};
+  const url = 'https://joulemath.com/api/e';
+  const body = {event: 'go', props: {v: 'flash'}};
+  const cases = [
+    {'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 HeadlessChrome/130.0 Safari/537.36', 'cf-connecting-ip': '203.0.113.210'},
+    {'user-agent': 'python-requests/2.32', 'cf-connecting-ip': '203.0.113.211'},
+    {'user-agent': '', 'cf-connecting-ip': '203.0.113.212'},
+    {origin: 'https://evil.example', 'cf-connecting-ip': '203.0.113.213'},
+    {origin: '', 'cf-connecting-ip': '203.0.113.214'},
+  ];
+  for (const h of cases) {
+    const res = await onRequestPost({request: post(body, url, h), env});
+    assert.equal(res.status, 204);
+  }
+  assert.equal(events.store.size, 0);
+  const ok = await onRequestPost({request: post(body, url, {'cf-connecting-ip': '203.0.113.215'}), env});
+  assert.equal(ok.status, 204);
+  assert.equal(events.store.size, 1);
+  const viaReferer = await onRequestPost({request: post(body, url, {origin: '', referer: 'https://joulemath.com/gpu/', 'cf-connecting-ip': '203.0.113.216'}), env});
+  assert.equal(viaReferer.status, 204);
+  assert.equal([...events.store.values()][0].value, '2');
 });
