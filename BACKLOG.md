@@ -9,6 +9,7 @@ Ranked by expected traffic + revenue. Ship top to bottom. Re-ranked 2026-11-09 (
 5. [x] (shipped 2026-11-12, /gpu/rent-vs-buy-h100/) 'Rent vs buy an H100'. Reuses /gpu/h100/ data (GYGO $289,000 8x server, Ornn H100 $3.02 settled Nov 1, payback ~24 months at 70% rented, our math in data/snapshots/2026-11-02.md).
 6. [x] (shipped 2026-11-05, 0808adc) /gpu/a100/ NVIDIA A100 rent price. Vast median $0.80 SXM / $0.71 PCIe (10:09 CET), RunPod Community $1.39/$1.19 (page Updated Nov 4), Ornn A100 $1.07 settled Nov 4 (+16.3% 1M). Content ship Thu Nov 5 (GPU day; Nov 3 was S19j Pro ASIC).
 7. [ ] H200 page. Ornn $6.21 vs RunPod $3.59 vs Vast $3.29 (Nov 2): big spread, newsy.
+- [ ] (added 2026-11-14) Refresh /gpu/rtx-4090/ to latest Salad earning-rates (Nov 7-13 mean $0.2719/switched-on hr per X card Nov 14; page FAQ still says ~25 months for a $2,436 card, X card said ~21) plus fresh Vast 4090 median.
 8. [ ] RTX 5090 page (new). Vast 64+ offers, median $0.64 (64 cheapest, Nov 2); the 5090 vs 4090 X card got 40 impressions Nov 1. Same template as /gpu/rtx-4090/, Vast host payback angle.
 9. [ ] B200 page. Ornn $9.44 (+19.8% 1M); Lambda $6.69 to $6.99, RunPod $5.98, only 1 open Vast offer Nov 2.
 10. [ ] Energy-to-Compute Index (dated target Nov 1 missed). Start as the weekly Monday X rent card (week 3 drafts, Mon Nov 9) and promote to a page once it has 3 weekly reads.
