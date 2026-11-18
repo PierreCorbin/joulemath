@@ -24,13 +24,13 @@ const RENT=[
  ['CoreWeave HGX H100, 8 GPUs ($49.24/hr)',CW,'Read Oct 26, 2026; per GPU is our division','$6.16','Not checked'],
  ['Vast.ai marketplace, 1 GPU (low / median / high)',VAST,'API query Oct 26, 2026, 09:06 CET','$1.93 / $3.20 / $9.10 (4 offers)','No offers'],
 ];
-// Fresh read, Nov 11, 2026. Vast: public offers API, 11:03 CET, rentable, on-demand, exactly 1 GPU (count = offers returned, capped at 64).
+// Fresh read, Nov 18, 2026 (data/snapshots/2026-11-18.md). Vast: public offers API, 11:08 CET, rentable, on-demand, exactly 1 GPU (count = offers returned, capped at 64).
 const NOW=[
- ['Ornn Compute Price Index (OCPI-H100)',ORNN,'Settled Nov 10, 2026, read Nov 11','$3.10','Not indexed','Nov 9 $3.30, Nov 5 $3.13'],
- ['RunPod Community Cloud',RP,'Page "Updated November 9, 2026", read Nov 11','$2.69','$1.99','H100 NVL $2.59'],
- ['RunPod Secure Cloud',RP,'Same page','$3.99','$2.89','H100 NVL $3.19'],
- ['Lambda on-demand, 1x GPU',LAM,'Read Nov 11, 2026, plus tax; page says these take effect Nov 16, 2026','$4.89','$3.79','8x $4.59, 4x $4.69, 2x $4.79 per GPU'],
- ['Vast.ai marketplace, 1 GPU (low / median / high)',VAST,'API query Nov 11, 2026, 11:03 CET','$2.00 / $2.67 / $4.60 (3 offers)','$2.47 (2 offers, both $2.47)','H100 NVL $2.34 / $2.67 / $3.42 (4 offers)'],
+ ['Ornn Compute Price Index (OCPI-H100)',ORNN,'Settled Nov 17, 2026, read Nov 18','$2.92','Not indexed','Nov 16 $3.16, Nov 10 $3.10; 1 month +4.3%'],
+ ['RunPod Community Cloud',RP,'Page "Updated November 12, 2026", read Nov 18','$2.69','$1.99','H100 NVL $2.59'],
+ ['RunPod Secure Cloud',RP,'Same page','$4.39','$2.89','H100 NVL $3.19'],
+ ['Lambda on-demand, 1x GPU',LAM,'Read Nov 18, 2026, plus tax; list in effect since Nov 16, 2026','$4.89','$3.79','8x $4.59, 4x $4.69, 2x $4.79 per GPU'],
+ ['Vast.ai marketplace, 1 GPU (low / median / high)',VAST,'API query Nov 18, 2026, 11:08 CET','$1.74 / $1.80 / $5.09 (3 offers)','$2.14 / $2.40 / $2.67 (2 offers)','H100 NVL $2.34 / $3.47 / $4.73 (4 offers)'],
 ];
 // GPU hub table, Nov 11, 2026: [gpu, vast median (offers), runpod community, runpod secure, lambda, ornn]
 const HUB=[
@@ -50,7 +50,7 @@ const HUB=[
  ['RTX 3090','$0.21 (64 offers)','$0.22','$0.50','Not listed','Not checked'],
 ];
 const UTIL=0.7, W=1000; // our assumptions: 70% of hours rented, 1,000 W per H100 SXM incl. its server share
-const RATES=[['Ornn index',3.10],['RunPod Community',2.69],['Vast median',2.67]];
+const RATES=[['Ornn index',2.92],['RunPod Community',2.69],['Vast median',1.80]];
 const PRICES=[0.04,0.06,0.08,0.10];
 const BUY=36125, LIFE=4;
 export function buildGpu(a){
@@ -59,27 +59,27 @@ export function buildGpu(a){
   const tbl=`<table><thead><tr><th>Power price</th>${RATES.map(([n,r])=>`<th>${n} $${r.toFixed(2)}/hr</th>`).join('')}</tr></thead><tbody>
 <tr><td>Gross / kW / day</td>${RATES.map(([n,r])=>`<td>${$(gross(r))}</td>`).join('')}</tr>
 ${PRICES.map(p=>`<tr${p===0.06?' class="hl"':''}><td>Net at $${p.toFixed(2)}/kWh</td>${RATES.map(([n,r])=>`<td><b>${$(gross(r)-pw(p))}</b></td>`).join('')}</tr>`).join('\n')}</tbody></table>`;
-  const ornnNet=gross(3.10)-pw(0.06);
+  const ornnNet=gross(2.92)-pw(0.06);
   const deprHr=BUY/(LIFE*365*24);
   const h100Faq=[
-   ['faq-rent','How much does it cost to rent an H100?','On November 11, 2026: a median $2.67 per GPU-hour for one H100 SXM on Vast.ai (3 offers, $2.00 to $4.60), $2.69 on RunPod Community, $3.99 on RunPod Secure and $4.89 on Lambda 1x (published list; page says those take effect November 16, 2026). The Ornn index of real trades settled at $3.10 on November 10. On October 26 Nebius was $4.50 and CoreWeave\'s 8-GPU box worked out to $6.16 per GPU.'],
+   ['faq-rent','How much does it cost to rent an H100?','On November 18, 2026: a median $1.80 per GPU-hour for one H100 SXM on Vast.ai (only 3 offers, $1.74 to $5.09; it was $2.10 across 8 offers on November 16 and $2.34 across 6 on November 17), $2.69 on RunPod Community, $4.39 on RunPod Secure and $4.89 on Lambda 1x (published list, in effect since November 16). The Ornn index of real trades settled at $2.92 on November 17. On October 26 Nebius was $4.50 and CoreWeave\'s 8-GPU box worked out to $6.16 per GPU.'],
    ['faq-power','How much power does an H100 use?','NVIDIA lists the H100 SXM at up to 700 W max TDP and the H100 PCIe at 350 W. A full server draws more per GPU; we assume about 1,000 W per SXM GPU all-in.'],
-   ['faq-kw','What does one kW of H100 earn per day?',`At the $3.10 Ornn rate (settled November 10, 2026) and 70% utilization, about ${$(gross(3.10))} gross per kW per day, or about ${$(ornnNet)} after $0.06/kWh power. That is renter price, before platform cut and hardware.`],
+   ['faq-kw','What does one kW of H100 earn per day?',`At the $2.92 Ornn rate (settled November 17, 2026) and 70% utilization, about ${$(gross(2.92))} gross per kW per day, or about ${$(ornnNet)} after $0.06/kWh power. That is renter price, before platform cut and hardware.`],
    ['faq-buy','How much does it cost to buy an H100?','About $31,250 to $40,000 per GPU based on 8x server listings and estimates of $250,000 to $320,000 per server, with one listing at $289,000 on October 13, 2026.'],
-   ['faq-sxm','What is the difference between H100 SXM and PCIe?','SXM is the server-board version with up to 700 W and 3.35 TB/s of memory bandwidth. PCIe is a card with a 350 W max TDP and 2,000 GB/s. PCIe rents for less: $1.99 vs $2.69 on RunPod Community (page dated November 9, 2026).'],
+   ['faq-sxm','What is the difference between H100 SXM and PCIe?','SXM is the server-board version with up to 700 W and 3.35 TB/s of memory bandwidth. PCIe is a card with a 350 W max TDP and 2,000 GB/s. PCIe rents for less: $1.99 vs $2.69 on RunPod Community (page dated November 12, 2026).'],
    ['faq-vs-btc','Does H100 rental beat Bitcoin mining per kW?','On gross revenue per kW, yes by a wide margin at current prices. But a GPU kW needs far more hardware money and only earns when rented, while an ASIC earns every hour it is on.']];
-  const calc=`/?gpuw=1000&amp;rate=3.10&amp;gprice=36125&amp;util=70`;
+  const calc=`/?gpuw=1000&amp;rate=2.92&amp;gprice=36125&amp;util=70`;
   const url='/gpu/h100/';
   const title='NVIDIA H100 rental price per hour (Nov 2026): specs and profit per kW';
-  const desc='H100 rental price per hour on Nov 11, 2026: Vast.ai median $2.67, RunPod $2.69, Lambda $4.89, Ornn index $3.10. SXM vs PCIe specs, and what one kW of H100 nets per day.';
+  const desc='H100 rental price per hour on Nov 18, 2026: Vast.ai median $1.80 (3 offers), RunPod $2.69, Lambda $4.89, Ornn index $2.92. SXM vs PCIe specs and profit per kW.';
   const body=`<article class="prose post"><p class="eyebrow"><a href="/gpu/">GPUs</a></p><h1>NVIDIA H100 rental price per hour, specs and profit per kW</h1>
-<p class="eyebrow">Last updated November 11, 2026</p>
-<p class="lead"><b>Short answer:</b> on November 11, 2026 one H100 SXM rented for a median <b>$2.67 an hour on Vast.ai</b> (3 offers), <b>$2.69 on RunPod Community</b> and <b>$4.89 on Lambda</b> (1x, published list). The <a href="https://data.ornn.com/">Ornn index</a> of real trades settled at <b>$3.10</b> on November 10, down from $3.30 the day before. At $3.10 and 70% rented, one kW of H100 grosses about ${$(gross(3.10))} a day. Here is the math.</p>
+<p class="eyebrow">Last updated <time datetime="2026-11-18">November 18, 2026</time></p>
+<p class="lead"><b>Short answer:</b> on November 18, 2026 one H100 SXM rented for <b>$2.69 an hour on RunPod Community</b>, <b>$4.39 on RunPod Secure</b> and <b>$4.89 on Lambda</b> (1x, published list). Vast.ai had only 3 single H100 SXM offers, with a median of <b>$1.80</b>. The <a href="https://data.ornn.com/">Ornn index</a> of real trades settled at <b>$2.92</b> on November 17, down from $3.16 the day before. At $2.92 and 70% rented, one kW of H100 grosses about ${$(gross(2.92))} a day. Here is the math.</p>
 <h2 id="price-now">How much does an H100 cost per hour right now?</h2>
 <table><thead><tr><th>Source</th><th>Date</th><th>H100 SXM</th><th>H100 PCIe</th><th>Also</th></tr></thead><tbody>
 ${NOW.map(([n,u,d,s,p,x])=>`<tr><td><a href="${u}">${n}</a></td><td>${d}</td><td>${s}</td><td>${p}</td><td>${x}</td></tr>`).join('\n')}
 </tbody></table>
-<p class="note">Renter prices per GPU-hour. Our Vast query: rentable, on-demand, exactly one GPU; only 1 of the 3 SXM offers was a verified host ($4.60). Thin sample: three single-GPU SXM offers today, so the Vast median moves a lot day to day (it was $3.67 on Nov 6 and $3.54 on Nov 10). Other GPUs side by side: <a href="/gpu/">GPU rental prices</a>.</p>
+<p class="note">Renter prices per GPU-hour. Our Vast query: rentable, on-demand, exactly one GPU; only 1 of the 3 SXM offers was a verified host ($5.09). Thin sample: three single-GPU SXM offers today, so the Vast median moves a lot day to day (it was $2.10 across 8 offers on Nov 16 and $2.34 across 6 on Nov 17, from our snapshots). RunPod Secure H100 SXM went from $3.99 to $4.39 on the page dated November 12; Community did not move. Other GPUs side by side: <a href="/gpu/">GPU rental prices</a>.</p>
 <h2 id="specs">What are the H100 SXM and PCIe specs?</h2>
 <table><thead><tr><th></th><th>H100 SXM</th><th>H100 PCIe</th></tr></thead><tbody>
 <tr><td>Max TDP</td><td>Up to 700 W (configurable)</td><td>350 W</td></tr>
@@ -102,15 +102,15 @@ ${tbl}
 <p>For scale: a kW of Antminer S21 XP (13.5 J/TH, <a href="https://support.bitmain.com/hc/en-us/articles/35383015643673-S21-XP-Specifications">Bitmain</a>) grosses about <b>${$(btcKw)}</b> a day at the current hashprice. ${a.dataLine}</p>
 <h2 id="rent-vs-buy">Should you rent or buy an H100?</h2>
 <p>An 8x H100 SXM server was listed at $289,000 on Oct 13, 2026 (<a href="https://gygo.com/buy/">GYGO</a>), about $36,125 per GPU. Mercatus puts typical 8x servers at $250,000 to $320,000 (<a href="https://www.mercatus-ai.com/blog/h100-server-price">Mercatus</a>). Spread over 4 years (our assumption), $36,125 is about ${$(deprHr)} per GPU-hour before power, hosting or financing.</p>
-<p>So if you just need compute, renting at $2.67 to $3.10 an hour is simpler unless you keep the GPU busy most of the time for years. If you are a host with cheap power, the gap between that ~${$(deprHr)} hardware cost and a ~$3 rental rate is the business, and utilization decides whether you see it. Full math: <a href="/gpu/rent-vs-buy-h100/">rent vs buy an H100</a>.</p>
-<div class="callout"><b>Run your own numbers or check a live Vast.ai machine.</b> The calculator is preloaded with 1,000 W, the Ornn $3.10 rate, $36,125 per GPU and 70% utilization. Or enter your Vast.ai <code>machine_id</code> in <a href="/fleet/">Fleet Check</a> to pull live GPU occupancy and 36-month net returns.<br><a class="btn" href="${calc}">Open the per-kW calculator <span aria-hidden="true">→</span></a> <a class="btn ghost" href="/fleet/" style="margin-left:.4rem">Benchmark Vast.ai machine ID <span aria-hidden="true">→</span></a></div>
+<p>So if you just need compute, renting at $2.69 to $2.92 an hour (RunPod Community, Ornn index) is simpler unless you keep the GPU busy most of the time for years. If you are a host with cheap power, the gap between that ~${$(deprHr)} hardware cost and a ~$3 rental rate is the business, and utilization decides whether you see it. Full math: <a href="/gpu/rent-vs-buy-h100/">rent vs buy an H100</a>.</p>
+<div class="callout"><b>Run your own numbers or check a live Vast.ai machine.</b> The calculator is preloaded with 1,000 W, the Ornn $2.92 rate, $36,125 per GPU and 70% utilization. Or enter your Vast.ai <code>machine_id</code> in <a href="/fleet/">Fleet Check</a> to pull live GPU occupancy and 36-month net returns.<br><a class="btn" href="${calc}">Open the per-kW calculator <span aria-hidden="true">→</span></a> <a class="btn ghost" href="/fleet/" style="margin-left:.4rem">Benchmark Vast.ai machine ID <span aria-hidden="true">→</span></a></div>
 <h2 id="faq">H100 rental FAQ</h2>
 ${h100Faq.map(([id,q,a])=>`<h3 id="${id}">${q}</h3><p>${a}</p>`).join('\n')}
 <p>Related: <a href="/">mine vs AI calculator</a> · <a href="/gpu/host-earnings/">what GPU hosts earn per GPU</a> · <a href="/gpu/h200/">H200 rent price and H200 vs H100</a> · <a href="/gpu/a100/">A100 rent price per kW</a> · <a href="/guides/rent-out-your-gpu/">rent out your own GPU</a> · <a href="/gpu/rtx-4090/">RTX 4090 rent price and payback</a> · <a href="/methodology/#sources-gpu">GPU defaults and sources</a> · <a href="/asic/">ASIC profitability by model</a> · <a href="/power-prices/">industrial power prices</a>.</p>
-<p class="note">Prices change constantly; this page is updated by hand, last on November 11, 2026. Nothing here is financial advice.</p>
+<p class="note">Prices change constantly; this page is updated by hand, last on November 18, 2026. Nothing here is financial advice.</p>
 <!--signup--></article>
 <section class="cta"><div><h2>Renting out H100s?</h2><p>Connect Vast.ai to Flash to track earnings, fees and payouts by machine. Get help with payments and sync to QuickBooks in one click.</p></div><a class="btn" rel="nofollow" href="/go/flash?c=gpu-h100&amp;p=cta&amp;op=ai_gpu">See Flash for compute providers <span aria-hidden="true">→</span></a></section>`;
-  const ld={"@context":"https://schema.org","@graph":[{"@type":"WebPage","name":title,"description":desc,"url":SITE+url,"dateModified":'2026-11-11',"breadcrumb":{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"GPU rental prices","item":SITE+'/gpu/'},{"@type":"ListItem","position":2,"name":"NVIDIA H100","item":SITE+url}]}},
+  const ld={"@context":"https://schema.org","@graph":[{"@type":"WebPage","name":title,"description":desc,"url":SITE+url,"dateModified":'2026-11-18',"breadcrumb":{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"GPU rental prices","item":SITE+'/gpu/'},{"@type":"ListItem","position":2,"name":"NVIDIA H100","item":SITE+url}]}},
    {"@type":"FAQPage","mainEntity":h100Faq.map(([,q,a])=>({"@type":"Question","name":q,"acceptedAnswer":{"@type":"Answer","text":a}}))}]};
   fs.mkdirSync('dist'+url,{recursive:true});fs.writeFileSync('dist'+url+'index.html',a.page({title:`${title} | joulemath`,desc,url,ld,body}));
   const hubFaq=[['faq-h100','How much does it cost to rent an H100 per hour?','On November 11, 2026 one H100 SXM rented for a median $2.67 an hour on Vast.ai (3 offers), $2.69 on RunPod Community, $3.99 on RunPod Secure and $4.89 on Lambda (1x GPU, published list). The Ornn index of executed trades settled at $3.10 on November 10.'],
