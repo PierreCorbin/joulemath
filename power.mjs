@@ -34,8 +34,8 @@ export const PLACES=[
   intro:'Ethiopia has a special electricity tariff just for data mining, set by the state power company. It went from a flat rate to time-of-use pricing in December 2025.',
   caveat:'This figure includes VAT. Rates are a bit lower off-peak and higher from 6 PM to 10 PM, and an availability-based adjustment changes the bill when the utility curtails. The average steps up again to 6.5 cents in July 2027.'},
  {slug:'uae',name:'United Arab Emirates (Dubai)',short:'UAE',
-  prices:[{label:'DEWA industrial tariff above 10,000 kWh a month, plus fuel surcharge (October 2026, excl. VAT)',cur:'AED',amt:0.44}],
-  src:[{name:'Dubai Electricity and Water Authority (DEWA), slab tariff',url:'https://www.dewa.gov.ae/en/consumer/billing/slab-tariff',note:'Industrial slab tariff AED 0.230/kWh for the first 10,000 kWh a month and AED 0.380/kWh above that, plus a fuel surcharge of AED 0.060/kWh for October 2026; 5% VAT on top. We use 0.380 + 0.060 = AED 0.44/kWh, since any mining-size load is almost all above 10,000 kWh. Accessed October 21, 2026.'},
+  prices:[{label:'DEWA industrial tariff above 10,000 kWh a month, plus fuel surcharge (November 2026, excl. VAT)',cur:'AED',amt:0.44}],
+  src:[{name:'Dubai Electricity and Water Authority (DEWA), slab tariff',url:'https://www.dewa.gov.ae/en/consumer/billing/slab-tariff',note:'Industrial slab tariff AED 0.230/kWh for the first 10,000 kWh a month and AED 0.380/kWh above that, plus a fuel surcharge of AED 0.060/kWh for November 2026 (same as October); 5% VAT on top. We use 0.380 + 0.060 = AED 0.44/kWh, since any mining-size load is almost all above 10,000 kWh. First accessed October 21, 2026, rechecked November 18, 2026.'},
    {name:'Central Bank of the UAE',url:'https://www.centralbank.ae/en/',note:'The dirham is pegged at AED 3.6725 per US dollar, which we use to convert.'}],
   intro:'The UAE is one of the bigger mining countries by hashrate, much of it in Abu Dhabi. Dubai\'s utility DEWA is the one that publishes a full industrial tariff, so that is the price used here.',
   caveat:'This is Dubai\'s published tariff for regular industrial accounts. Large mining sites in the UAE, especially in Abu Dhabi, usually run on privately negotiated power deals that are not public, so treat this as the walk-in grid price, not what big miners pay.'},
@@ -63,7 +63,14 @@ function perKw(p,hp,d=DEF){
 const $=(n,d=2)=>(n<0?'-$':'$')+Math.abs(n).toFixed(d);
 const cls=n=>n>=0?'pos':'neg';
 async function boc(){const r=await fetch('https://www.bankofcanada.ca/valet/observations/FXUSDCAD/json?recent=1');if(!r.ok)throw new Error('Bank of Canada '+r.status);const o=(await r.json()).observations[0];return {rate:+o.FXUSDCAD.v,date:o.d};}
-export async function buildPower({hp,eurPerUsd,when,dataLine,page,updated,iso,day,models}){
+// CTR titles (Nov 18, 2026 pass): lead with the price people search; numbers come from the sourced prices at build time.
+const rng=res=>res.map(r=>'$'+r.p.toFixed(3)).join(' to ');
+const CTR={
+ 'paraguay':{t:(res,mon)=>`Paraguay industrial power: ${rng(res)}/kWh, ${mon}`,src:'ANDE tariff via Hashrate Index'},
+ 'uae':{t:(res,mon)=>`UAE (Dubai) industrial power: AED ${res[0].amt.toFixed(2)}/kWh ($${res[0].p.toFixed(3)}), ${mon}`,src:'DEWA'},
+ 'canada-quebec':{t:(res,mon)=>`Hydro-Quebec crypto mining rate: ${(res[0].amt*100).toFixed(2)} cents CAD/kWh, ${mon}`,src:'Hydro-Quebec Rate CB',what:'crypto mining power'},
+ 'ethiopia':{t:(res,mon,c)=>{const r=c.sched[0].rows;return `Ethiopia mining power: $${r[1][1].toFixed(3)}/kWh now, $${r[2][1].toFixed(3)} from July 2027`;},src:'EEP via Addis Standard',what:'data mining power'}};
+export async function buildPower({hp,eurPerUsd,when,dataLine,page,updated,iso,day,models,mon,dshort,prev,prevPct,prevTxt}){
   const usdcad=await boc();
   const calcUrl=p=>`/?price=${p.toFixed(4).replace(/0+$/,'').replace(/\.$/,'')}&amp;kw=${DEF.kw}`;
   const FX={EUR:1/eurPerUsd,AED:1/3.6725,CAD:1/usdcad.rate};const usdOf=x=>x.usd??x.amt*FX[x.cur];
@@ -83,8 +90,11 @@ export async function buildPower({hp,eurPerUsd,when,dataLine,page,updated,iso,da
 <p><a class="btn" href="${calcUrl(r.p)}">Open the calculator at $${r.p.toFixed(4)}/kWh <span aria-hidden="true">→</span></a></p>`).join('\n');
     const r0=res[0],w=r0.g.net>=r0.m.net?'GPU rental':'mining';
     const title=`${c.name} industrial electricity price and what 1 kW earns`;
-    const seoTitle=c.seoTitle||`${c.short} industrial electricity price for Bitcoin mining (2026)`;
-    const desc=c.desc||`${c.name}: industrial power at ${res.map(r=>'$'+r.p.toFixed(3)).join(' to ')}/kWh (${c.src[0].name.split(',')[0]}). What 1 kW nets mining with an S21 XP at live hashprice vs renting out H100 GPUs.`;
+    const ctr=CTR[c.slug];
+    const seoTitle=ctr?ctr.t(res,mon,c):(c.seoTitle||`${c.short} industrial electricity price for Bitcoin mining (2026)`);
+    const okN=models.filter(o=>o.be>r0.p).length;
+    let desc=ctr?`${dshort}: ${c.slug==='uae'?'UAE':c.short} ${ctr.what||'industrial power'} about ${rng(res)}/kWh (${ctr.src}). ${okN} of ${models.length} tracked ASICs cover $${r0.p.toFixed(3)} at today's hashprice.`:c.desc||`${c.name}: industrial power at ${res.map(r=>'$'+r.p.toFixed(3)).join(' to ')}/kWh (${c.src[0].name.split(',')[0]}). What 1 kW nets mining with an S21 XP at live hashprice vs renting out H100 GPUs.`;
+    if(ctr&&desc.length<125)desc+=' Mining vs H100 rent per kW.';
     const inName=c.slug==='uae'?'the UAE':c.short, atLead=res.length>1?'At the low end':'At that price';
     const verdict=r=>r.m.net>=0?`mining keeps about ${$(r.m.net)} a day per kW after power and hardware`:`mining loses about ${$(-r.m.net)} a day per kW after power and hardware`;
     const cmpRows=rows.map(o=>{const r=o.res[0];return `<tr${o.c===c?' class="hl"':''}><td>${o.c===c?`<b>${o.c.short}</b>`:`<a href="${o.url}">${o.c.short}</a>`}</td><td>$${r.p.toFixed(4)}</td><td class="${cls(r.m.net)}">${$(r.m.net)}</td><td class="${cls(r.g.net)}">${$(r.g.net)}</td></tr>`;}).join('');
@@ -113,7 +123,7 @@ export async function buildPower({hp,eurPerUsd,when,dataLine,page,updated,iso,da
      ...(c.faq||[]),...xfaq,
      ['faq-gpu',`Does renting out GPUs beat Bitcoin mining in ${inName}?`,`At ${plain(priceTxt(r0))}, renting out H100 GPUs nets about ${$(r0.g.net)} a day per kW vs ${$(r0.m.net)} for mining, so ${w} comes out ahead on these assumptions. GPU rental needs data-center grade power, cooling and customers, so it is not open to every site.`]];
     const body=`<article class="prose post"><p class="eyebrow"><a href="/power-prices/">Power prices</a> · ${updated}</p><h1>${esc(c.h1||`${c.name}: industrial power price and what 1 kW earns`)}</h1>
-<p class="lead"><b>Short answer:</b> ${c.lead?esc(c.lead)+', or':`industrial power in ${esc(inName)} runs`} about <b>${res.map(r=>'$'+r.p.toFixed(3)).join(' to ')}/kWh</b> (<a href="${c.src[0].url}">${esc(srcName)}</a>). ${atLead} ${verdict(r0)}, vs <b>${$(r0.g.net)}</b> a day renting out H100 GPUs, so ${w} comes out ahead.</p>
+<p class="lead"><b>Short answer (${dshort}):</b> ${c.lead?esc(c.lead)+', or':`industrial power in ${esc(inName)} runs`} about <b>${res.map(r=>'$'+r.p.toFixed(3)).join(' to ')}/kWh</b> (<a href="${c.src[0].url}">${esc(srcName)}</a>). ${atLead} ${verdict(r0)}, vs <b>${$(r0.g.net)}</b> a day renting out H100 GPUs, so ${w} comes out ahead. At today's hashprice of ${$(hp,4)} per TH/s per day${prev?`, after ${prevTxt},`:','} an ${esc(xpm.m.name)} breaks even at about <b>$${xpm.be.toFixed(3)}/kWh</b> and an ${esc(s19m.m.name)} at about <b>$${s19m.be.toFixed(3)}/kWh</b>, before pool fee.</p>
 <p>${esc(c.intro)}</p>
 <h2 id="price">What is the industrial electricity price in ${esc(inName)}?</h2><ul>${res.map(r=>`<li><b>${esc(r.label)}:</b> ${priceTxt(r)}</li>`).join('')}</ul>
 <p>${c.caveat}</p>
@@ -136,7 +146,7 @@ ${faq.map(([id,q,a])=>`<h3 id="${id}">${esc(q)}</h3>\n<p>${esc(a)}</p>`).join('\
 <!--signup--></article>`;
     const ld={"@context":"https://schema.org","@graph":[{"@type":"WebPage","name":title,"description":desc,"url":SITE+url,"dateModified":iso,"breadcrumb":{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Power prices","item":SITE+'/power-prices/'},{"@type":"ListItem","position":2,"name":c.name,"item":SITE+url}]}},
      {"@type":"FAQPage","mainEntity":faq.map(([,q,a])=>({"@type":"Question","name":q,"acceptedAnswer":{"@type":"Answer","text":a}}))}]};
-    fs.mkdirSync('dist'+url,{recursive:true});fs.writeFileSync('dist'+url+'index.html',page({title:`${seoTitle} | joulemath`,desc,url,ld,body}));
+    fs.mkdirSync('dist'+url,{recursive:true});fs.writeFileSync('dist'+url+'index.html',page({title:ctr?seoTitle:`${seoTitle} | joulemath`,desc,url,ld,body}));
   }
   const flat=rows.flatMap(({c,url,res})=>res.map(r=>({c,url,r}))).sort((a,b)=>a.r.p-b.r.p),cheap=flat[0],dear=flat[flat.length-1];
   const xp=models.find(o=>o.m.slug==='antminer-s21-xp'),s19=models.find(o=>o.m.slug==='antminer-s19-xp');
@@ -146,7 +156,7 @@ ${faq.map(([id,q,a])=>`<h3 id="${id}">${esc(q)}</h3>\n<p>${esc(a)}</p>`).join('\
    ['faq-avg','What do big miners actually pay for power?','Usually less than the published industrial average. Large sites sign their own contracts, sell flexibility back to the grid or own their power. The prices here are public tariffs and averages, so treat them as the walk-in price, not the best deal in each place.'],
    ['faq-gpu-power','Does cheap power matter for renting out GPUs too?','Less. Power is a small share of what an H100 earns per kW, so GPU rent per kW changes far less with the power price than mining does. What GPUs need more is data-center grade cooling, uptime and customers.']];
   const body=`<div class="prose post"><p class="eyebrow">Power prices · ${updated}</p><h1>Industrial electricity prices for Bitcoin mining, by country</h1>
-<p class="lead"><b>Short answer:</b> of the mining places we track, ${esc(cheap.c.slug==='uae'?'the UAE':cheap.c.short)} has the cheapest public industrial power at about <b>$${cheap.r.p.toFixed(3)}/kWh</b> and ${esc(dear.c.slug==='uae'?'the UAE':dear.c.short)} the most expensive at about <b>$${dear.r.p.toFixed(3)}/kWh</b>. At today's hashprice an ${esc(xp.m.name)} needs power under about <b>$${xp.be.toFixed(3)}/kWh</b> to cover its bill. Every price below links its source.</p>
+<p class="lead"><b>Short answer (${dshort}):</b> of the mining places we track, ${esc(cheap.c.slug==='uae'?'the UAE':cheap.c.short)} has the cheapest public industrial power at about <b>$${cheap.r.p.toFixed(3)}/kWh</b> and ${esc(dear.c.slug==='uae'?'the UAE':dear.c.short)} the most expensive at about <b>$${dear.r.p.toFixed(3)}/kWh</b>. At today's hashprice of ${$(hp,4)} per TH/s per day${prev?`, after ${prevTxt},`:','} an ${esc(xp.m.name)} needs power under about <b>$${xp.be.toFixed(3)}/kWh</b> to cover its bill, and an ${esc(s19.m.name)} under about <b>$${s19.be.toFixed(3)}/kWh</b>. Every price below links its source.</p>
 <h2 id="prices">What does industrial power cost in each mining country?</h2>
 <p>Industrial electricity prices from public sources, and what 1 kW nets mining vs renting GPUs at each one.</p>
 <table><thead><tr><th>Place</th><th>Industrial $/kWh</th><th>Mining net / kW / day</th><th>GPU net / kW / day</th><th>Source</th></tr></thead><tbody>${rows.flatMap(({c,url,res})=>res.map((r,i)=>`<tr><td>${i?'':`<a href="${url}">${c.name}</a>`}</td><td>$${r.p.toFixed(4)}${res.length>1?` (${i?'high':'low'})`:''}</td><td class="${cls(r.m.net)}">${$(r.m.net)}</td><td class="${cls(r.g.net)}">${$(r.g.net)}</td><td>${i?'':`<a href="${c.src[0].url}">${esc(c.src[0].name.split(',')[0])}</a>`}</td></tr>`)).join('')}</tbody></table>
@@ -159,6 +169,6 @@ ${faq.map(([id,q,a])=>`<h3 id="${id}">${esc(q)}</h3>\n<p>${esc(a)}</p>`).join('\
 ${hubFaq.map(([id,q,a])=>`<h3 id="${id}">${esc(q)}</h3>\n<p>${esc(a)}</p>`).join('\n')}<!--signup--></div>`;
   const hubLd={"@context":"https://schema.org","@graph":[{"@type":"CollectionPage","name":"Industrial electricity prices for Bitcoin mining by country","url":SITE+'/power-prices/',"dateModified":iso,"breadcrumb":{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":SITE+'/'},{"@type":"ListItem","position":2,"name":"Power prices","item":SITE+'/power-prices/'}]}},
    {"@type":"FAQPage","mainEntity":hubFaq.map(([,q,a])=>({"@type":"Question","name":q,"acceptedAnswer":{"@type":"Answer","text":a}}))}]};
-  fs.writeFileSync('dist/power-prices/index.html',page({title:'Industrial electricity prices for Bitcoin mining by country (2026) | joulemath',desc:`Sourced industrial electricity prices for Bitcoin mining: ${placeList} per kWh. Which ASICs pay at each, and mining vs GPU rent per kW.`,url:'/power-prices/',ld:hubLd,body}));
+  fs.writeFileSync('dist/power-prices/index.html',page({title:`Bitcoin mining electricity cost by country ($/kWh), ${mon}`,desc:`${dshort}: sourced industrial power for mining runs from $${cheap.r.p.toFixed(3)}/kWh (${cheap.c.short}) to $${dear.r.p.toFixed(3)} (${dear.c.short}). S21 XP breaks even near $${xp.be.toFixed(3)}/kWh.`,url:'/power-prices/',ld:hubLd,body}));
   console.log('power: pages',PLACES.length);
 }

@@ -16,7 +16,7 @@ const WMP={'whatsminer-m60s':{price:1674,url:'https://shop.whatsminer.com/produc
  'whatsminer-m63s':{price:3672,sold:'November 13, 2026',url:'https://shop.whatsminer.com/products/details/67?skuId=132'},'whatsminer-m70s':{price:3472,url:'https://shop.whatsminer.com/products'}};
 // Specs as published by the manufacturer, accessed Oct 21, 2026. For WhatsMiner the shop lists hashrate and J/TH; watts = TH x J/TH (our arithmetic).
 export const MODELS=[
- {slug:'antminer-s21-xp',name:'Antminer S21 XP',maker:'Bitmain',th:270,w:3645,src:BM,url:'https://support.bitmain.com/hc/en-us/articles/35383015643673-S21-XP-Specifications',
+ {slug:'antminer-s21-xp',name:'Antminer S21 XP',maker:'Bitmain',th:270,w:3645,ctr:'Antminer S21 XP profit per day and breakeven, {mon}',src:BM,url:'https://support.bitmain.com/hc/en-us/articles/35383015643673-S21-XP-Specifications',
   intro:'The S21 XP is the most efficient air-cooled Antminer on this list at 13.5 J/TH, pushing 270 TH/s from 3,645 W. That efficiency is why it keeps a margin at power prices where older machines are underwater. It is the benchmark the other machines on this site are measured against. Below: what it earns today, what the electricity costs per bitcoin mined, whether new or used pays back sooner, and what one megawatt of them looks like.',
   accessed:'November 9, 2026',specsAccessed:'November 9, 2026',
   used:used('antminer-s21-xp','antminer-s21-pro','antminer-s21','antminer-s19-xp'),
@@ -27,7 +27,7 @@ export const MODELS=[
  {slug:'antminer-s21-pro',name:'Antminer S21 Pro',maker:'Bitmain',th:234,w:3510,src:BM,url:'https://support.bitmain.com/hc/en-us/articles/31321354157593-S21-Pro-Specification',
   intro:'The S21 Pro sits between the S21 and the S21 XP: 234 TH/s at 3,510 W, or 15 J/TH. It draws almost the same power as a plain S21 but hashes 17% more.',
   used:used('antminer-s21-pro','antminer-s21','antminer-s21-xp'),up:'antminer-s21-xp'},
- {slug:'antminer-s21',name:'Antminer S21',maker:'Bitmain',th:200,w:3500,src:BM,url:'https://support.bitmain.com/hc/en-us/articles/23794895251609-S21-Specification',
+ {slug:'antminer-s21',name:'Antminer S21',maker:'Bitmain',th:200,w:3500,ctr:'Antminer S21 profitability: daily profit, breakeven, {mon}',src:BM,url:'https://support.bitmain.com/hc/en-us/articles/23794895251609-S21-Specification',
   intro:'The original S21 does 200 TH/s at 3,500 W, which is 17.5 J/TH. It is the baseline for the S21 family, and a useful yardstick for how much the Pro and XP versions improved. It draws almost exactly what the S21 Pro does (3,500 W vs 3,510 W) while hashing about 15% less, and 15% more than an S19 XP (3,031.5 W) for 42% more hashrate. Whether a used one beats a newer machine is what the payback, upgrade and megawatt sections below work out.',
   accessed:'November 9, 2026',specsAccessed:'November 9, 2026',
   used:used('antminer-s21','antminer-s21-pro','antminer-s21-xp'),up:'antminer-s21-xp',
@@ -49,17 +49,17 @@ export const MODELS=[
   // Used prices: ING Mining used ASIC sold price index (eBay sales), 90-day medians to November 11, 2026, read November 13, 2026.
   used:used('antminer-s19j-pro','antminer-s19-xp','antminer-s21-xp')},
  {slug:'antminer-s19k-pro',name:'Antminer S19k Pro',maker:'Bitmain',th:120,w:2760,src:BM,url:'https://support.bitmain.com/hc/en-us/articles/23833956049049-S19K-Pro-Specifications',
-  title:'Antminer S19k Pro profitability: is it still worth it in 2026?',h1:'Antminer S19k Pro profitability in 2026',accessed:'November 3, 2026',
+  title:'Antminer S19k Pro profitability: is it still worth it in 2026?',ctr:'Antminer S19k Pro profit per day and breakeven, {mon}',h1:'Antminer S19k Pro profitability in 2026',accessed:'November 3, 2026',
   intro:'The S19k Pro came out in late 2023 (Bitmain posted its spec sheet on October 9, 2023) as a cheaper, lighter S19: 120 TH/s at 2,760 W, or 23 J/TH. It draws less power per box than an S19 XP, but it burns more energy per terahash, so it needs slightly cheaper power to break even. Used ones sold for a bit more than S19 XPs on eBay over the last 90 days.',
   used:used('antminer-s19k-pro','antminer-s19-xp','antminer-s19j-pro','antminer-s21-xp'),up:'antminer-s21-xp',
   specs:[['Hashrate','120 TH/s'],['Power on wall at 25 °C','2,760 W ±5%'],['Efficiency','23 J/TH ±5%'],['Input power','200 to 240 V AC, 20 A max over two 10 A cords'],['Size without box','400 × 195 × 290 mm'],['Net weight','12.85 kg, about 1.35 kg lighter than an S19 XP'],['Operating temperature','0 to 40 °C'],['Operating humidity','10 to 90% RH, non-condensing'],['AC frequency','47 to 63 Hz'],['Network','RJ45 Ethernet 10/100M'],['Altitude','Up to 2,000 m (max temperature drops 1 °C per 300 m above 900 m)']],
   specNote:'Bitmain\'s spec sheet also says Secure Boot is switched on and root access is disabled on S19 series firmware, to stop firmware viruses. If you plan to run third-party firmware for underclocking or autotuning, check that it supports your unit before you buy.',
   mw:{peers:['antminer-s19k-pro','antminer-s19-xp','antminer-s19j-pro','antminer-s21-xp'],basis:'used'},
   site:'Like the S19 XP it is air-cooled on single-phase 200 to 240 V. At 2,760 W it is about 270 W lighter on the circuit than an S19 XP, which matters if you are tight on breaker capacity.'},
- {slug:'whatsminer-m60s',name:'WhatsMiner M60S',maker:'MicroBT',th:186,jth:18.5,src:WM,url:WMURL,
+ {slug:'whatsminer-m60s',name:'WhatsMiner M60S',maker:'MicroBT',th:186,jth:18.5,ctr:'WhatsMiner M60S profit per day and breakeven, {mon}',src:WM,url:WMURL,
   intro:'The M60S is MicroBT\'s air-cooled workhorse, listed at 186 TH/s and 18.5 J/TH, which works out to about 3,441 W. On paper it lands between the S21 and the S19 XP on efficiency.',new:WMP['whatsminer-m60s']},
  {slug:'whatsminer-m66s',name:'WhatsMiner M66S',maker:'MicroBT',th:290,jth:18.5,src:WM,url:WMURL,
-  title:'WhatsMiner M66S profitability: immersion miner profit and payback',h1:'WhatsMiner M66S profitability (immersion)',accessed:'November 3, 2026',
+  title:'WhatsMiner M66S profitability: immersion miner profit and payback',ctr:'WhatsMiner M66S immersion: profit per day, breakeven, {mon}',h1:'WhatsMiner M66S profitability (immersion)',accessed:'November 3, 2026',
   intro:'The M66S is an immersion-cooled MicroBT unit, listed at 290 TH/s and 18.5 J/TH, with 5,365 W power on wall on its shop page. Same efficiency as the air-cooled M60S, just 56% more hashrate per box. The price of that is the tank: it only runs submerged in dielectric fluid, on 380 to 480 V power.',
   new:WMP['whatsminer-m66s'],cool:'immersion',mw:{peers:['whatsminer-m66s','whatsminer-m60s','whatsminer-m70s','whatsminer-m63s'],basis:'new'},warranty:true,
   specs:[['Cooling','Immersion'],['Hashrate','290 TH/s (a 286 TH/s bin is also listed)'],['Power on wall','5,365 W'],['Efficiency','18.5 J/TH'],['Input power','380 to 480 V AC'],['Power cable','Custom made, 16 A or more'],['Size','267.5 × 147 × 401 mm'],['Net weight','16 kg'],['List price','$2,610 for 290 TH/s ($9 per TH), $2,574 for 286 TH/s']],
@@ -70,7 +70,7 @@ export const MODELS=[
   new:WMP['whatsminer-m63s'],cool:'hydro',mw:{peers:['whatsminer-m63s','whatsminer-m60s','whatsminer-m70s','whatsminer-m66s'],basis:'new'},warranty:true,
   specs:[['Cooling','Hydro (water loop)'],['Hashrate','408 TH/s'],['Power on wall','7,344 W'],['Efficiency','18 J/TH'],['Input power','380 to 480 V AC, three wires plus ground, 10 kW input'],['Coolant per machine','About 1 L'],['Power cable','Custom made, 16 A or more'],['Size','86 × 483 × 663 mm with handle'],['Net weight','27.5 kg'],['List price','$3,672 ($9 per TH)']],
   site:'You need rack space, a closed water loop with a dry cooler or cooling tower, and three-phase 380 to 480 V power at about 10 kW per machine. The loop and electrical work are not in the box price, so the payback above is the machine only.'},
- {slug:'whatsminer-m70s',name:'WhatsMiner M70S',maker:'MicroBT',th:248,jth:13.5,src:WM,url:WMURL,
+ {slug:'whatsminer-m70s',name:'WhatsMiner M70S',maker:'MicroBT',th:248,jth:13.5,ctr:'WhatsMiner M70S profit per day and breakeven, {mon}',src:WM,url:WMURL,
   intro:'The M70S is MicroBT\'s newer air-cooled model, listed at 248 TH/s and 13.5 J/TH, so about 3,348 W. It matches the S21 XP on efficiency with a bit less hashrate per box.',new:WMP['whatsminer-m70s']},
 ];
 // Same-family groups, used for sibling links on each model page.
@@ -113,6 +113,12 @@ ${body}
   const rows=[];
   const day=now.toLocaleDateString('en-US',{timeZone:'UTC',year:'numeric',month:'long',day:'numeric'});
   const updated=`Last updated <time datetime="${iso}">${day}</time>`;
+  // Build-date labels for titles, metas and dated short answers (never hardcoded months).
+  const mon=now.toLocaleDateString('en-US',{timeZone:'UTC',month:'short',year:'numeric'}), dshort=now.toLocaleDateString('en-US',{timeZone:'UTC',month:'short',day:'numeric',year:'numeric'});
+  // Last difficulty adjustment (mempool.space difficulty-adjustment API: previousRetarget %, previousTime). Optional, left out if missing.
+  const prev=adjR&&Number.isFinite(adjR.previousRetarget)&&Number.isFinite(adjR.previousTime)?{pct:adjR.previousRetarget,date:new Date(adjR.previousTime*1000).toLocaleDateString('en-US',{timeZone:'UTC',month:'short',day:'numeric'})}:null;
+  const prevPct=prev?(prev.pct>0?'+':'-')+Math.abs(prev.pct).toFixed(2)+'%':'';
+  const prevTxt=prev?`the ${prev.date} difficulty adjustment (${prevPct}, mempool.space)`:'';
   // Every model's revenue and break-even at the same live hashprice, so each page can show where it ranks.
   const all=MODELS.map(m=>{const rev=m.th*hp,kwh=m.w/1000*24;return {m,url:`/asic/${m.slug}/`,rev,kwh,be:rev/kwh,p05:rev-kwh*0.05};});
   const byEff=[...all].sort((a,b)=>a.m.jth-b.m.jth);
@@ -245,11 +251,11 @@ ${rt}`;
     rows.push({m,url,rev,be,p05});
     const rank=byEff.indexOf(r0)+1, n=MODELS.length;
     const cmp=byEff.map(o=>`<tr${o===r0?' class="hl"':''}><td>${o===r0?`<b>${o.m.name}</b>`:`<a href="${o.url}">${o.m.name}</a>`}</td><td>${o.m.th}</td><td>${o.m.w.toLocaleString('en-US')}</td><td>${o.m.jth}</td><td>${$(o.rev)}</td><td>$${o.be.toFixed(3)}</td></tr>`).join('');
-    const title=m.title||`${m.name} profitability: profit per day and break-even`;
+    const title=m.ctr?m.ctr.replace('{mon}',mon):(m.title||`${m.name} profitability: profit per day and break-even`);
     const ex=extra(r0), cb=costSection(r0);
     const fam=(FAM.find(f=>f.includes(m.slug))||[]).filter(s=>s!==m.slug).map(s=>all.find(a=>a.m.slug===s));
     const famLinks=fam.length?`<p><b>Same family:</b> ${fam.map(o=>`<a href="${o.url}">${esc(o.m.name)}</a> (${o.m.th} TH/s, ${o.m.jth} J/TH${o.m.cool?', '+o.m.cool:''}, break-even $${o.be.toFixed(3)}/kWh)`).join(', ')}. Every model side by side: <a href="/asic/">ASIC profitability by model</a>.</p>`:'';
-    const desc=m.used?`${m.name} (${m.th} TH/s, ${m.jth} J/TH) breaks even at about $${be.toFixed(3)}/kWh today. Profit per day, used price and payback${m.up?', upgrade math':''} and the 2028 halving.`:m.new?`${m.name} (${m.th} TH/s, ${m.jth} J/TH): profit per day, break-even about $${be.toFixed(3)}/kWh, new price $${m.new.price.toLocaleString('en-US')} and payback${m.specs?', plus cooling and power specs':''}.`:`${m.name} (${m.th} TH/s, ${m.w.toLocaleString('en-US')} W, ${m.jth} J/TH): daily revenue, power cost and profit at $0.03 to $0.10/kWh from live hashprice. Break-even about $${be.toFixed(3)}/kWh.`;
+    const desc=m.ctr?`${dshort}: ${m.name} grosses ${$(rev)}/day and breaks even near $${be.toFixed(3)}/kWh${prev?` after the ${prevPct} ${prev.date} retarget`:''}. Profit by power price, ${m.used?'used payback':m.new?'list price payback':'cost per BTC'}.`:m.used?`${m.name} (${m.th} TH/s, ${m.jth} J/TH) breaks even at about $${be.toFixed(3)}/kWh today. Profit per day, used price and payback${m.up?', upgrade math':''} and the 2028 halving.`:m.new?`${m.name} (${m.th} TH/s, ${m.jth} J/TH): profit per day, break-even about $${be.toFixed(3)}/kWh, new price $${m.new.price.toLocaleString('en-US')} and payback${m.specs?', plus cooling and power specs':''}.`:`${m.name} (${m.th} TH/s, ${m.w.toLocaleString('en-US')} W, ${m.jth} J/TH): daily revenue, power cost and profit at $0.03 to $0.10/kWh from live hashprice. Break-even about $${be.toFixed(3)}/kWh.`;
     // FAQ answers: plain text built only from the manufacturer spec above and the live hashprice. Same text goes on the page and into FAQPage JSON-LD.
     const faq=[...ex.faq,...cb.faq,
      ['faq-day',`How much does the ${m.name} make per day?`,`At a hashprice of ${$(hp,4)} per TH/s per day, one ${m.name} (${m.th} TH/s) grosses about ${$(rev)} a day before power. At $0.05/kWh it ${p05<0?`loses about ${$(-p05)} a day after the power bill, or about ${$(-p05*30,0)} over 30 days`:`keeps about ${$(p05)} a day after the power bill, or about ${$(p05*30,0)} over 30 days`}.`],
@@ -258,7 +264,7 @@ ${rt}`;
      ['faq-rank',`Is the ${m.name} efficient compared with other ASICs?`,`At ${m.jth} J/TH it ranks ${rank} of ${n} on efficiency among the Antminer and WhatsMiner models we track (lower J/TH is better). The most efficient here is the ${byEff[0].m.name} at ${byEff[0].m.jth} J/TH.`],
      ['faq-left-out','What do these numbers leave out?','Pool fees, downtime, hosting markups and the price of the machine itself. They also hold difficulty and the BTC price where they are today, and both move. Use the ASIC calculator for your own pool fee and power price.']];
     const body=`<article class="prose post"><p class="eyebrow"><a href="/asic/">ASIC profitability</a> · ${updated}</p><h1>${esc(m.h1||m.name+' profitability')}</h1>
-<p class="lead"><b>Short answer:</b> ${be<0.08?`only if your power costs less than about <b>$${be.toFixed(3)}/kWh</b>. One `:'one '}${esc(m.name)} grosses about <b>${$(rev)}</b> a day at the hashprice on ${day}, ${p05<0?`loses about <b>${$(-p05)}</b>`:`keeps about <b>${$(p05)}</b>`} a day at $0.05/kWh, and stops making money above about <b>$${be.toFixed(3)}/kWh</b>. Specs from the <a href="${m.url}">${m.src}</a>, hashprice from the <a href="https://mempool.space/docs/api">mempool.space API</a>.</p>
+<p class="lead"><b>Short answer (${dshort}):</b> one ${esc(m.name)} grosses about <b>${$(rev)}</b> a day, ${p05<0?`loses about <b>${$(-p05)}</b>`:`keeps about <b>${$(p05)}</b>`} a day after power at $0.05/kWh, and breaks even at about <b>$${be.toFixed(3)}/kWh</b> before pool fee. That uses a hashprice of ${$(hp,4)} per TH/s per day (${$(hp*1000,1)} per PH/s)${prev?`, after ${prevTxt}`:''}${adj?`; the next adjustment is estimated at ${sgn(adj.pct)} around ${adj.dateTxt}`:''}. Specs from the <a href="${m.url}">${m.src}</a>, hashprice from the <a href="https://mempool.space/docs/api">mempool.space API</a>.</p>
 <p>Want your own power price and pool fee? Open the <a href="/mining-calculator/#m-${m.slug}">ASIC miner profitability calculator</a> with the ${esc(m.name)} preloaded.</p>
 <p>${esc(m.intro)}</p>
 <ul><li><b>Hashrate:</b> ${m.th} TH/s</li><li><b>Power:</b> ${m.w.toLocaleString('en-US')} W</li><li><b>Efficiency:</b> ${m.jth} J/TH</li><li><b>Source:</b> <a href="${m.url}">${m.src}</a>, accessed ${m.accessed||'October 21, 2026'}.${m.maker==='MicroBT'&&!m.specs?' The shop lists hashrate and J/TH; the wattage is our arithmetic (TH/s × J/TH).':''}</li></ul>
@@ -284,7 +290,7 @@ ${faq.map(([id,q,a])=>`<h3 id="${id}">${esc(q)}</h3>\n<p>${esc(a)}</p>`).join('\
 <section class="cta"><div><h2>Already mining?</h2><p>Track your real per-site numbers (uptime, power cost, curtailment, payouts) instead of estimates.</p></div><a class="btn" rel="nofollow" href="/go/flash?c=asic-model&amp;p=cta">See Flash for miners <span aria-hidden="true">→</span></a></section>`;
     const ld={"@context":"https://schema.org","@graph":[{"@type":"WebPage","name":title,"description":desc,"url":SITE+url,"dateModified":iso,"breadcrumb":{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ASIC profitability","item":SITE+'/asic/'},{"@type":"ListItem","position":2,"name":m.name,"item":SITE+url}]}},
      {"@type":"FAQPage","mainEntity":faq.map(([,q,a])=>({"@type":"Question","name":q,"acceptedAnswer":{"@type":"Answer","text":a}}))}]};
-    fs.mkdirSync('dist'+url,{recursive:true});fs.writeFileSync('dist'+url+'index.html',page({title:`${title} | joulemath`,desc,url,ld,body}));
+    fs.mkdirSync('dist'+url,{recursive:true});fs.writeFileSync('dist'+url+'index.html',page({title:m.ctr?title:`${title} | joulemath`,desc,url,ld,body}));
   }
   rows.sort((a,b)=>b.be-a.be);
   const top=rows[0],low=rows[rows.length-1],pos=rows.filter(r=>r.p05>0);
@@ -302,7 +308,7 @@ ${faq.map(([id,q,a])=>`<h3 id="${id}">${esc(q)}</h3>\n<p>${esc(a)}</p>`).join('\
    ['faq-used-value','Which used ASIC miner is the best value right now?',usedAns],
    ['faq-calc','How do you calculate ASIC miner profitability?',`Daily profit = TH/s × hashprice − (watts ÷ 1000 × 24 × power price). Hashprice is what one TH/s earns per day, ${$(hp,4)} on ${day} from mempool.space data. Break-even power price = TH/s × hashprice ÷ daily kWh.`]];
   const body=`<div class="prose post"><p class="eyebrow">ASIC profitability · ${updated}</p><h1>ASIC miner profitability by model (live)</h1>
-<p class="lead"><b>Short answer:</b> at the hashprice on ${day} (${$(hp,4)} per TH/s per day), ${pos.length} of ${rows.length} popular Antminer and WhatsMiner models still make money at $0.05/kWh. The ${esc(top.m.name)} has the most room, breaking even at about <b>$${top.be.toFixed(3)}/kWh</b>; the ${esc(low.m.name)} needs power under about <b>$${low.be.toFixed(3)}/kWh</b>. Specs from Bitmain and MicroBT, hashprice from the <a href="https://mempool.space/docs/api">mempool.space API</a>, used prices from <a href="${ING.url}">ING Mining</a>. For your own numbers use the <a href="/mining-calculator/">ASIC miner profitability calculator</a>.</p>
+<p class="lead"><b>Short answer (${dshort}):</b> at a hashprice of ${$(hp,4)} per TH/s per day (${$(hp*1000,1)} per PH/s)${prev?`, after ${prevTxt}`:''}, ${pos.length} of ${rows.length} popular Antminer and WhatsMiner models still make money at $0.05/kWh. The ${esc(top.m.name)} has the most room, breaking even at about <b>$${top.be.toFixed(3)}/kWh</b>; the ${esc(low.m.name)} needs power under about <b>$${low.be.toFixed(3)}/kWh</b>. Specs from Bitmain and MicroBT, hashprice from the <a href="https://mempool.space/docs/api">mempool.space API</a>, used prices from <a href="${ING.url}">ING Mining</a>. For your own numbers use the <a href="/mining-calculator/">ASIC miner profitability calculator</a>.</p>
 <h2 id="profitable-now">Which Bitcoin ASIC miners are profitable right now?</h2>
 <p>Daily revenue, profit at $0.05/kWh and break-even power price for each model, using one live hashprice for all of them so they compare fairly.</p>
 <table class="sortable"><caption class="note">Sorted by break-even power price, highest first.<span class="sort-hint" hidden> Tap a column header to re-sort.</span></caption><thead><tr><th>Model</th><th>TH/s</th><th>W</th><th>J/TH</th><th>Revenue / day</th><th>Profit / day at $0.05</th><th aria-sort="descending">Break-even $/kWh</th></tr></thead><tbody>${rows.map(r=>`<tr><td><a href="${r.url}">${r.m.name}</a></td><td data-v="${r.m.th}">${r.m.th}</td><td data-v="${r.m.w}">${r.m.w.toLocaleString('en-US')}</td><td data-v="${r.m.jth}">${r.m.jth}</td><td data-v="${r.rev}">${$(r.rev)}</td><td data-v="${r.p05}">${$(r.p05)}</td><td data-v="${r.be}">$${r.be.toFixed(3)}</td></tr>`).join('')}</tbody></table><script src="/js/sort.js" defer></script>
@@ -320,7 +326,7 @@ ${hubFaq.map(([id,q,a])=>`<h3 id="${id}">${esc(q)}</h3>\n<p>${esc(a)}</p>`).join
 <section class="cta"><div><h2>Already mining?</h2><p>Track your real per-site numbers (uptime, power cost, curtailment, payouts) instead of estimates.</p></div><a class="btn" rel="nofollow" href="/go/flash?c=asic-hub&amp;p=cta">See Flash for miners <span aria-hidden="true">→</span></a></section>`;
   const hubLd={"@context":"https://schema.org","@graph":[{"@type":"CollectionPage","name":"ASIC miner profitability by model","url":SITE+'/asic/',"dateModified":iso,"breadcrumb":{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":SITE+'/'},{"@type":"ListItem","position":2,"name":"ASIC profitability","item":SITE+'/asic/'}]}},
    {"@type":"FAQPage","mainEntity":hubFaq.map(([,q,a])=>({"@type":"Question","name":q,"acceptedAnswer":{"@type":"Answer","text":a}}))}]};
-  fs.writeFileSync('dist/asic/index.html',page({title:'ASIC miner profitability by model (live hashprice) | joulemath',desc:'Antminer S21 XP, S21 Pro, S21, S19 XP, S19k Pro, S19j Pro and WhatsMiner M60S, M66S, M63S, M70S: profit per day, break-even power price and used payback, live.',url:'/asic/',ld:hubLd,body}));
+  fs.writeFileSync('dist/asic/index.html',page({title:`ASIC miner profitability and value by model, ${mon} | joulemath`,desc:`${dshort}: ${pos.length} of ${rows.length} Antminer and WhatsMiner models profit at $0.05/kWh. ${top.m.name} breaks even near $${top.be.toFixed(3)}/kWh. Profit per day, used value, payback.`,url:'/asic/',ld:hubLd,body}));
   // /mining-calculator/: fill the build-time markers (snapshot, model presets, compare table, worked example, FAQ, JSON-LD).
   {const f='dist/mining-calculator/index.html';let h=fs.readFileSync(f,'utf8');
    const xp=all.find(a=>a.m.slug==='antminer-s21-xp'),ex=all.find(a=>a.m.slug==='antminer-s19-xp'),exC=ex.kwh*0.05,exP=ex.rev-exC,fee=ex.rev*0.02;
@@ -345,7 +351,7 @@ ${hubFaq.map(([id,q,a])=>`<h3 id="${id}">${esc(q)}</h3>\n<p>${esc(a)}</p>`).join
 <li><b>Revenue.</b> ${ex.m.th} TH/s × ${$(hp,4)} = <b>${$(ex.rev)}</b> a day. Less a 2% pool fee (${$(fee)}) = ${$(ex.rev-fee)}.</li>
 <li><b>Power cost.</b> ${ex.m.w.toLocaleString('en-US')} W ÷ 1000 × 24 h = ${ex.kwh.toFixed(1)} kWh a day × $0.05 = <b>${$(exC)}</b>.</li>
 <li><b>Profit and break-even.</b> ${$(ex.rev-fee)} − ${$(exC)} = <b>${$(exP-fee)}</b> a day. Break-even power price = revenue ÷ kWh = ${$(ex.rev-fee)} ÷ ${ex.kwh.toFixed(1)} = <b>$${((ex.rev-fee)/ex.kwh).toFixed(3)}/kWh</b>.</li></ol>
-<p>Full formulas and data sources are on the <a href="/methodology/">methodology page</a>, and the verdict, with the cost to mine 1 BTC, is in <a href="/guides/is-bitcoin-mining-profitable-2026/">is Bitcoin mining profitable in 2026?</a> To see what power actually costs in mining regions, check <a href="/power-prices/">industrial power prices by country</a>, like <a href="/power-prices/canada-quebec/">Quebec</a> or <a href="/power-prices/united-states-texas/">Texas</a>.</p>
+<p>Full formulas and data sources are on the <a href="/methodology/">methodology page</a>, and the verdict, with the cost to mine 1 BTC, is in <a href="/guides/is-bitcoin-mining-profitable-2026/">is Bitcoin mining profitable in 2026?</a> To see what power actually costs in mining regions, check <a href="/power-prices/">industrial power prices by country</a>, like <a href="/power-prices/paraguay/">Paraguay</a>, <a href="/power-prices/ethiopia/">Ethiopia</a>, <a href="/power-prices/canada-quebec/">Quebec</a>, <a href="/power-prices/uae/">the UAE</a> or <a href="/power-prices/united-states-texas/">Texas</a>. Profit per day and break-even for one machine, updated with each rebuild: <a href="/asic/antminer-s21-xp/">S21 XP</a>, <a href="/asic/antminer-s21/">S21</a>, <a href="/asic/antminer-s19k-pro/">S19k Pro</a>, <a href="/asic/whatsminer-m70s/">M70S</a>, <a href="/asic/whatsminer-m60s/">M60S</a> and <a href="/asic/whatsminer-m66s/">M66S</a>.</p>
 <h2 id="faq">FAQ</h2>
 ${cq.map(([id,q,a])=>`<h3 id="${id}">${esc(q)}</h3>\n<p>${esc(a)}</p>`).join('\n')}
 <p class="note">Used prices: <a href="${ING.url}">${ING.src}</a>, ${ING.window}. Network data: <a href="https://mempool.space/docs/api">mempool.space API</a>. Specs: each manufacturer, linked on the <a href="/asic/">ASIC model pages</a>.</p>
@@ -389,5 +395,5 @@ ${adj?`<p>${esc(retargetTxt)}</p>`:''}
    for(const [k,v] of [['<!--meth-ld-->',`<script type="application/ld+json">${JSON.stringify(ld)}</script>`],['<!--meth-date-->',updated],['<!--meth-answer-->',ans],['<!--meth-example-->',exH+'\n'+today+'\n'+costH],['<!--meth-desc-->',esc(methDesc)],['<!--meth-title-->',esc(methTitle)]]){if(!h.includes(k))throw new Error('meth marker '+k);h=h.split(k).join(v);}
    fs.writeFileSync(f,h);}
   console.log('asic: hashprice',hp.toFixed(4),'pages',MODELS.length);
-  return {hp,btc,D,reward,eurPerUsd:pr.EUR/pr.USD,when,iso,day,updated,dataLine,page,models:all,adj,retargetTxt,costBtc};
+  return {hp,btc,D,reward,eurPerUsd:pr.EUR/pr.USD,when,iso,day,updated,mon,dshort,prev,prevPct,prevTxt,dataLine,page,models:all,adj,retargetTxt,costBtc};
 }
