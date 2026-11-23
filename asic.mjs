@@ -3,6 +3,7 @@
 import fs from 'fs';
 import {PLACES} from './power.mjs';
 import {gitDate,stamp} from './dates.mjs';
+import {STORY} from './asicStory.mjs';
 const SITE='https://joulemath.com';
 const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 const BM='Bitmain spec sheet', WM='MicroBT WhatsMiner shop listing';
@@ -17,15 +18,15 @@ const WMP={'whatsminer-m60s':{price:1674,url:'https://shop.whatsminer.com/produc
  'whatsminer-m63s':{price:3672,sold:'November 13, 2026',url:'https://shop.whatsminer.com/products/details/67?skuId=132'},'whatsminer-m70s':{price:3472,url:'https://shop.whatsminer.com/products'}};
 // Specs as published by the manufacturer, accessed Oct 21, 2026. For WhatsMiner the shop lists hashrate and J/TH; watts = TH x J/TH (our arithmetic).
 export const MODELS=[
- {slug:'antminer-s21-xp',name:'Antminer S21 XP',maker:'Bitmain',th:270,w:3645,ctr:'Antminer S21 XP profit per day and breakeven, {mon}',src:BM,url:'https://support.bitmain.com/hc/en-us/articles/35383015643673-S21-XP-Specifications',
-  intro:'The S21 XP is the most efficient air-cooled Antminer on this list at 13.5 J/TH, pushing 270 TH/s from 3,645 W. That efficiency is why it keeps a margin at power prices where older machines are underwater. It is the benchmark the other machines on this site are measured against. Below: what it earns today, what the electricity costs per bitcoin mined, whether new or used pays back sooner, and what one megawatt of them looks like.',
+ {slug:'antminer-s21-xp',merged:true,name:'Antminer S21 XP',maker:'Bitmain',th:270,w:3645,ctr:'Antminer S21 XP profit per day and breakeven, {mon}',src:BM,url:'https://support.bitmain.com/hc/en-us/articles/35383015643673-S21-XP-Specifications',
+  intro:'The S21 XP is the most efficient air-cooled Antminer on this list at 13.5 J/TH, pushing 270 TH/s from 3,645 W. That efficiency is why it keeps a margin at power prices where older machines are underwater. It is the benchmark the other machines on this site are measured against.',
   accessed:'November 9, 2026',specsAccessed:'November 9, 2026',
   used:used('antminer-s21-xp','antminer-s21-pro','antminer-s21','antminer-s19-xp'),
   newBM:{date:'November 13, 2026',n:7,window:'365 days of eBay sales to November 11, 2026',rows:[{who:'lowest new eBay sale',price:3050,url:'https://ingmining.com/used-asic-miner-sold-prices'},{who:'median new eBay sale',price:4000,url:'https://ingmining.com/used-asic-miner-sold-prices'}]},
   mw:{peers:['antminer-s21-xp','antminer-s21-pro','antminer-s21','antminer-s19-xp'],basis:'used',label:'Antminer'},
   specs:[['Hashrate','270 TH/s typical (±3%)'],['Power on wall at 25 °C','3,645 W (±5%)'],['Efficiency','13.5 J/TH (±5%)'],['Input power','220 to 277 V AC, 50 to 60 Hz, 20 A single-phase'],['Adapted AC output power requirement','4,000 W'],['Network','RJ45 Ethernet 10/100M'],['Size without box','449 × 219 × 293 mm'],['Net weight','18.7 kg'],['Noise','76 dBA with fans at maximum speed'],['Operating temperature','-20 to 45 °C'],['Operating humidity','10 to 90% RH, non-condensing'],['Altitude','Up to 2,000 m (max temperature drops 1 °C per 300 m above 900 m)']],
   site:'Bitmain lists 220 to 277 V AC input on a single 20 A feed, a narrower range than the 200 to 240 V on the S19 XP spec sheet, so check your supply voltage before you buy. Bitmain quotes 76 dBA with fans at maximum speed, so it needs a hosting hall or a separated building, not a spare room. It is also 4.5 kg heavier than the S19 XP.'},
- {slug:'antminer-s21-pro',name:'Antminer S21 Pro',maker:'Bitmain',th:234,w:3510,src:BM,url:'https://support.bitmain.com/hc/en-us/articles/31321354157593-S21-Pro-Specification',
+ {slug:'antminer-s21-pro',merged:true,name:'Antminer S21 Pro',maker:'Bitmain',th:234,w:3510,src:BM,url:'https://support.bitmain.com/hc/en-us/articles/31321354157593-S21-Pro-Specification',
   intro:'The S21 Pro sits between the S21 and the S21 XP: 234 TH/s at 3,510 W, or 15 J/TH. It draws almost the same power as a plain S21 but hashes 17% more.',
   used:used('antminer-s21-pro','antminer-s21','antminer-s21-xp'),up:'antminer-s21-xp'},
  {slug:'antminer-s21',name:'Antminer S21',maker:'Bitmain',th:200,w:3500,ctr:'Antminer S21 profitability: daily profit, breakeven, {mon}',src:BM,url:'https://support.bitmain.com/hc/en-us/articles/23794895251609-S21-Specification',
@@ -36,7 +37,7 @@ export const MODELS=[
   specs:[['Hashrate','200 TH/s'],['Power on wall at 25 °C','3,500 W'],['Efficiency','17.5 J/TH'],['Input power','220 to 277 V AC, 47 to 63 Hz, 20 A on one AC input wire'],['Network','RJ45 Ethernet 10/100M'],['Size without box, including PSU','400 × 195 × 290 mm'],['Net weight, including PSU','15.4 kg'],['Operating temperature','0 to 45 °C'],['Operating humidity','10 to 90% RH, non-condensing'],['Altitude','Up to 2,000 m (max temperature drops 1 °C per 300 m above 900 m)']],
   specNote:'Bitmain\'s spec sheet also says Secure Boot is switched on and root access is disabled, to stop firmware viruses. If you plan to run third-party firmware for underclocking or autotuning, check that it supports your unit before you buy.',
   site:'Like the S21 XP it is air-cooled and wants 220 to 277 V AC on a 20 A feed. At 15.4 kg including its power supply it is 3.3 kg lighter than the S21 XP,, and its 400 × 195 × 290 mm footprint matches the S19k Pro.'},
- {slug:'antminer-s19-xp',name:'Antminer S19 XP',maker:'Bitmain',th:141,w:3031.5,src:BM,url:'https://support.bitmain.com/hc/en-us/articles/8906244096409-S19-XP-Specifications',
+ {slug:'antminer-s19-xp',merged:true,name:'Antminer S19 XP',maker:'Bitmain',th:141,w:3031.5,src:BM,url:'https://support.bitmain.com/hc/en-us/articles/8906244096409-S19-XP-Specifications',
   title:'Antminer S19 XP profitability today: profit, break-even, payback',h1:'Antminer S19 XP profitability: is it still worth running?',accessed:'November 3, 2026',
   intro:'The S19 XP was the top S19 when it launched: 141 TH/s at 3,031.5 W, or 21.5 J/TH. Today it uses about 60% more energy per terahash than an S21 XP, so power price decides almost everything. It is also one of the most traded used miners: 52 eBay sales in the 90 days to November 11, 2026, more than any other model in the ING Mining index.',
   used:used('antminer-s19-xp','antminer-s19j-pro','antminer-s19k-pro','antminer-s21','antminer-s21-pro','antminer-s21-xp'),up:'antminer-s21-xp',
@@ -72,7 +73,10 @@ export const MODELS=[
   specs:[['Cooling','Hydro (water loop)'],['Hashrate','408 TH/s'],['Power on wall','7,344 W'],['Efficiency','18 J/TH'],['Input power','380 to 480 V AC, three wires plus ground, 10 kW input'],['Coolant per machine','About 1 L'],['Power cable','Custom made, 16 A or more'],['Size','86 × 483 × 663 mm with handle'],['Net weight','27.5 kg'],['List price','$3,672 ($9 per TH)']],
   site:'You need rack space, a closed water loop with a dry cooler or cooling tower, and three-phase 380 to 480 V power at about 10 kW per machine. The loop and electrical work are not in the box price, so the payback above is the machine only.'},
  {slug:'whatsminer-m70s',name:'WhatsMiner M70S',maker:'MicroBT',th:248,jth:13.5,ctr:'WhatsMiner M70S profit per day and breakeven, {mon}',src:WM,url:WMURL,
-  intro:'The M70S is MicroBT\'s newer air-cooled model, listed at 248 TH/s and 13.5 J/TH, so about 3,348 W. It matches the S21 XP on efficiency with a bit less hashrate per box.',new:WMP['whatsminer-m70s']},
+  intro:'The M70S is MicroBT\'s newer air-cooled model, listed at 248 TH/s and 13.5 J/TH, so about 3,348 W. It matches the S21 XP on efficiency with a bit less hashrate per box.',new:WMP['whatsminer-m70s'],specsAccessed:'November 23, 2026',
+  specSrc:{url:'https://hashrateindex.com/blog/hardware-review-microbt-whatsminer-m70s/',name:'Hashrate Index M70S hardware review'},
+  specs:[['Hashrate','226 to 258 TH/s (±5%), 250 TH/s nameplate'],['Power draw','3,140 to 3,500 W (±10%), 3,375 W nameplate'],['Efficiency','13.5 J/TH (±5% at 25 °C)'],['Size','430 × 135 × 226 mm'],['Weight','11.5 kg'],['Airflow','350 CFM'],['Operating temperature','-5 to 35 °C']],
+  site:'It is a standard air-cooled box at 11.5 kg. Hashrate Index lists an operating range up to 35 °C, below the 45 °C Bitmain lists for the S21 and S21 XP, so a hot site needs more airflow or a cooler intake.'},
 ];
 // Same-family groups, used for sibling links on each model page.
 const FAM=[['antminer-s19-xp','antminer-s19k-pro','antminer-s19j-pro'],['antminer-s21-xp','antminer-s21-pro','antminer-s21'],['whatsminer-m63s','whatsminer-m66s','whatsminer-m60s','whatsminer-m70s']];
@@ -123,7 +127,8 @@ ${body}
   const prevPct=prev?(prev.pct>0?'+':'-')+Math.abs(prev.pct).toFixed(2)+'%':'';
   const prevTxt=prev?`the ${prev.date} difficulty adjustment (${prevPct}, mempool.space)`:'';
   // Every model's revenue and break-even at the same live hashprice, so each page can show where it ranks.
-  const all=MODELS.map(m=>{const rev=m.th*hp,kwh=m.w/1000*24;return {m,url:`/asic/${m.slug}/`,rev,kwh,be:rev/kwh,p05:rev-kwh*0.05};});
+  // Merged models (weak pages folded into /asic/ on Nov 23, 2026, 301s in redirects.mjs) keep their data and calculator preset, and link to their section on /asic/.
+  const all=MODELS.map(m=>{const rev=m.th*hp,kwh=m.w/1000*24;return {m,url:m.merged?`/asic/#${m.slug}`:`/asic/${m.slug}/`,rev,kwh,be:rev/kwh,p05:rev-kwh*0.05};});
   const byEff=[...all].sort((a,b)=>a.m.jth-b.m.jth);
   // Electricity cost to mine 1 BTC (our arithmetic): BTC per day = revenue per day x (1 - 2% pool fee) / BTC price; cost = kWh per day x $/kWh / BTC per day.
   const costBtc=(o,p)=>{const perDay=o.rev*0.98/btc;return {days:1/perDay,kwh:o.kwh/perDay,usd:o.kwh*p/perDay,share:o.kwh*p/perDay/btc,btc30:perDay*30};};
@@ -134,12 +139,12 @@ ${body}
     const ans=`At $0.05/kWh, electricity alone costs about ${usd0(c5.usd)} to mine 1 BTC with ${/^[AEIOU]/.test(n)?'an':'a'} ${n}, about ${(c5.share*100).toFixed(0)}% of the $${btc.toLocaleString('en-US')} BTC price on ${day}. That is about ${Math.round(c5.kwh).toLocaleString('en-US')} kWh per BTC, and one machine on its own would need about ${Math.round(c5.days/365)} years to mine 1 BTC.`;
     faq.push(['faq-cost-btc',`How much does it cost to mine 1 BTC with ${/^[AEIOU]/.test(n)?'an':'a'} ${n}?`,ans+' Hardware, pool fee beyond 2%, hosting and downtime come on top.']);
     let rt='';
-    if(adj){const be2=be*adj.hpAfter/hp;rt=`<p>${esc(retargetTxt)} For a ${esc(n)} that would move the break-even power price from about $${be.toFixed(3)} to about $${be2.toFixed(3)}/kWh (before pool fee).</p>`;
+    if(adj){const be2=be*adj.hpAfter/hp;rt=`<p>The next difficulty adjustment is estimated at ${sgn(adj.pct)} around ${adj.dateTxt} (mempool.space, read ${day}). If price and fees hold, that moves the ${esc(n)} break-even from about $${be.toFixed(3)} to about $${be2.toFixed(3)}/kWh.</p>`;
      faq.push(['faq-retarget',`What will the next difficulty adjustment do to the ${n}?`,`${retargetTxt} For a ${n} that would move the break-even power price from about $${be.toFixed(3)} to about $${be2.toFixed(3)}/kWh, before pool fee.`]);}
     const html=`<h2 id="cost-per-btc">How much does it cost to mine 1 Bitcoin with ${/^[AEIOU]/.test(n)?'an':'a'} ${esc(n)}?</h2>
 <p><b>${esc(ans)}</b></p>
 <table><thead><tr><th>Power price</th><th>Electricity per BTC</th><th>Share of BTC price</th><th>Left per BTC after power</th></tr></thead><tbody>${P.map(p=>{const c=costBtc(r0,p);return `<tr${p===0.05?' class="hl"':''}><td>$${p.toFixed(2)}/kWh</td><td>${usd0(c.usd)}</td><td>${(c.share*100).toFixed(0)}%</td><td>${usd0(btc-c.usd)}</td></tr>`;}).join('')}</tbody></table>
-<p class="note">Our arithmetic: BTC per day = ${n} revenue per day × 0.98 (2% pool fee) ÷ BTC price; cost per BTC = ${r0.kwh.toFixed(1)} kWh a day × power price ÷ BTC per day. Hashprice and BTC price from the <a href="https://mempool.space/docs/api">mempool.space API</a> on ${day}. Electricity only: no hardware, hosting or downtime. The same math for the whole market is in <a href="/guides/is-bitcoin-mining-profitable-2026/#cost-per-btc">how much it costs to mine 1 Bitcoin</a>.</p>
+<p class="note">Our arithmetic, with a 2% pool fee and electricity only, at the mempool.space hashprice and BTC price on ${day}. Formula and the whole-market version: <a href="/guides/is-bitcoin-mining-profitable-2026/#cost-per-btc">how much it costs to mine 1 Bitcoin</a>.</p>
 ${rt}`;
     return {html,faq};
   }
@@ -160,7 +165,7 @@ ${rt}`;
 <p><b>${esc(verdict)}</b></p>
 <p>Here is how that line compares with real industrial power prices from our <a href="/power-prices/">power price pages</a>, each with its own source and date.</p>
 <table><thead><tr><th>Place</th><th>Price</th><th>$/kWh</th><th>${esc(n)} profit / day</th><th>Pays its power bill?</th></tr></thead><tbody>${pl.map(o=>{const pr=rev-kwh*o.usd;return `<tr><td><a href="/power-prices/${o.c.slug}/">${esc(o.c.short)}</a></td><td>${esc(o.x.label)}</td><td>$${o.usd.toFixed(3)}</td><td>${$(pr)}</td><td>${pr>0?'Yes':'No'}</td></tr>`;}).join('')}</tbody></table>
-<p class="note">Prices and their sources: Texas from the <a href="https://www.eia.gov/electricity/monthly/epm_table_grapher.php?t=epmt_5_6_a">EIA Electric Power Monthly</a> (July 2026), Paraguay from <a href="https://hashrateindex.com/blog/the-state-of-bitcoin-mining-in-latin-america-2026/">Hashrate Index</a> (October 2026), Ethiopia from <a href="https://addisstandard.com/industry-insiders-say-ethiopias-new-power-tariff-a-crucial-test-for-its-crypto-mining-boom/">Addis Standard</a>, UAE from <a href="https://www.dewa.gov.ae/en/consumer/billing/slab-tariff">DEWA</a> converted at the 3.6725 AED/USD peg. Full notes on each power price page. Profit is gross of pool fees and hardware cost, at spec, 24 hours a day.</p>`);
+<p class="note">Each price links to its own source and date on our power price pages. Gross of pool fees and hardware, at spec, 24 hours a day.</p>`);
     faq.push(['faq-still',`Is the ${n} still profitable?`,verdict+(winners.length?` Of the industrial prices we track, it covers its power bill in ${winners.join(', ')}${losers.length?` but not in ${losers.join(', ')}`:''}.`:'')]);
     // 2. Used price and payback, against newer machines at the same hashprice.
     if(m.used){const U=m.used,P=[0.03,0.04,0.05];
@@ -168,9 +173,9 @@ ${rt}`;
      const me=rows.find(r=>r.slug===m.slug), p04=me.pr[1];
      const ans=`A used ${n} sold for a median of $${me.price.toLocaleString("en-US")} on eBay (${me.n} sales, ${U.window}, ${U.src}). At $0.04/kWh and the hashprice on ${day}, it nets about ${$(p04)} a day, so it pays back in about ${days(me.price,p04)}${p04>0?'':' (it does not cover its power bill)'}. At $0.03/kWh that drops to ${days(me.price,me.pr[0])}.`;
      html.push(`<h2 id="used-payback">How long does a used ${esc(n)} take to pay back?</h2>
-<p><b>${esc(ans)}</b> Cheap to buy, expensive to run: newer machines cost far more up front but burn less power per terahash. Same live hashprice for every machine below.</p>
+<p><b>${esc(ans)}</b> Same live hashprice for every machine below.</p>
 <table><thead><tr><th>Machine</th><th>Used median (sales)</th><th>Middle half</th><th>Payback at $0.03</th><th>Payback at $0.04</th><th>Payback at $0.05</th></tr></thead><tbody>${rows.map(r=>`<tr${r.slug===m.slug?' class="hl"':''}><td>${r.slug===m.slug?`<b>${esc(r.o.m.name)}</b>`:`<a href="${r.o.url}">${esc(r.o.m.name)}</a>`}</td><td>$${r.price.toLocaleString('en-US')} (${r.n})</td><td>${r.mid}</td>${r.pr.map(x=>`<td>${days(r.price,x)}</td>`).join('')}</tr>`).join('')}</tbody></table>
-<p class="note">Used prices: <a href="${U.url}">${U.src}</a>, 90-day medians of eBay sales to November 11, 2026, read November 13, 2026. Payback = used price ÷ daily profit at that power price (our arithmetic), holding today's hashprice flat. No pool fee, shipping, hosting or repairs. "Never" means the machine doesn't cover its power bill at that price.</p>`);
+<p class="note">Used prices: <a href="${U.url}">${U.src}</a>, ${U.window}, read ${U.read}. Payback = used price ÷ daily profit, hashprice held flat, no pool fee, shipping or repairs (our arithmetic; "never" = does not cover its power bill).</p>`);
      faq.push(['faq-used-price',`How much is a used ${n}?`,`About $${me.price.toLocaleString("en-US")}. That's the median of ${me.n} eBay sales over the 90 days to November 11, 2026, with the middle half from ${me.mid} (${U.src}).`]);
      faq.push(['faq-payback',`How long does a used ${n} take to pay back?`,ans]);}
     // 2b. Upgrade: sell this one used, buy the target used, payback on the extra daily profit.
@@ -187,8 +192,7 @@ ${rt}`;
      const me=P.map(p=>rev-kwh*p);
      const ans=`MicroBT lists the ${n} at $${m.new.price.toLocaleString('en-US')} new on its shop${m.new.sold?` (last list price; sold out on ${m.new.sold})`:''}. At $0.04/kWh and the hashprice on ${day} it nets about ${$(me[1])} a day, so the machine alone pays back in about ${days(m.new.price,me[1])}. At $0.03/kWh it's about ${days(m.new.price,me[0])}. That leaves out shipping, import duty, hosting${m.slug==='whatsminer-m63s'||m.slug==='whatsminer-m66s'?' and the cooling setup':''}.`;
      html.push(`<h2 id="new-payback">How long does a new ${esc(n)} take to pay back?</h2>
-<p><b>${esc(ans)}</b> Here it is next to the other MicroBT models we price, all at the same live hashprice.</p>
-<table><thead><tr><th>Machine</th><th>List price</th><th>$ per TH</th><th>Payback at $0.03</th><th>Payback at $0.04</th><th>Payback at $0.05</th><th>Payback at $0.06</th></tr></thead><tbody>${wm.map(o=>`<tr${o===r0?' class="hl"':''}><td>${o===r0?`<b>${esc(o.m.name)}</b>`:`<a href="${o.url}">${esc(o.m.name)}</a>`}</td><td><a href="${o.m.new.url}">$${o.m.new.price.toLocaleString('en-US')}</a></td><td>$${(o.m.new.price/o.m.th).toFixed(2)}</td>${P.map(p=>`<td>${days(o.m.new.price,o.rev-o.kwh*p)}</td>`).join('')}</tr>`).join('')}</tbody></table>
+<p><b>${esc(ans)}</b></p>
 <p class="note">List prices from the <a href="https://shop.whatsminer.com/products">MicroBT shop</a>, read November 3, 2026 and rechecked November 13, 2026 (unchanged), for the hashrate bin shown on each page.${wm.some(o=>o.m.new.sold)?` The ${wm.filter(o=>o.m.new.sold).map(o=>esc(o.m.name)).join(' and ')} bin we price showed as sold out on the shop on November 13, 2026, so its last list price is shown.`:''} Payback = list price ÷ daily profit (our arithmetic), holding today's hashprice flat. Shop prices change often; check before you buy.</p>`);
      faq.push(['faq-new-price',`How much does a new ${n} cost?`,`$${m.new.price.toLocaleString('en-US')} on the MicroBT shop (read November 3, 2026, same on November 13), which is $${(m.new.price/m.th).toFixed(2)} per TH/s.${m.new.sold?` That bin showed as sold out on the shop on ${m.new.sold}, so check stock and current price before you plan around it.`:''}`]);
      faq.push(['faq-new-payback',`How long does a new ${n} take to pay back?`,ans]);}
@@ -217,7 +221,7 @@ ${rt}`;
       more=`If power capacity is your limit, pick on J/TH: the more efficient box squeezes more hashrate out of every kilowatt. If cash is your limit, pick on payback. Draw per box runs from ${lo.o.m.w.toLocaleString('en-US')} W (${esc(lo.o.m.name)}) to ${hi.o.m.w.toLocaleString('en-US')} W (${esc(hi.o.m.name)}), which only matters when a single circuit is the limit.`;}
      html.push(`<h2 id="per-mw">${esc(h2)}</h2>
 <p><b>${esc(ans)}</b></p>
-<p>${more}</p>
+${B==='used'?`<p>${more}</p>`:''}
 <table><thead><tr><th>Machine (1 MW)</th><th>${B==='used'?'Used median':'List price'}</th><th>Machines</th><th>PH/s</th><th>Profit / day at $0.04</th><th>Machine cost</th><th>Payback</th></tr></thead><tbody>${R.map(r=>`<tr${r===me?' class="hl"':''}><td>${r===me?`<b>${esc(r.o.m.name)}</b>`:`<a href="${r.o.url}">${esc(r.o.m.name)}</a>`}${r.o.m.cool?` (${r.o.m.cool})`:''}</td><td>$${r.price.toLocaleString('en-US')}</td><td>${r.cnt}</td><td>${r.ph.toFixed(1)}</td><td>$${k(r.prof)}</td><td>$${k(r.capex)}</td><td>${days(r.capex,r.prof)}</td></tr>`).join('')}</tbody></table>
 <p class="note">Machines = 1,000,000 W ÷ watts per box, rounded down (our arithmetic). ${B==='used'?`Prices are 90-day eBay medians from <a href="${ING.url}">${ING.src}</a> (${ING.window}, read ${ING.read}).`:`Prices are list prices on the <a href="https://shop.whatsminer.com/products">MicroBT shop</a> (read November 3, 2026, rechecked for the M63S and M66S on November 4, 2026).`} Machines only: no cooling, transformers, building, pool fee or downtime, and hashprice held flat.</p>`);
      faq.push(['faq-per-mw',`How many ${n} miners fit in 1 MW?`,ans]);}
@@ -226,20 +230,14 @@ ${rt}`;
      const ans=`MicroBT's shop gives a one-year warranty. At the hashprice on ${day}, a new ${n} at list price ($${m.new.price.toLocaleString('en-US')}) pays back in about ${days(m.new.price,pp[0])} at $0.03/kWh, ${days(m.new.price,pp[1])} at $0.04 and ${days(m.new.price,pp[2])} at $0.05. ${d[1]<=365?'So at $0.04/kWh it earns back its list price inside the warranty year.':d[0]<=365?'So it only earns back its list price inside the warranty year on power around $0.03/kWh.':'So even at $0.03/kWh it needs longer than the warranty year to earn back its list price.'}`;
      html.push(`<h2 id="warranty">Does the ${esc(n)} pay for itself inside its warranty?</h2>
 <p><b>${esc(ans)}</b></p>
-<p>The warranty does not cover damage from running outside spec (wrong voltage, humidity, heat or dust), overclocking, unofficial firmware or unofficial parts like power supplies and fans, or shipping without vacuum-sealed packaging. The shop also says payment can't be refunded once made, and international bank transfers take about a week to confirm.</p>
 <p class="note">Warranty and payment terms from the <a href="${m.new.url}">MicroBT shop product page</a>, read November 4, 2026. Payback = list price ÷ daily profit (our arithmetic), machine only, hashprice held flat.</p>`);
      faq.push(['faq-warranty',`What warranty does the ${n} have?`,`One year from MicroBT, per its shop's after-sales policy (read November 4, 2026). Running outside spec, overclocking and unofficial firmware or parts are not covered.`]);}
     // 2d. Spec sheet and site needs, straight from the manufacturer page.
     if(m.specs){html.push(`<h2 id="specs">What does the ${esc(n)} need to run?</h2>
 <p>${esc(m.site)}</p>
 <table><thead><tr><th>Spec</th><th>${esc(n)}</th></tr></thead><tbody>${m.specs.map(([k,v])=>`<tr><td>${esc(k)}</td><td>${esc(v)}</td></tr>`).join('')}</tbody></table>${m.specNote?`\n<p>${esc(m.specNote)}</p>`:''}
-<p class="note">From the <a href="${m.new?m.new.url:m.url}">${esc(m.new?'MicroBT shop product page':m.src)}</a>, accessed ${m.specsAccessed||'November 3, 2026'}.</p>`);
+<p class="note">From the <a href="${m.specSrc?m.specSrc.url:m.new?m.new.url:m.url}">${esc(m.specSrc?m.specSrc.name:m.new?'MicroBT shop product page':m.src)}</a>, accessed ${m.specsAccessed||'November 3, 2026'}.</p>`);
      faq.push(['faq-specs',`What power and cooling does the ${n} need?`,m.site+' '+m.specs.filter(([k])=>/Cooling|Input power|Power on wall/.test(k)).map(([k,v])=>`${k}: ${v}.`).join(' ')]);}
-    // 3. Halving: same price, difficulty and fees, half the subsidy.
-    {const beAfter=hpAfter*m.th/kwh;const ans=`If BTC price, difficulty and fees stayed where they are, its break-even would fall from about $${be.toFixed(3)} to about $${beAfter.toFixed(3)}/kWh. The subsidy halves from ${SUBSIDY} to ${SUBSIDY/2} BTC at block ${HALVING.toLocaleString('en-US')}, ${blocksLeft.toLocaleString('en-US')} blocks from now, which at 10 minutes a block is around ${halvingEst}.`;
-     html.push(`<h2 id="halving">Will the ${esc(n)} be profitable after the 2028 halving?</h2>
-<p><b>${esc(ans)}</b> Fees make up the rest of the block reward: ${reward.toFixed(4)} BTC per block on average over the last 144 blocks, of which ${SUBSIDY} is subsidy (<a href="https://mempool.space/docs/api">mempool.space</a>). Price and difficulty will move before then, so treat this as a stress test, not a forecast.</p>`);
-     faq.push(['faq-halving',`Will the ${n} be profitable after the 2028 halving?`,ans]);}
     // 4. Bins of the same machine.
     if(m.variants){html.push(`<h2 id="versions">Which ${esc(n)} version do you have, and does it matter?</h2>
 <p><b>For break-even, no.</b> ${esc(m.maker)} sells the ${esc(n)} in ${m.variants.length} hashrate bins from ${m.variants[m.variants.length-1][0]} to ${m.variants[0][0]} TH/s, all rated ${m.jth} J/TH, so every bin breaks even at the same power price. Bigger bins just earn, or lose, more per box.</p>
@@ -252,10 +250,16 @@ ${rt}`;
     const {m,url,rev,kwh,be,p05}=r0;
     const tbl=PRICES.map(p=>{const c=kwh*p,pr=rev-c;return `<tr${p===0.05?' class="hl"':''}><td>$${p.toFixed(2)}</td><td>${$(rev)}</td><td>${$(c)}</td><td><b>${$(pr)}</b></td><td>${$(pr*30,0)}</td></tr>`;}).join('');
     rows.push({m,url,rev,be,p05});
+    if(m.merged)continue;
     const rank=byEff.indexOf(r0)+1, n=MODELS.length;
     const cmp=byEff.map(o=>`<tr${o===r0?' class="hl"':''}><td>${o===r0?`<b>${o.m.name}</b>`:`<a href="${o.url}">${o.m.name}</a>`}</td><td>${o.m.th}</td><td>${o.m.w.toLocaleString('en-US')}</td><td>${o.m.jth}</td><td>${$(o.rev)}</td><td>$${o.be.toFixed(3)}</td></tr>`).join('');
     const title=m.ctr?m.ctr.replace('{mon}',mon):(m.title||`${m.name} profitability: profit per day and break-even`);
     const ex=extra(r0), cb=costSection(r0);
+    // Model-specific history and buy / keep / sell guidance (asicStory.mjs), each with its own sources.
+    const st=STORY[m.slug],sc={o:r0,g:s=>all.find(a=>a.m.slug===s),UP,ING,day,hp,$,days};
+    const story=st?`<h2 id="history">Where the ${esc(m.name)} fits</h2>\n${st.hist(sc)}\n<h2 id="who">Who should buy, keep or sell ${/^[AEIOU]/.test(m.name)?'an':'a'} ${esc(m.name)}?</h2>\n${st.who(sc)}`:'';
+    // Nearest neighbours on efficiency, instead of repeating the full model table on every page (it lives on /asic/).
+    const nb=[byEff[rank-2],byEff[rank]].filter(Boolean);
     const fam=(FAM.find(f=>f.includes(m.slug))||[]).filter(s=>s!==m.slug).map(s=>all.find(a=>a.m.slug===s));
     const famLinks=fam.length?`<p><b>Same family:</b> ${fam.map(o=>`<a href="${o.url}">${esc(o.m.name)}</a> (${o.m.th} TH/s, ${o.m.jth} J/TH${o.m.cool?', '+o.m.cool:''}, break-even $${o.be.toFixed(3)}/kWh)`).join(', ')}. Every model side by side: <a href="/asic/">ASIC profitability by model</a>.</p>`:'';
     const desc=m.ctr?`${dshort}: ${m.name} grosses ${$(rev)}/day and breaks even near $${be.toFixed(3)}/kWh${prev?` after the ${prevPct} ${prev.date} retarget`:''}. Profit by power price, ${m.used?'used payback':m.new?'list price payback':'cost per BTC'}.`:m.used?`${m.name} (${m.th} TH/s, ${m.jth} J/TH) breaks even at about $${be.toFixed(3)}/kWh today. Profit per day, used price and payback${m.up?', upgrade math':''} and the 2028 halving.`:m.new?`${m.name} (${m.th} TH/s, ${m.jth} J/TH): profit per day, break-even about $${be.toFixed(3)}/kWh, new price $${m.new.price.toLocaleString('en-US')} and payback${m.specs?', plus cooling and power specs':''}.`:`${m.name} (${m.th} TH/s, ${m.w.toLocaleString('en-US')} W, ${m.jth} J/TH): daily revenue, power cost and profit at $0.03 to $0.10/kWh from live hashprice. Break-even about $${be.toFixed(3)}/kWh.`;
@@ -271,28 +275,20 @@ ${rt}`;
 <p>Want your own power price and pool fee? Open the <a href="/mining-calculator/#m-${m.slug}">ASIC miner profitability calculator</a> with the ${esc(m.name)} preloaded.</p>
 <p>${esc(m.intro)}</p>
 <ul><li><b>Hashrate:</b> ${m.th} TH/s</li><li><b>Power:</b> ${m.w.toLocaleString('en-US')} W</li><li><b>Efficiency:</b> ${m.jth} J/TH</li><li><b>Source:</b> <a href="${m.url}">${m.src}</a>, accessed ${m.accessed||'October 21, 2026'}.${m.maker==='MicroBT'&&!m.specs?' The shop lists hashrate and J/TH; the wattage is our arithmetic (TH/s × J/TH).':''}</li></ul>
+${story}
 <h2 id="daily-profit">How much does the ${esc(m.name)} make a day at different power prices?</h2>
 <p>At the hashprice below, one ${esc(m.name)} grosses about <b>${$(rev)}</b> a day. At $0.05/kWh it ${p05<0?`loses about <b>${$(-p05)}</b>`:`nets about <b>${$(p05)}</b>`} a day, and it breaks even at about <b>$${be.toFixed(3)}/kWh</b>.</p>
 <table><thead><tr><th>Power price</th><th>Revenue / day</th><th>Power / day</th><th>Profit / day</th><th>Profit / 30 days</th></tr></thead><tbody>${tbl}</tbody></table>
 <p class="note">${dataLine} Revenue is gross: no pool fee, downtime, hosting markup or hardware cost. Assumes the machine runs at spec 24 hours a day (our assumption). Figures update when the site is rebuilt.</p>
-<h2 id="break-even">What is the ${esc(m.name)} break-even power price?</h2>
-<p>Break-even is daily revenue divided by daily energy use. The ${esc(m.name)} burns ${m.w.toLocaleString('en-US')} W × 24 h = about ${kwh.toFixed(1)} kWh a day, and grosses about ${$(rev)}, so it breaks even at about <b>$${be.toFixed(3)}/kWh</b>. Pay more than that for power and the bill is bigger than the revenue.</p>
 ${ex.html}
 ${cb.html}
-<h2 id="compare">How does the ${esc(m.name)} compare with other ASICs?</h2>
-<p>Same live hashprice for every machine, sorted by efficiency (lowest J/TH first). The ${esc(m.name)} ranks <b>${rank} of ${n}</b>.</p>
-<table><thead><tr><th>Model</th><th>TH/s</th><th>W</th><th>J/TH</th><th>Revenue / day</th><th>Break-even $/kWh</th></tr></thead><tbody>${cmp}</tbody></table>
-<p class="note">Specs from each manufacturer, linked on each model page. Gross revenue, no pool fee or hardware cost.</p>
+<h2 id="compare">How does the ${esc(m.name)} rank on efficiency?</h2>
+<p>At ${m.jth} J/TH it ranks <b>${rank} of ${n}</b> among the models we track (lower J/TH is better)${nb.length?`, next to the ${nb.map(o=>`<a href="${o.url}">${esc(o.m.name)}</a> (${o.m.jth} J/TH, break-even $${o.be.toFixed(3)}/kWh)`).join(' and the ')}`:''}. Every model at the same live hashprice is on the <a href="/asic/#profitable-now">ASIC profitability table</a>.</p>
 ${famLinks}
 ${slots}
-<h2 id="faq">FAQ</h2>
-${faq.map(([id,q,a])=>`<h3 id="${id}">${esc(q)}</h3>\n<p>${esc(a)}</p>`).join('\n')}
 <div class="callout"><b>Use your own numbers or paste your payout address.</b> Pool fee, live price and your exact power cost are all inputs in the ASIC calculator, or paste your Bitcoin mining payout address in <a href="/fleet/">Fleet Check</a> to reconcile your actual 90-day on-chain payouts.<br><a class="btn" href="/mining-calculator/#m-${m.slug}">Open the ASIC calculator <span aria-hidden="true">→</span></a> <a class="btn ghost" href="/fleet/" style="margin-left:.4rem">Benchmark your payout address <span aria-hidden="true">→</span></a></div>
-<p>Wondering whether the same kilowatts would earn more renting GPUs? Try the <a href="/">mine vs AI per-kW calculator</a>, or see what an <a href="/gpu/h100/">H100</a> or <a href="/gpu/rtx-4090/">RTX 4090</a> earns per kW. What power costs in big mining places: <a href="/power-prices/">industrial power prices</a>. Learn the math: <a href="/guides/is-bitcoin-mining-profitable-2026/">is Bitcoin mining profitable in 2026?</a> and the <a href="/methodology/">ASIC profitability formulas and sources</a>. Or see <a href="/asic/">all ASICs</a>.</p>
-<!--signup--></article>
-<section class="cta"><div><h2>Already mining?</h2><p>Track your real per-site numbers (uptime, power cost, curtailment, payouts) instead of estimates.</p></div><a class="btn" rel="nofollow" href="/go/flash?c=asic-model&amp;p=cta">See Flash for miners <span aria-hidden="true">→</span></a></section>`;
-    const ld={"@context":"https://schema.org","@graph":[{"@type":"WebPage","name":title,"description":desc,"url":SITE+url,"dateModified":edAsic,"breadcrumb":{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ASIC profitability","item":SITE+'/asic/'},{"@type":"ListItem","position":2,"name":m.name,"item":SITE+url}]}},
-     {"@type":"FAQPage","mainEntity":faq.map(([,q,a])=>({"@type":"Question","name":q,"acceptedAnswer":{"@type":"Answer","text":a}}))}]};
+<!--signup--></article>`;
+    const ld={"@context":"https://schema.org","@graph":[{"@type":"WebPage","name":title,"description":desc,"url":SITE+url,"dateModified":edAsic,"breadcrumb":{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ASIC profitability","item":SITE+'/asic/'},{"@type":"ListItem","position":2,"name":m.name,"item":SITE+url}]}}]};
     fs.mkdirSync('dist'+url,{recursive:true});fs.writeFileSync('dist'+url+'index.html',page({title:m.ctr?title:`${title} | joulemath`,desc,url,ld,body}));
   }
   rows.sort((a,b)=>b.be-a.be);
@@ -305,6 +301,19 @@ ${faq.map(([id,q,a])=>`<h3 id="${id}">${esc(q)}</h3>\n<p>${esc(a)}</p>`).join('\
   const uv=Object.keys(UP).map(s=>{const o=g(s),pr=o.rev-o.kwh*0.04;return {o,u:UP[s],pr,pb:pr>0?UP[s].price/pr:Infinity};}).sort((a,b)=>a.pb-b.pb);
   const uvHead=[...uv].sort((a,b)=>b.o.be-a.o.be)[0];
   const usedAns=`At $0.04/kWh and the hashprice on ${day}, a used ${uv[0].o.m.name} pays back fastest: about ${days(uv[0].u.price,uv[0].pr)} at its $${uv[0].u.price.toLocaleString('en-US')} eBay median. The ${uvHead.o.m.name} costs the most used ($${uvHead.u.price.toLocaleString('en-US')}) but has the most headroom if power gets dearer, breaking even at about $${uvHead.o.be.toFixed(3)}/kWh. Prices are 90-day eBay medians to November 11, 2026 (${ING.src}).`;
+  // Antminer S21 XP, S21 Pro and S19 XP: their thin standalone pages were merged here on Nov 23, 2026 (301s in redirects.mjs).
+  // Each keeps its own section, id = old slug, built from the same specs, used prices and live hashprice as before.
+  const mg=all.filter(a=>a.m.merged).sort((a,b)=>a.m.jth-b.m.jth),mgP=o=>o.rev-o.kwh*0.04;
+  const mgFast=[...mg].filter(o=>mgP(o)>0).sort((a,b)=>UP[a.m.slug].price/mgP(a)-UP[b.m.slug].price/mgP(b))[0];
+  const mgAns=`At the hashprice on ${day}, the ${mg[0].m.name} has the most headroom, breaking even at about $${mg[0].be.toFixed(3)}/kWh, against $${mg[mg.length-1].be.toFixed(3)} for the ${mg[mg.length-1].m.name}.${mgFast?` Bought used at eBay medians, the ${mgFast.m.name} pays back fastest at $0.04/kWh, in about ${days(UP[mgFast.m.slug].price,mgP(mgFast))}.`:''} Cheap power favours the cheap machine; expensive or rising power favours the efficient one.`;
+  const mergedHtml=`<h2 id="antminer-compare">Antminer S21 XP vs S21 Pro vs S19 XP: which one to run?</h2>
+<p><b>${esc(mgAns)}</b></p>
+<table><thead><tr><th>Model</th><th>TH/s</th><th>W</th><th>J/TH</th><th>Used median (sales)</th><th>$ per TH</th><th>Break-even $/kWh</th><th>Profit / day at $0.04</th><th>Payback at $0.04</th></tr></thead><tbody>${mg.map(o=>{const u=UP[o.m.slug];return `<tr><td><a href="#${o.m.slug}">${esc(o.m.name)}</a></td><td>${o.m.th}</td><td>${o.m.w.toLocaleString('en-US')}</td><td>${o.m.jth}</td><td>$${u.price.toLocaleString('en-US')} (${u.n})</td><td>$${(u.price/o.m.th).toFixed(2)}</td><td>$${o.be.toFixed(3)}</td><td>${$(mgP(o))}</td><td>${days(u.price,mgP(o))}</td></tr>`;}).join('')}</tbody></table>
+<p class="note">Specs from each Bitmain spec sheet (linked below). Used prices: <a href="${ING.url}">${ING.src}</a>, ${ING.window}, read ${ING.read}. Profit and payback are our arithmetic at the hashprice in the note above, no pool fee, hashprice held flat.</p>
+${mg.map(o=>{const m=o.m,u=UP[m.slug],N=m.newBM;return `<h3 id="${m.slug}">${esc(m.name)}</h3>
+<p>${esc(m.intro)}</p>
+<p>Today one grosses about ${$(o.rev)} a day and breaks even at about $${o.be.toFixed(3)}/kWh. A used one sold for a median of $${u.price.toLocaleString('en-US')} (${u.n} eBay sales, middle half ${u.mid}), which pays back in about ${days(u.price,o.rev-o.kwh*0.03)} at $0.03/kWh and ${days(u.price,mgP(o))} at $0.04.${N?` New ones sold for a median of $${N.rows[N.rows.length-1].price.toLocaleString('en-US')} (${N.n} new-condition eBay sales, ${N.window}).`:''}${m.site?' '+esc(m.site):''}</p>
+<p class="note">Specs: <a href="${m.url}">${esc(m.src)}</a> (${m.th} TH/s, ${m.w.toLocaleString('en-US')} W, ${m.jth} J/TH), accessed ${m.specsAccessed||m.accessed||'October 21, 2026'}. Load it into the <a href="/mining-calculator/#m-${m.slug}">ASIC calculator</a> for your own power price and pool fee.</p>`;}).join('\n')}`;
   const hubFaq=[['faq-most-profitable','What is the most profitable Bitcoin ASIC miner right now?',`On break-even power price, the ${top.m.name} (${top.m.jth} J/TH): it keeps making money up to about $${top.be.toFixed(3)}/kWh at the hashprice on ${day}. The ${low.m.name} (${low.m.jth} J/TH) is the first to go underwater, at about $${low.be.toFixed(3)}/kWh.`],
    ['faq-how-many',`Which ASIC miners are profitable at $0.05/kWh?`,pos.length?`${pos.length} of the ${rows.length} models we track: ${pos.map(r=>r.m.name).join(', ')}. That's gross of pool fees and the machine price.`:`None of the ${rows.length} models we track cover a $0.05/kWh power bill at today's hashprice.`],
    ['faq-hydro','Which ASIC miner is best for a hydro or immersion site?',hydroAns],
@@ -317,6 +326,7 @@ ${faq.map(([id,q,a])=>`<h3 id="${id}">${esc(q)}</h3>\n<p>${esc(a)}</p>`).join('\
 <table class="sortable"><caption class="note">Sorted by break-even power price, highest first.<span class="sort-hint" hidden> Tap a column header to re-sort.</span></caption><thead><tr><th>Model</th><th>TH/s</th><th>W</th><th>J/TH</th><th>Revenue / day</th><th>Profit / day at $0.05</th><th aria-sort="descending">Break-even $/kWh</th></tr></thead><tbody>${rows.map(r=>`<tr><td><a href="${r.url}">${r.m.name}</a></td><td data-v="${r.m.th}">${r.m.th}</td><td data-v="${r.m.w}">${r.m.w.toLocaleString('en-US')}</td><td data-v="${r.m.jth}">${r.m.jth}</td><td data-v="${r.rev}">${$(r.rev)}</td><td data-v="${r.p05}">${$(r.p05)}</td><td data-v="${r.be}">$${r.be.toFixed(3)}</td></tr>`).join('')}</tbody></table><script src="/js/sort.js" defer></script>
 <p class="note">${dataLine} Specs from each manufacturer, linked on each model page. Gross revenue, no pool fee or hardware cost.</p>
 <p>For your own power price and pool fee, use the <a href="/mining-calculator/">ASIC calculator</a>, or paste your Bitcoin payout address into <a href="/fleet/">Fleet Check</a> to benchmark your last 90 days of on-chain payouts against AI GPU rigs. To see what the same kilowatts earn renting GPUs, try the <a href="/gpu/">GPU rental prices</a> page. Power costs by country are on the <a href="/power-prices/">industrial power prices</a> page, and the formulas are on the <a href="/methodology/">methodology</a> page. Is mining worth it at all? <a href="/guides/is-bitcoin-mining-profitable-2026/">Is Bitcoin mining profitable in 2026?</a> has the break-even power price and the cost to mine 1 BTC.</p>
+${mergedHtml}
 <h2 id="hydro-immersion">Which miner suits a hydro or immersion site?</h2>
 <p><b>${esc(hydroAns)}</b></p>
 <p>See the megawatt math and whether each pays back inside MicroBT's one-year warranty on the <a href="${m63.url}">WhatsMiner M63S</a> (hydro) and <a href="${m66.url}">WhatsMiner M66S</a> (immersion) pages, or compare with the air-cooled <a href="${m60.url}">M60S</a> and <a href="${g('whatsminer-m70s').url}">M70S</a>.</p>
@@ -347,14 +357,14 @@ ${hubFaq.map(([id,q,a])=>`<h3 id="${id}">${esc(q)}</h3>\n<p>${esc(a)}</p>`).join
 <p>Every model at the same live hashprice (${$(hp,4)} per TH/s per day on ${day}), most efficient first. Tap Load to put a model into the calculator.</p>
 <table><thead><tr><th>Model</th><th>TH/s</th><th>W</th><th>J/TH</th><th>Revenue / day</th><th>Profit / day at $0.05</th><th>Break-even $/kWh</th><th></th></tr></thead><tbody>${tb}</tbody></table>
 <p class="note">${dataLine} Specs from each manufacturer, linked on each <a href="/asic/">model page</a>. Gross of pool fee and hardware cost, 24 hours a day at spec.</p>
-<p>Buying used? The <a href="/asic/antminer-s19k-pro/">S19k Pro</a>, <a href="/asic/antminer-s19-xp/">S19 XP</a> and <a href="/asic/antminer-s19j-pro/">S19j Pro</a> pages compare eBay sold prices, payback and what a megawatt of each earns. Building a hydro or immersion site? The <a href="/asic/whatsminer-m63s/">WhatsMiner M63S</a> (hydro) and <a href="/asic/whatsminer-m66s/">M66S</a> (immersion) pages work out the cost of a megawatt and whether it pays back inside the warranty.</p>
+<p>Buying used? The <a href="/asic/antminer-s19k-pro/">S19k Pro</a> and <a href="/asic/antminer-s19j-pro/">S19j Pro</a> pages and the <a href="/asic/#antminer-s19-xp">S19 XP section</a> compare eBay sold prices, payback and what a megawatt of each earns. Building a hydro or immersion site? The <a href="/asic/whatsminer-m63s/">WhatsMiner M63S</a> (hydro) and <a href="/asic/whatsminer-m66s/">M66S</a> (immersion) pages work out the cost of a megawatt and whether it pays back inside the warranty.</p>
 <h2 id="how-to">How do you calculate ASIC miner profitability?</h2>
 <p>Four steps. Worked example: an ${esc(ex.m.name)} (${ex.m.th} TH/s, ${ex.m.w.toLocaleString('en-US')} W) at $0.05/kWh with a 2% pool fee, at the network numbers on ${day}.</p>
 <ol><li><b>Hashprice.</b> BTC earned per TH/s per day = 86,400 × 10<sup>12</sup> ÷ (difficulty × 2<sup>32</sup>) × average block reward = ${(btcTh*1e8).toFixed(1)} sats (${btcTh.toFixed(10)} BTC). Times the BTC price = <b>${$(hp,4)}</b> per TH/s per day.</li>
 <li><b>Revenue.</b> ${ex.m.th} TH/s × ${$(hp,4)} = <b>${$(ex.rev)}</b> a day. Less a 2% pool fee (${$(fee)}) = ${$(ex.rev-fee)}.</li>
 <li><b>Power cost.</b> ${ex.m.w.toLocaleString('en-US')} W ÷ 1000 × 24 h = ${ex.kwh.toFixed(1)} kWh a day × $0.05 = <b>${$(exC)}</b>.</li>
 <li><b>Profit and break-even.</b> ${$(ex.rev-fee)} − ${$(exC)} = <b>${$(exP-fee)}</b> a day. Break-even power price = revenue ÷ kWh = ${$(ex.rev-fee)} ÷ ${ex.kwh.toFixed(1)} = <b>$${((ex.rev-fee)/ex.kwh).toFixed(3)}/kWh</b>.</li></ol>
-<p>Full formulas and data sources are on the <a href="/methodology/">methodology page</a>, and the verdict, with the cost to mine 1 BTC, is in <a href="/guides/is-bitcoin-mining-profitable-2026/">is Bitcoin mining profitable in 2026?</a> To see what power actually costs in mining regions, check <a href="/power-prices/">industrial power prices by country</a>, like <a href="/power-prices/paraguay/">Paraguay</a>, <a href="/power-prices/ethiopia/">Ethiopia</a>, <a href="/power-prices/canada-quebec/">Quebec</a>, <a href="/power-prices/uae/">the UAE</a> or <a href="/power-prices/united-states-texas/">Texas</a>. Profit per day and break-even for one machine, updated with each rebuild: <a href="/asic/antminer-s21-xp/">S21 XP</a>, <a href="/asic/antminer-s21/">S21</a>, <a href="/asic/antminer-s19k-pro/">S19k Pro</a>, <a href="/asic/whatsminer-m70s/">M70S</a>, <a href="/asic/whatsminer-m60s/">M60S</a> and <a href="/asic/whatsminer-m66s/">M66S</a>.</p>
+<p>Full formulas and data sources are on the <a href="/methodology/">methodology page</a>, and the verdict, with the cost to mine 1 BTC, is in <a href="/guides/is-bitcoin-mining-profitable-2026/">is Bitcoin mining profitable in 2026?</a> To see what power actually costs in mining regions, check <a href="/power-prices/">industrial power prices by country</a>, like <a href="/power-prices/paraguay/">Paraguay</a>, <a href="/power-prices/ethiopia/">Ethiopia</a>, <a href="/power-prices/canada-quebec/">Quebec</a>, <a href="/power-prices/uae/">the UAE</a> or <a href="/power-prices/united-states-texas/">Texas</a>. Profit per day and break-even for one machine, updated with each rebuild: <a href="/asic/#antminer-s21-xp">S21 XP</a>, <a href="/asic/antminer-s21/">S21</a>, <a href="/asic/antminer-s19k-pro/">S19k Pro</a>, <a href="/asic/whatsminer-m70s/">M70S</a>, <a href="/asic/whatsminer-m60s/">M60S</a> and <a href="/asic/whatsminer-m66s/">M66S</a>.</p>
 <h2 id="faq">FAQ</h2>
 ${cq.map(([id,q,a])=>`<h3 id="${id}">${esc(q)}</h3>\n<p>${esc(a)}</p>`).join('\n')}
 <p class="note">Used prices: <a href="${ING.url}">${ING.src}</a>, ${ING.window}. Network data: <a href="https://mempool.space/docs/api">mempool.space API</a>. Specs: each manufacturer, linked on the <a href="/asic/">ASIC model pages</a>.</p>

@@ -9,7 +9,7 @@ const urls=pages.map(u=>u.replace('//','/'));
  const col=(t,items)=>`<div><h3>${t}</h3><ul>${items.join('')}</ul></div>`;
  const ex=`<section class="explore" aria-labelledby="explore-h"><h2 id="explore-h">Explore the numbers</h2><div class="explore-grid">${[
   col('AI GPUs',[li('/gpu/','All GPUs'),li('/gpu/h100/','NVIDIA H100 rent and profit per kW'),li('/gpu/h200/','NVIDIA H200 rent price and profit per kW'),li('/gpu/rent-vs-buy-h100/','Rent vs buy an H100'),li('/gpu/a100/','NVIDIA A100 rent price and profit per kW'),li('/gpu/rtx-4090/','RTX 4090 rent, power and payback'),li('/gpu/rtx-5090/','RTX 5090 rent price and host earnings'),li('/guides/rent-out-your-gpu/','Rent out your GPU: what it earns'),li('/gpu/host-earnings/','What GPU hosts earn per GPU'),li('/fleet/','Fleet Check for Vast.ai rigs and BTC payouts')]),
-  col('Bitcoin ASICs',[li('/asic/','All ASICs compared'),...MODELS.map(m=>li(`/asic/${m.slug}/`,m.name))]),
+  col('Bitcoin ASICs',[li('/asic/','All ASICs compared'),...MODELS.map(m=>li(m.merged?`/asic/#${m.slug}`:`/asic/${m.slug}/`,m.name))]),
   col('Power prices',[li('/power-prices/','All power prices'),...PLACES.map(c=>li(`/power-prices/${c.slug}/`,c.short))]),
   col('Guides and blog',[...guides.filter(u=>!u.includes('rent-out')).map(u=>li(u,h1(u))),...blog.map(u=>li(u,h1(u))),li('/methodology/','Methodology and sources')])].join('')}</div></section>`;
  const f='dist/index.html';const hh=fs.readFileSync(f,'utf8');if(!hh.includes('<!--explore-->'))throw new Error('no explore marker');fs.writeFileSync(f,hh.replace('<!--explore-->',ex));}
@@ -69,4 +69,5 @@ const assets={};for(const rel of ['style.css',...fs.readdirSync('dist/js').map(f
 for(const u of urls){const f='dist'+u+'index.html';let h=fs.readFileSync(f,'utf8');h=h.replace(/(href|src)="(\/(?:style\.css|js\/[^"]+\.js))"/g,(m,a,p)=>assets[p]?`${a}="${assets[p]}"`:m);fs.writeFileSync(f,h);}
 fs.writeFileSync('dist/_headers',[...urls.flatMap(u=>[u,u+'index.html']).map(u=>`${u}\n  Cache-Control: public, max-age=0, must-revalidate`),
 '/assets/*\n  Cache-Control: public, max-age=31536000, immutable','/style.css\n  Cache-Control: public, max-age=300','/js/*\n  Cache-Control: public, max-age=300','/fonts/*\n  Cache-Control: public, max-age=604800','/sitemap.xml\n  Content-Type: application/xml; charset=utf-8','/blog/rss.xml\n  Content-Type: application/rss+xml; charset=utf-8\n  X-Robots-Tag: noindex','/llms.txt\n  Content-Type: text/plain; charset=utf-8\n  Cache-Control: public, max-age=3600'].join('\n')+'\n');
+{const {REDIRECTS}=await import('./functions/lib/redirects.mjs');fs.writeFileSync('dist/_redirects',REDIRECTS.flatMap(([f,t])=>[`${f} ${t} 301`,`${f.slice(0,-1)} ${t} 301`]).join('\n')+'\n');}
 console.log('assets:',Object.values(assets).join(' '));
