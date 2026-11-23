@@ -1,6 +1,6 @@
 # joulemath content backlog
 
-Ranked by expected traffic + revenue. Ship top to bottom. Re-ranked 2026-11-16 (see "Week of Nov 16" below, its PRIORITY list wins over the numbered list and over older weeks). Rule: queries and pages already getting impressions first, then the AI plan with GPU/Vast pages pushed up (Flash Vast.ai integration live Nov 1, GPU is the main push).
+Ranked by expected traffic + revenue. Ship top to bottom. Re-ranked 2026-11-23 (see "Week of Nov 23" below, its PRIORITY list wins over the numbered list and over older weeks). Rule: queries and pages already getting impressions first, then the AI plan with GPU/Vast pages pushed up (Flash Vast.ai integration live Nov 1, GPU is the main push).
 
 1. [x] (shipped 2026-11-03, 8ff2910) /mining-calculator/ AEO pass. Top impressions page (65 impressions through Oct 28; queries "asic profit calculator" 11, "asic profitability calculator" 9). Today it has 2 H2s and no FAQPage. Add sourced short answer up top, question H2s, FAQ + FAQPage JSON-LD, 9-model compare table, last-updated date, links to every /asic/ model page.
 2. [x] (shipped 2026-11-03, 8ff2910: per-model used price, upgrade and payback sections; S19 XP break-even by place on /power-prices/, 871f881) S19 XP + ASIC model pages, round 2. "antminer s19 xp profitability" had 8 impressions, /asic/antminer-s19-xp/ 20. Round 1 shipped 2026-11-01 (29efff8: short answer, question H2s, compare table, FAQ). Next: break-even by power price table and S19 XP vs S21 XP "upgrade or keep" section with payback.
@@ -38,6 +38,45 @@ Done since Oct 26 (git log):
 - Old item "SEO quick wins" folded into #1 to #3.
 
 Recurring: weekly AI post (Mon). Oct 26 shipped "What an H100 hour costs across 7 clouds".
+
+## Week of Nov 23 (written 2026-11-23)
+
+Data, Nov 16 to 22 2026 (UTC days) plus Nov 23 to ~09:00 Warsaw. Market numbers: data/snapshots/2026-11-23.md (commit 97b9096).
+- GSC: NOT READ. Box browser is signed out of Google (account chooser shows corbin.pierre92@gmail.com "Signed out", asks for password). No impressions, clicks, positions, queries or indexing this week. Needs Pierre to sign in on the box browser. The CTR re-read of the Nov 18 pass (S19k Pro, S21, power pages) moves to the next run that has GSC.
+- Bing Webmaster: n/a (not signed in).
+- Cloudflare Web Analytics: NOT READ. Connector is signed in as pierre.corbin@paywithflash.com and sees only account 2965b9d7 (no zones, no RUM); joulemath account 21e7ed7a returns "not authorized". Broken since Nov 21 (daily review). Last good daily reads (daily self-review): Nov 18 14 loads, Nov 19 17, Nov 20 28 (best day). AI-engine referrals unknown this week.
+- Events (events-report 8, Nov 16 to 23 UTC): 0 counters, 0 server-verified signups, 0 /go/flash clicks. Real Flash leads: 0.
+- X @joulemath (X API, Nov 16 08:48 to Nov 23 08:28 CET): 80 posts (14 originals, 6 quotes, 16 self-replies, 44 replies), 2,089 impressions (last week 456, 4.6x), 14 likes, 0 reposts. Replies to others did 1,481 (71%): TheRealBirnbaum 389, GameGPU_com 265, luxor thread 138, alistairmilne 118 x2, all polite counters with numbers. Main posts ~22 avg (was ~11); best: Odd Lots GPU loan quote 34, "what a GPU host keeps per hour" 32, Clore rented share by GPU 32. Link-in-post S19 XP breakeven (Nov 18) 30 vs self-reply avg 22.2, so link-in-post no longer clearly loses. 31 followers (20 last week) / 198 following.
+- Market (snapshot 2026-11-23, 08:57 CET): BTC $61,453 (-5.4% w/w); difficulty 134.82 T flat; hashprice $28.80/PH/day (-5.3%); next retarget est +8.72% ~Fri Nov 27 03:18 CET (after it hashprice ~$26.5, S21 XP breakeven ~$0.082, S19 XP ~$0.051; now $0.089 / $0.056). Vast medians: H100 SXM $2.33 (5 offers, +11%), H200 $4.44, B200 $8.13 (-18%), 4090 $0.469, 5090 $0.593 (-13%). Ornn settled Nov 22: H100 $2.91 (-4.9%), H200 $5.79 (-7.8%), B200 $9.08 (-6.0%, down 6 days straight). RunPod page still "Updated Nov 12"; Lambda 8x B200 $7.69. Salad 4090 $0.2621, 5090 $0.355. Clore 49.9% rented (5090 median $20/day, 61% rented).
+
+| Metric | Week 1 | Nov 16 | This week (Nov 23) |
+|---|---|---|---|
+| GSC impressions (7d) | 136 | 351 | n/a (signed out) |
+| GSC clicks (7d) | 0 | 1 | n/a |
+| GSC avg position | 59.2 | 36.2 | n/a |
+| Indexed / not indexed | 22 / 42 | 26 / 81 | n/a |
+| CF visits (7d, real) | ~29 | 107 | n/a (connector auth) |
+| X impressions (7d) | 768 | 456 | 2,089 |
+| X followers | 6 | 20 | 31 |
+| AI-engine referrals | 0 | 0 | n/a |
+| Flash leads | 0 | 0 | 0 |
+
+Ranking reasoning (no fresh search data, so this week leans on last week's GSC plus the open Desk gaps; re-rank once GSC is back):
+- Last week's locked ships all landed (host-earnings, CTR pass, RTX 5090, /gpu/ index + H200). Give the CTR pass a second week before judging it.
+- GPU stays the main push (Pierre, Nov 1). /gpu/h100/ was the GPU page Google liked (37 imp, pos 13.7) and "H100 rent per hour" is the biggest Desk gap, so it gets the Wed site improve slot (old Nov 16 #8).
+- B200 is the newsiest GPU number this week (Ornn down 6 days straight, Vast -18%, Lambda $7.69 vs RunPod $5.98): new page Tue (numbered #9).
+- Mining: the +8.7% retarget lands Fri Nov 27 and cuts hashprice to ~$26.5. "cost to mine 1 BTC" (GSC query "bitcoin mining cost per btc" had 6 imp Nov 9; Desk gap) gets a dedicated answer page Thu with pre- and post-retarget numbers, linked from the mining guide and /methodology/ (no rework of those two).
+- X replies with numbers are what work (71% of reach); keep reply-first. Week 6 drafts test 3 link-in-post slots since the Nov 18 one beat the self-reply average.
+
+PRIORITY this week (top to bottom):
+1. [ ] Content ship Tue Nov 24: NEW /gpu/b200/ "B200 rent price per hour (Nov 2026)". Re-pull on the day: Vast median and offer count, RunPod, Lambda 8x B200 $7.69, Ornn settled with 1W/1M change, B200 vs H200 vs H100 premium table, Ornn vs Vast spread. FAQPage, dated short answer, link from /gpu/, /gpu/h200/, /gpu/h100/, /calculators/. Flash GPU CTA ok. IndexNow.
+2. [ ] Site improve Wed Nov 25: /gpu/h100/ for "H100 price / rent per hour": answer-first title and meta, dated short answer, multi-provider table (Vast, RunPod Community vs Secure, Lambda, Ornn, Clore if listed), Vast vs RunPod vs Clore section, body links to /gpu/rent-vs-buy-h100/, /gpu/host-earnings/, /gpu/b200/. Then internal links to discovered-not-indexed /fleet/, /gpu/a100/, /asic/antminer-s19j-pro/.
+3. [ ] Content ship Thu Nov 26: NEW "What does it cost to mine 1 BTC? (Nov 2026)" answer page: cost per BTC by model (S21 XP, S21, S19k Pro, S19 XP) at sourced power prices, before and after the Nov 27 retarget estimate, all build-driven where possible. Link from mining guide, /methodology/, /mining-calculator/, ASIC model pages.
+4. [ ] Site improve Fri Nov 27: post-retarget check. Verify build-driven short answers, breakevens and "last retarget" lines on the CTR-pass pages picked up the Nov 27 adjustment; fix anything static. Refresh /gpu/ weekly index table with a Nov 27 read (4th weekly column).
+5. [ ] Pierre: sign the box browser back into Google (corbin.pierre92@gmail.com) so GSC reads work, then request indexing for /gpu/, /gpu/h200/, /gpu/host-earnings/, /gpu/rtx-5090/, /asic/antminer-s21-xp/, /power-prices/canada-quebec/, /calculators/, /gpu/a100/, /fleet/, /asic/antminer-s19j-pro/ and "Validate fix" (carried from Nov 16 #5). Also reconnect Cloudflare with the account that owns joulemath.com.
+6. [ ] SEO & AEO Desk Nov 23 check requested; fold its gaps in when it lands.
+7. [ ] Later (unchanged): expand rent-vs-buy H100 (Desk #8), Energy-to-Compute Index page (now 4 weekly reads in /gpu/), inference cost calculator, LLM query power cost.
+- X: week 6 drafts in /workspace/joulemath-x-drafts-week6.md (Thu Nov 26 to Wed Dec 2, 14 posts, 3 link-in-post: Thu 16:30, Mon 08:30, Wed 16:30). The scheduled posts routine (joulemath X week 3-5 posts) ends Nov 25 and needs repointing to this file through Dec 2.
 
 ## Week of Nov 16 (written 2026-11-16)
 
