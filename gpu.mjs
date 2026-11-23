@@ -157,9 +157,7 @@ ${WEEK.map(r=>`<tr>${r.map((c,k)=>k?`<td>${c}</td>`:`<td><b>${c}</b></td>`).join
 <h2 id="faq">FAQ</h2>
 ${hubFaq.map(([id,q,a])=>`<h3 id="${id}">${q}</h3>\n<p>${a}</p>`).join('\n')}
 <p>Already hosting GPUs? Benchmark a Vast.ai machine in <a href="/fleet/">Fleet Check</a>.</p></div>
-<h2 id="vast-books">How do Vast.ai hosts track earnings and payments?</h2>
-<p>Connect your Vast.ai account to Flash to track earnings, fees and payouts by machine. The integration is available to hosts today, and Flash can help with payments as well as sync to QuickBooks in one click.</p>
-<section class="cta"><div><h2>Run GPUs for AI?</h2><p>Connect Vast.ai to Flash to track earnings, fees and payouts by machine. Get help with payments and sync to QuickBooks in one click.</p></div><a class="btn" rel="nofollow" href="/go/flash?c=gpu-hub&amp;p=cta&amp;op=ai_gpu">See Flash for compute providers <span aria-hidden="true">→</span></a></section>`;
+`;
   const hubLd={"@context":"https://schema.org","@graph":[{"@type":"CollectionPage","name":"GPU rental prices per hour","url":SITE+'/gpu/',"dateModified":'2026-11-20',"breadcrumb":{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":SITE+'/'},{"@type":"ListItem","position":2,"name":"GPU rental prices","item":SITE+'/gpu/'}]}},
    {"@type":"FAQPage","mainEntity":hubFaq.map(([,q,a])=>({"@type":"Question","name":q,"acceptedAnswer":{"@type":"Answer","text":a}}))}]};
   fs.writeFileSync('dist/gpu/index.html',a.page({title:'GPU rental prices per hour, Nov 2026: H100, H200, B200, RTX 5090',desc:'Nov 20, 2026 GPU rent per hour: H100 $2.20 to $4.89, H200 $3.59 to $6.40, B200 $5.98 to $9.17, plus A100, RTX 5090 and 4090. Weekly moves, every price dated.',url:'/gpu/',ld:hubLd,body:hubBody}));
