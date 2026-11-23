@@ -95,7 +95,7 @@ ${PRICES.map(p=>`<tr${p===0.06?' class="hl"':''}><td>Net at $${p.toFixed(2)}/kWh
 <table><thead><tr><th>Source</th><th>Date</th><th>H100 SXM</th><th>H100 PCIe</th><th>Also</th></tr></thead><tbody>
 ${NOW.map(([n,u,d,s,p,x])=>`<tr><td><a href="${u}">${n}</a></td><td>${d}</td><td>${s}</td><td>${p}</td><td>${x}</td></tr>`).join('\n')}
 </tbody></table>
-<p class="note">Renter prices per GPU-hour. Our Vast query: rentable, on-demand, exactly one GPU; only 1 of the 3 SXM offers was a verified host ($5.09). Thin sample: three single-GPU SXM offers today, so the Vast median moves a lot day to day (it was $2.10 across 8 offers on Nov 16 and $2.34 across 6 on Nov 17, from our snapshots). RunPod Secure H100 SXM went from $3.99 to $4.39 on the page dated November 12; Community did not move. Other GPUs side by side: <a href="/gpu/">GPU rental prices</a>.</p>
+<p class="note">Renter prices per GPU-hour. Our Vast query: rentable, on-demand, exactly one GPU; only 1 of the 3 SXM offers was a verified host ($5.09). Thin sample: three single-GPU SXM offers today, so the Vast median moves a lot day to day (it was $2.10 across 8 offers on Nov 16 and $2.34 across 6 on Nov 17, from our snapshots). RunPod Secure H100 SXM went from $3.99 to $4.39 on the page dated November 12; Community did not move. Other GPUs side by side: <a href="/gpu/">GPU rental prices</a>. If you do not need H100 speed, the <a href="/gpu/a100/">A100 page</a> has the older, cheaper data center card.</p>
 <h2 id="specs">What are the H100 SXM and PCIe specs?</h2>
 <table><thead><tr><th></th><th>H100 SXM</th><th>H100 PCIe</th></tr></thead><tbody>
 <tr><td>Max TDP</td><td>Up to 700 W (configurable)</td><td>350 W</td></tr>
