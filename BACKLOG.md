@@ -18,6 +18,12 @@ Ranked by expected traffic + revenue. Ship top to bottom. Re-ranked 2026-11-23 (
 13. [ ] AI data center power demand.
 14. [ ] GPU hosting cost line on power price pages (AEO pass on the 5 power pages done 2026-11-01, 29efff8).
 
+Deindex recovery shipped 2026-11-23 (Pierre, "Do everything needed to get us to the top"):
+- [x] 63f62f3 dates from git, not build time. adf6be8 S21 XP, S21 Pro, S19 XP merged into /asic/ (301s), sourced history and who-should-buy on the 7 remaining ASIC pages, shared boilerplate cut. b001e75 /gpu/h100/ canonical, Oct GPU posts are dated archives. f551adb /about/, /guides/, /blog/ E-E-A-T. a029de1 Flash CTAs and /go/ links cut on info pages. 6ba8018 body links to a100, rent-vs-buy, host-earnings, rtx-5090, s19j-pro, fleet.
+- [x] IndexNow 200, GSC sitemap resubmitted.
+- [ ] Pierre: Request indexing on /mining-calculator/, /methodology/, /guides/is-bitcoin-mining-profitable-2026/, /asic/antminer-s19k-pro/, /asic/.
+- [ ] Re-inspect the 5 in a week; new pages stay paused until impressions come back.
+
 Shipped 2026-11-03 SEO/AEO run (Pierre: "improve it all so we rank higher"):
 - [x] 8ff2910 calculator + ASIC cluster AEO. 871f881 power prices: Quebec "Hydro-Quebec Rate CB" title/FAQ, ASIC-by-place tables, hub short answer + break-even + FAQ schema. 2c7242e /methodology/ "how to calculate mining profitability and hashprice", live worked example, TechArticle. d64fc39 rent-out guide Nov 3 prices. 0c69822 /gpu/ hub + H100 Nov 3 prices and FAQ. 2ba9901 Oct GPU post Nov 3 update. cd388d9 pivot post Nov 3 update (Cipher Q3 first AI rent). dd59828 Breadcrumb schema sitewide, WebSite+Organization on home, joulemath.pages.dev 301 to apex, preview hosts noindex.
 - [x] All 34 sitemap URLs 200 live with no em dashes; IndexNow pinged (200).
