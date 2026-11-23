@@ -1,3 +1,4 @@
+import {gitDate,stamp} from './dates.mjs';
 // Country power price pages: dist/power-prices/<slug>/index.html + dist/power-prices/index.html.
 // Prices are industrial electricity prices from public sources, each with source and date. Never fill a gap with a guess:
 // if a place has no citable industrial price, leave it out.
@@ -70,7 +71,9 @@ const CTR={
  'uae':{t:(res,mon)=>`UAE (Dubai) industrial power: AED ${res[0].amt.toFixed(2)}/kWh ($${res[0].p.toFixed(3)}), ${mon}`,src:'DEWA'},
  'canada-quebec':{t:(res,mon)=>`Hydro-Quebec crypto mining rate: ${(res[0].amt*100).toFixed(2)} cents CAD/kWh, ${mon}`,src:'Hydro-Quebec Rate CB',what:'crypto mining power'},
  'ethiopia':{t:(res,mon,c)=>{const r=c.sched[0].rows;return `Ethiopia mining power: $${r[1][1].toFixed(3)}/kWh now, $${r[2][1].toFixed(3)} from July 2027`;},src:'EEP via Addis Standard',what:'data mining power'}};
-export async function buildPower({hp,eurPerUsd,when,dataLine,page,updated,iso,day,models,mon,dshort,prev,prevPct,prevTxt}){
+export async function buildPower({hp,eurPerUsd,when,dataLine,page,day,models,mon,dshort,prev,prevPct,prevTxt}){
+  // Page date from git (dates.mjs): changes when the hand-read power prices or this page's words change, not on every rebuild.
+  const ed=gitDate(['power.mjs']),updated=stamp(ed),iso=ed;
   const usdcad=await boc();
   const calcUrl=p=>`/?price=${p.toFixed(4).replace(/0+$/,'').replace(/\.$/,'')}&amp;kw=${DEF.kw}`;
   const FX={EUR:1/eurPerUsd,AED:1/3.6725,CAD:1/usdcad.rate};const usdOf=x=>x.usd??x.amt*FX[x.cur];

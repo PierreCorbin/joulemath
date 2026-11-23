@@ -1,3 +1,4 @@
+import {gitDate,stamp} from './dates.mjs';
 // Build-time numbers for /guides/is-bitcoin-mining-profitable-2026/. The page also refreshes them live in the browser (js/live.js),
 // but crawlers and no-JS readers get real values instead of "...". Everything comes from the same mempool.space fetch as the ASIC pages.
 import fs from 'fs';
@@ -10,7 +11,8 @@ export function buildGuide(a){
   const ms=[...a.models].sort((x,y)=>x.m.jth-y.m.jth), best=ms[0], worst=ms[ms.length-1];
   const live={rewardPerBlock:fmt(a.reward,4),difficulty:fmt(a.D,0),hashpriceUSD:fmt(a.hp,4),btcUSD:fmt(a.btc,0),breakevenS21:fmt(be(13.5),3)};
   h=h.replace(/<b data-k="(\w+)">\.\.\.<\/b>/g,(m,k)=>live[k]?`<b data-k="${k}">${live[k]}</b>`:m);
-  h=h.replace('<!--guide-updated-->',a.updated);
+  const ed=gitDate(['guides.mjs','src/guides/is-bitcoin-mining-profitable-2026']);
+  h=h.replace('<!--guide-updated-->',stamp(ed));
   h=h.replace('<!--guide-answer-->',`<p><b>At today's numbers:</b> hashprice is about <b>$${fmt(a.hp,4)}</b> per TH/s per day, so the most efficient machine we track, the ${best.m.name} (${best.m.jth} J/TH), breaks even at about <b>$${fmt(be(best.m.jth),3)}/kWh</b> with a 2% pool fee, and the least efficient, the ${worst.m.name} (${worst.m.jth} J/TH), at about <b>$${fmt(be(worst.m.jth),3)}/kWh</b>. If your all-in power costs less than that, mining pays on paper today. Hashprice computed ${esc(a.when)} from the <a href="https://mempool.space/docs/api">mempool.space API</a>; specs from each manufacturer.</p>`);
   h=h.replace('<!--guide-table-->',`<table><thead><tr><th>Machine</th><th>J/TH</th><th>Break-even $/kWh (2% pool fee)</th></tr></thead><tbody>${ms.map(r=>`<tr><td><a href="${r.url}">${r.m.name}</a></td><td>${r.m.jth}</td><td>$${fmt(be(r.m.jth),3)}</td></tr>`).join('')}</tbody></table>
 <p class="note">Break-even = hashprice × 0.98 ÷ (J/TH × 0.024), at the hashprice above. Specs are linked on each machine's page.</p>`);
@@ -32,7 +34,7 @@ export function buildGuide(a){
   put('<!--guide-lead-->',`<b>Short answer:</b> yes, if your power costs less than your machine's break-even price. On ${esc(a.day)} hashprice was <b>$${fmt(a.hp,4)} per TH/s per day</b> (<a href="https://mempool.space/docs/api">mempool.space</a> data, our math), so an ${xp.m.name} breaks even at about <b>$${fmt(be(13.5),3)}/kWh</b> and an ${s19.m.name} at about <b>$${fmt(be(s19.m.jth),3)}/kWh</b>, both with a 2% pool fee. At $0.05/kWh, electricity alone costs about <b>${k0(cx.usd)}</b> to mine 1 BTC with an ${xp.m.name}, against a BTC price of ${btcTxt}.`);
   const title='Is Bitcoin mining worth it in 2026? Cost per BTC | joulemath';
   const desc=`Is mining profitable? On ${a.day} an S21 XP breaks even at $${fmt(be(13.5),3)}/kWh and 1 BTC costs about ${k0(cx.usd)} in power at $0.05/kWh. Hashprice, retarget, sources.`;
-  for(const [k,v] of [['<!--guide-title-->',esc(title)],['<!--guide-desc-->',esc(desc)],['<!--guide-modified-->',a.iso.slice(0,10)]])h=h.split(k).join(v);
+  for(const [k,v] of [['<!--guide-title-->',esc(title)],['<!--guide-desc-->',esc(desc)],['<!--guide-modified-->',ed]])h=h.split(k).join(v);
   const faq=[
    ['faq-profitable','Is Bitcoin mining profitable in 2026?',`It is if your power costs less than your machine's break-even price. At today's hashprice of $${fmt(a.hp,4)} per TH/s per day, the ${best.m.name} breaks even at about $${fmt(be(best.m.jth),3)}/kWh and the ${worst.m.name} at about $${fmt(be(worst.m.jth),3)}/kWh, both with a 2% pool fee. Hardware cost, downtime and hosting fees come on top.`],
    ['faq-worth','Is it worth mining Bitcoin in 2026?',`It depends on your power price. On ${a.day}, an ${xp.m.name} stays profitable on electricity up to about $${fmt(be(13.5),3)}/kWh and an ${s19.m.name} up to about $${fmt(be(s19.m.jth),3)}/kWh (2% pool fee, our math from mempool.space data). Above that, the power bill is bigger than the coins mined. Hardware, hosting and downtime come on top, so work out payback before you buy.`],

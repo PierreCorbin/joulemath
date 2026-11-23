@@ -2,6 +2,7 @@
 // Hashprice is computed at build time from mempool.space; the build fails if the fetch fails (no stale or invented numbers).
 import fs from 'fs';
 import {PLACES} from './power.mjs';
+import {gitDate,stamp} from './dates.mjs';
 const SITE='https://joulemath.com';
 const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 const BM='Bitmain spec sheet', WM='MicroBT WhatsMiner shop listing';
@@ -112,7 +113,9 @@ ${body}
   fs.mkdirSync('dist/asic',{recursive:true});
   const rows=[];
   const day=now.toLocaleDateString('en-US',{timeZone:'UTC',year:'numeric',month:'long',day:'numeric'});
-  const updated=`Last updated <time datetime="${iso}">${day}</time>`;
+  // Page dates come from git (dates.mjs), not the build clock. Live numbers say when they were computed in dataLine.
+  const edAsic=gitDate(['asic.mjs','power.mjs']),edCalc=gitDate(['asic.mjs','src/mining-calculator']),edMeth=gitDate(['asic.mjs','src/methodology']);
+  const updated=stamp(edAsic);
   // Build-date labels for titles, metas and dated short answers (never hardcoded months).
   const mon=now.toLocaleDateString('en-US',{timeZone:'UTC',month:'short',year:'numeric'}), dshort=now.toLocaleDateString('en-US',{timeZone:'UTC',month:'short',day:'numeric',year:'numeric'});
   // Last difficulty adjustment (mempool.space difficulty-adjustment API: previousRetarget %, previousTime). Optional, left out if missing.
@@ -288,7 +291,7 @@ ${faq.map(([id,q,a])=>`<h3 id="${id}">${esc(q)}</h3>\n<p>${esc(a)}</p>`).join('\
 <p>Wondering whether the same kilowatts would earn more renting GPUs? Try the <a href="/">mine vs AI per-kW calculator</a>, or see what an <a href="/gpu/h100/">H100</a> or <a href="/gpu/rtx-4090/">RTX 4090</a> earns per kW. What power costs in big mining places: <a href="/power-prices/">industrial power prices</a>. Learn the math: <a href="/guides/is-bitcoin-mining-profitable-2026/">is Bitcoin mining profitable in 2026?</a> and the <a href="/methodology/">ASIC profitability formulas and sources</a>. Or see <a href="/asic/">all ASICs</a>.</p>
 <!--signup--></article>
 <section class="cta"><div><h2>Already mining?</h2><p>Track your real per-site numbers (uptime, power cost, curtailment, payouts) instead of estimates.</p></div><a class="btn" rel="nofollow" href="/go/flash?c=asic-model&amp;p=cta">See Flash for miners <span aria-hidden="true">→</span></a></section>`;
-    const ld={"@context":"https://schema.org","@graph":[{"@type":"WebPage","name":title,"description":desc,"url":SITE+url,"dateModified":iso,"breadcrumb":{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ASIC profitability","item":SITE+'/asic/'},{"@type":"ListItem","position":2,"name":m.name,"item":SITE+url}]}},
+    const ld={"@context":"https://schema.org","@graph":[{"@type":"WebPage","name":title,"description":desc,"url":SITE+url,"dateModified":edAsic,"breadcrumb":{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ASIC profitability","item":SITE+'/asic/'},{"@type":"ListItem","position":2,"name":m.name,"item":SITE+url}]}},
      {"@type":"FAQPage","mainEntity":faq.map(([,q,a])=>({"@type":"Question","name":q,"acceptedAnswer":{"@type":"Answer","text":a}}))}]};
     fs.mkdirSync('dist'+url,{recursive:true});fs.writeFileSync('dist'+url+'index.html',page({title:m.ctr?title:`${title} | joulemath`,desc,url,ld,body}));
   }
@@ -324,7 +327,7 @@ ${faq.map(([id,q,a])=>`<h3 id="${id}">${esc(q)}</h3>\n<p>${esc(a)}</p>`).join('\
 <h2 id="faq">FAQ</h2>
 ${hubFaq.map(([id,q,a])=>`<h3 id="${id}">${esc(q)}</h3>\n<p>${esc(a)}</p>`).join('\n')}<!--signup--></div>
 <section class="cta"><div><h2>Already mining?</h2><p>Track your real per-site numbers (uptime, power cost, curtailment, payouts) instead of estimates.</p></div><a class="btn" rel="nofollow" href="/go/flash?c=asic-hub&amp;p=cta">See Flash for miners <span aria-hidden="true">→</span></a></section>`;
-  const hubLd={"@context":"https://schema.org","@graph":[{"@type":"CollectionPage","name":"ASIC miner profitability by model","url":SITE+'/asic/',"dateModified":iso,"breadcrumb":{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":SITE+'/'},{"@type":"ListItem","position":2,"name":"ASIC profitability","item":SITE+'/asic/'}]}},
+  const hubLd={"@context":"https://schema.org","@graph":[{"@type":"CollectionPage","name":"ASIC miner profitability by model","url":SITE+'/asic/',"dateModified":edAsic,"breadcrumb":{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":SITE+'/'},{"@type":"ListItem","position":2,"name":"ASIC profitability","item":SITE+'/asic/'}]}},
    {"@type":"FAQPage","mainEntity":hubFaq.map(([,q,a])=>({"@type":"Question","name":q,"acceptedAnswer":{"@type":"Answer","text":a}}))}]};
   fs.writeFileSync('dist/asic/index.html',page({title:`ASIC miner profitability and value by model, ${mon} | joulemath`,desc:`${dshort}: ${pos.length} of ${rows.length} Antminer and WhatsMiner models profit at $0.05/kWh. ${top.m.name} breaks even near $${top.be.toFixed(3)}/kWh. Profit per day, used value, payback.`,url:'/asic/',ld:hubLd,body}));
   // /mining-calculator/: fill the build-time markers (snapshot, model presets, compare table, worked example, FAQ, JSON-LD).
@@ -356,11 +359,11 @@ ${hubFaq.map(([id,q,a])=>`<h3 id="${id}">${esc(q)}</h3>\n<p>${esc(a)}</p>`).join
 ${cq.map(([id,q,a])=>`<h3 id="${id}">${esc(q)}</h3>\n<p>${esc(a)}</p>`).join('\n')}
 <p class="note">Used prices: <a href="${ING.url}">${ING.src}</a>, ${ING.window}. Network data: <a href="https://mempool.space/docs/api">mempool.space API</a>. Specs: each manufacturer, linked on the <a href="/asic/">ASIC model pages</a>.</p>
 </article>`;
-   const ld={"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"ASIC miner profitability calculator","url":SITE+'/mining-calculator/',"description":"Bitcoin ASIC miner profitability calculator: profit per day, break-even power price and payback from live hashprice.","applicationCategory":"FinanceApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"dateModified":iso,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"featureList":["Live hashprice from mempool.space","Live BTC price","Pool fee","Break-even power price","Hardware payback","USD and EUR",`${MODELS.length} preset ASIC models`]},
+   const ld={"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"ASIC miner profitability calculator","url":SITE+'/mining-calculator/',"description":"Bitcoin ASIC miner profitability calculator: profit per day, break-even power price and payback from live hashprice.","applicationCategory":"FinanceApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"dateModified":edCalc,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"featureList":["Live hashprice from mempool.space","Live BTC price","Pool fee","Break-even power price","Hardware payback","USD and EUR",`${MODELS.length} preset ASIC models`]},
     {"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":SITE+'/'},{"@type":"ListItem","position":2,"name":"ASIC miner profitability calculator","item":SITE+'/mining-calculator/'}]},
     {"@type":"FAQPage","mainEntity":cq.map(([,q,a])=>({"@type":"Question","name":q,"acceptedAnswer":{"@type":"Answer","text":a}}))}]};
    const snap=`<b>Today:</b> hashprice is ${$(hp,4)} per TH/s per day. An ${esc(xp.m.name)} grosses about ${$(xp.rev)} a day, keeps about ${$(xp.p05)} at $0.05/kWh and breaks even at about $${xp.be.toFixed(3)}/kWh. An ${esc(ex.m.name)} breaks even at about $${ex.be.toFixed(3)}/kWh.`;
-   for(const [k,v] of [['<!--calc-ld-->',`<script type="application/ld+json">${JSON.stringify(ld)}</script>`],['<!--calc-date-->',updated],['<!--calc-snap-->',snap],['<!--calc-models-->',opts],['<!--calc-body-->',body]]){if(!h.includes(k))throw new Error('calc marker '+k);h=h.replace(k,v);}
+   for(const [k,v] of [['<!--calc-ld-->',`<script type="application/ld+json">${JSON.stringify(ld)}</script>`],['<!--calc-date-->',stamp(edCalc)],['<!--calc-snap-->',snap],['<!--calc-models-->',opts],['<!--calc-body-->',body]]){if(!h.includes(k))throw new Error('calc marker '+k);h=h.replace(k,v);}
    fs.writeFileSync(f,h);}
   // /methodology/: short answer, live worked example and TechArticle JSON-LD.
   {const f='dist/methodology/index.html';let h=fs.readFileSync(f,'utf8');
@@ -390,9 +393,9 @@ ${adj?`<p>${esc(retargetTxt)}</p>`:''}
 <p>That is before the cost of the machine. Try other models and prices in the <a href="/mining-calculator/">ASIC miner profitability calculator</a>, see every model side by side on the <a href="/asic/">ASIC profitability page</a>, or check what power costs in mining countries on the <a href="/power-prices/">industrial power prices</a> page. This example is rebuilt daily.</p>`;
    const methTitle='ASIC miner profitability formula and hashprice | joulemath';
    const methDesc=`ASIC miner profitability math on ${day} numbers: hashprice ${$(hp,4)} per TH/s per day, S21 XP breaks even near $${ex.be.toFixed(3)}/kWh. Formulas, worked example, sources.`;
-   const ld={"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"How to calculate ASIC miner profitability, hashprice and GPU rent per kW","url":SITE+'/methodology/',"dateModified":iso,"datePublished":"2026-10-21","author":{"@type":"Organization","name":"joulemath","url":SITE+'/'},"publisher":{"@type":"Organization","name":"joulemath","url":SITE+'/'},"about":["Hashprice","Bitcoin mining profitability","GPU rental"]},
+   const ld={"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"How to calculate ASIC miner profitability, hashprice and GPU rent per kW","url":SITE+'/methodology/',"dateModified":edMeth,"datePublished":"2026-10-21","author":{"@type":"Organization","name":"joulemath","url":SITE+'/'},"publisher":{"@type":"Organization","name":"joulemath","url":SITE+'/'},"about":["Hashprice","Bitcoin mining profitability","GPU rental"]},
     {"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":SITE+'/'},{"@type":"ListItem","position":2,"name":"Methodology","item":SITE+'/methodology/'}]}]};
-   for(const [k,v] of [['<!--meth-ld-->',`<script type="application/ld+json">${JSON.stringify(ld)}</script>`],['<!--meth-date-->',updated],['<!--meth-answer-->',ans],['<!--meth-example-->',exH+'\n'+today+'\n'+costH],['<!--meth-desc-->',esc(methDesc)],['<!--meth-title-->',esc(methTitle)]]){if(!h.includes(k))throw new Error('meth marker '+k);h=h.split(k).join(v);}
+   for(const [k,v] of [['<!--meth-ld-->',`<script type="application/ld+json">${JSON.stringify(ld)}</script>`],['<!--meth-date-->',stamp(edMeth)],['<!--meth-answer-->',ans],['<!--meth-example-->',exH+'\n'+today+'\n'+costH],['<!--meth-desc-->',esc(methDesc)],['<!--meth-title-->',esc(methTitle)]]){if(!h.includes(k))throw new Error('meth marker '+k);h=h.split(k).join(v);}
    fs.writeFileSync(f,h);}
   console.log('asic: hashprice',hp.toFixed(4),'pages',MODELS.length);
   return {hp,btc,D,reward,eurPerUsd:pr.EUR/pr.USD,when,iso,day,updated,mon,dshort,prev,prevPct,prevTxt,dataLine,page,models:all,adj,retargetTxt,costBtc};

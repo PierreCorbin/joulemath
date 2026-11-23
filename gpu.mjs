@@ -1,3 +1,4 @@
+import {gitDate} from './dates.mjs';
 import { build4090 } from './gpu4090.mjs';
 import { build5090 } from './gpu5090.mjs';
 import { buildA100 } from './gpuA100.mjs';
@@ -172,7 +173,7 @@ ${hubFaq.map(([id,q,a])=>`<h3 id="${id}">${q}</h3>\n<p>${a}</p>`).join('\n')}
    const cbody=`<h2 id="which">Which calculator should I use?</h2><ul><li>Running ASICs: the <a href="/mining-calculator/">ASIC profitability calculator</a>, or a model page like the <a href="/asic/antminer-s21-xp/">S21 XP</a> or <a href="/asic/antminer-s19j-pro/">S19j Pro</a>.</li><li>Deciding between mining and AI: the <a href="/">mine vs AI per-kW calculator</a>, then the <a href="/gpu/">weekly GPU rent index</a> and <a href="/gpu/h200/">H200</a> or <a href="/gpu/a100/">A100</a> prices.</li><li>Already running machines: <a href="/fleet/">Fleet Check</a> for BTC payout addresses and Vast.ai machine IDs.</li><li>Checking a site: <a href="/power-prices/">industrial power prices by country</a>.</li></ul>
 <h2 id="faq">Calculator FAQ</h2>
 ${cfaq.map(([id,q,t])=>`<h3 id="${id}">${q}</h3><p>${t}</p>`).join('\n')}`;
-   const cld={"@context":"https://schema.org","@graph":[{"@type":"CollectionPage","name":"Free Bitcoin mining and GPU rental calculators","url":SITE+'/calculators/',"dateModified":a.iso.slice(0,10)},{"@type":"FAQPage","mainEntity":cfaq.map(([,q,t])=>({"@type":"Question","name":q,"acceptedAnswer":{"@type":"Answer","text":t}}))}]};
+   const cld={"@context":"https://schema.org","@graph":[{"@type":"CollectionPage","name":"Free Bitcoin mining and GPU rental calculators","url":SITE+'/calculators/',"dateModified":gitDate(['gpu.mjs','src/calculators'])},{"@type":"FAQPage","mainEntity":cfaq.map(([,q,t])=>({"@type":"Question","name":q,"acceptedAnswer":{"@type":"Answer","text":t}}))}]};
    for(const m of ['<!--calc-desc-->','<!--calc-ld-->','<!--calc-answer-->','<!--calc-faq-->'])if(!ch.includes(m))throw new Error('calculators marker missing '+m);
    ch=ch.replaceAll('<!--calc-desc-->',esc(cdesc)).replace('<!--calc-ld-->',`<script type="application/ld+json">${JSON.stringify(cld).replace(/</g,'\\u003c')}</script>`).replace('<!--calc-answer-->',cans).replace('<!--calc-faq-->',cbody);
    fs.writeFileSync(cf,ch);}
