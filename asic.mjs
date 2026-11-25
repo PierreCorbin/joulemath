@@ -13,9 +13,9 @@ const ING={src:'ING Mining used ASIC miner sold prices',url:'https://ingmining.c
 const UP={'antminer-s19j-pro':{price:170,n:12,mid:'$140 to $189'},'antminer-s19-xp':{price:289,n:52,mid:'$250 to $350'},'antminer-s19k-pro':{price:330,n:10,mid:'$257 to $351'},
  'antminer-s21':{price:988,n:12,mid:'$938 to $1,012'},'antminer-s21-pro':{price:1600,n:13,mid:'$1,500 to $1,600'},'antminer-s21-xp':{price:2349,n:18,mid:'$2,178 to $2,574'}};
 const used=(...sl)=>({...ING,rows:sl.map(slug=>({slug,...UP[slug]}))});
-// New list prices on the MicroBT shop (shop.whatsminer.com/products and product pages), read November 3, 2026, rechecked November 13, 2026 (same prices; the M63S 408T bin shows SOLD).
-const WMP={'whatsminer-m60s':{price:1674,url:'https://shop.whatsminer.com/products'},'whatsminer-m66s':{price:2610,url:'https://shop.whatsminer.com/products/details/69?skuId=136'},
- 'whatsminer-m63s':{price:3672,sold:'November 13, 2026',url:'https://shop.whatsminer.com/products/details/67?skuId=132'},'whatsminer-m70s':{price:3472,url:'https://shop.whatsminer.com/products'}};
+// New list prices on the MicroBT shop (shop.whatsminer.com/products and product pages), read November 3, 2026, rechecked November 13 and November 25, 2026 (same prices; the M63S 408T bin shows SOLD on both rechecks).
+const WMP={'whatsminer-m60s':{price:1674,url:'https://shop.whatsminer.com/products/details/66?skuId=187'},'whatsminer-m66s':{price:2610,url:'https://shop.whatsminer.com/products/details/69?skuId=136'},
+ 'whatsminer-m63s':{price:3672,sold:'November 25, 2026',url:'https://shop.whatsminer.com/products/details/67?skuId=132'},'whatsminer-m70s':{price:3472,url:'https://shop.whatsminer.com/products'}};
 // Specs as published by the manufacturer, accessed Oct 21, 2026. For WhatsMiner the shop lists hashrate and J/TH; watts = TH x J/TH (our arithmetic).
 export const MODELS=[
  {slug:'antminer-s21-xp',merged:true,name:'Antminer S21 XP',maker:'Bitmain',th:270,w:3645,ctr:'Antminer S21 XP profit per day and breakeven, {mon}',src:BM,url:'https://support.bitmain.com/hc/en-us/articles/35383015643673-S21-XP-Specifications',
@@ -59,7 +59,12 @@ export const MODELS=[
   mw:{peers:['antminer-s19k-pro','antminer-s19-xp','antminer-s19j-pro','antminer-s21-xp'],basis:'used'},
   site:'Like the S19 XP it is air-cooled on single-phase 200 to 240 V. At 2,760 W it is about 270 W lighter on the circuit than an S19 XP, which matters if you are tight on breaker capacity.'},
  {slug:'whatsminer-m60s',name:'WhatsMiner M60S',maker:'MicroBT',th:186,jth:18.5,ctr:'WhatsMiner M60S profit per day and breakeven, {mon}',src:WM,url:WMURL,
-  intro:'The M60S is MicroBT\'s air-cooled workhorse, listed at 186 TH/s and 18.5 J/TH, which works out to about 3,441 W. On paper it lands between the S21 and the S19 XP on efficiency.',new:WMP['whatsminer-m60s']},
+  intro:'The M60S is MicroBT\'s air-cooled workhorse, sold in 184, 186 and 188 TH/s bins at 18.5 J/TH. We price the 186 TH/s bin, which works out to about 3,441 W. On paper it lands between the S21 and the S19 XP on efficiency.',new:WMP['whatsminer-m60s'],
+  accessed:'November 25, 2026',specsAccessed:'November 25, 2026',warranty:true,
+  // MicroBT shop product page, read November 25, 2026: 188T bin shows 3,478 W on wall; 186T and 184T watts are TH x 18.5 J/TH (our arithmetic).
+  variants:[[188,3478],[186,3441],[184,3404]],varNote:'Bins, J/TH and list prices from the <a href="https://shop.whatsminer.com/products/details/66?skuId=187">MicroBT shop</a>, read November 25, 2026 ($1,692, $1,674 and $1,656, all $9 per TH/s). The shop shows 3,478 W on wall for the 188 TH/s bin; the 186 and 184 TH/s wattage is TH/s × 18.5 J/TH (our arithmetic).',
+  specs:[['Hashrate bins','184, 186 and 188 TH/s, all 18.5 J/TH'],['Power on wall','3,478 W listed for the 188 TH/s bin'],['Power supply','P221B or P222B, 220 to 240 V AC'],['Power cable','IEC C19, 16 A or more'],['Working temperature','-5 to 35 °C'],['Size','430 × 155 × 226 mm'],['Weight','13.5 kg'],['Network','Ethernet'],['List price','$1,656 (184T), $1,674 (186T), $1,692 (188T), $9 per TH/s']],
+  site:'It is a normal air-cooled box on single-phase 220 to 240 V. At 3,441 W it pulls about 15.6 A at 220 V (our math), which is why MicroBT asks for a C19 cord rated 16 A or more. The shop lists a working range up to 35 °C, below the 45 °C Bitmain lists for the S21 XP, so a hot site needs more airflow or a cooler intake.'},
  {slug:'whatsminer-m66s',name:'WhatsMiner M66S',maker:'MicroBT',th:290,jth:18.5,src:WM,url:WMURL,
   title:'WhatsMiner M66S profitability: immersion miner profit and payback',ctr:'WhatsMiner M66S immersion: profit per day, breakeven, {mon}',h1:'WhatsMiner M66S profitability (immersion)',accessed:'November 3, 2026',
   intro:'The M66S is an immersion-cooled MicroBT unit, listed at 290 TH/s and 18.5 J/TH, with 5,365 W power on wall on its shop page. Same efficiency as the air-cooled M60S, just 56% more hashrate per box. The price of that is the tank: it only runs submerged in dielectric fluid, on 380 to 480 V power.',
@@ -190,11 +195,11 @@ ${rt}`;
     // 2c. New list price payback (MicroBT shop), compared across the MicroBT models we price.
     if(m.new){const P=[0.03,0.04,0.05,0.06],wm=all.filter(a=>a.m.new);
      const me=P.map(p=>rev-kwh*p);
-     const ans=`MicroBT lists the ${n} at $${m.new.price.toLocaleString('en-US')} new on its shop${m.new.sold?` (last list price; sold out on ${m.new.sold})`:''}. At $0.04/kWh and the hashprice on ${day} it nets about ${$(me[1])} a day, so the machine alone pays back in about ${days(m.new.price,me[1])}. At $0.03/kWh it's about ${days(m.new.price,me[0])}. That leaves out shipping, import duty, hosting${m.slug==='whatsminer-m63s'||m.slug==='whatsminer-m66s'?' and the cooling setup':''}.`;
+     const ans=`MicroBT lists the ${n} at $${m.new.price.toLocaleString('en-US')} new on its shop${m.new.sold?` (last list price; sold out on ${m.new.sold})`:''}. At $0.04/kWh and the hashprice on ${day} it nets about ${$(me[1])} a day, so the machine alone pays back in about ${days(m.new.price,me[1])}. At $0.03/kWh it's about ${days(m.new.price,me[0])}. That leaves out shipping, import duty, hosting${m.slug==='whatsminer-m63s'||m.slug==='whatsminer-m66s'?' and the cooling setup':''}.${m.warranty?(()=>{const d3=me[0]>0?m.new.price/me[0]:Infinity,d4=me[1]>0?m.new.price/me[1]:Infinity;return d4<=365?' That is inside the one-year MicroBT warranty.':d3<=365?' Only power around $0.03/kWh earns it back inside the one-year MicroBT warranty.':' Even at $0.03/kWh that is longer than the one-year MicroBT warranty.';})():''}`;
      html.push(`<h2 id="new-payback">How long does a new ${esc(n)} take to pay back?</h2>
 <p><b>${esc(ans)}</b></p>
-<p class="note">List prices from the <a href="https://shop.whatsminer.com/products">MicroBT shop</a>, read November 3, 2026 and rechecked November 13, 2026 (unchanged), for the hashrate bin shown on each page.${wm.some(o=>o.m.new.sold)?` The ${wm.filter(o=>o.m.new.sold).map(o=>esc(o.m.name)).join(' and ')} bin we price showed as sold out on the shop on November 13, 2026, so its last list price is shown.`:''} Payback = list price ÷ daily profit (our arithmetic), holding today's hashprice flat. Shop prices change often; check before you buy.</p>`);
-     faq.push(['faq-new-price',`How much does a new ${n} cost?`,`$${m.new.price.toLocaleString('en-US')} on the MicroBT shop (read November 3, 2026, same on November 13), which is $${(m.new.price/m.th).toFixed(2)} per TH/s.${m.new.sold?` That bin showed as sold out on the shop on ${m.new.sold}, so check stock and current price before you plan around it.`:''}`]);
+<p class="note">${m.th} TH/s bin at $${m.new.price.toLocaleString('en-US')} on the <a href="${m.new.url}">MicroBT shop</a>, read November 3 and rechecked November 25, 2026 (same price).${m.new.sold?` It showed as sold out on November 13 and November 25, so this is its last list price.`:''}${m.warranty?' Warranty per the shop after-sales policy, read November 25, 2026: one year, not covering overclocking, unofficial firmware or non-MicroBT parts.':''} Payback = list price ÷ daily profit at today's hashprice (our arithmetic).</p>`);
+     faq.push(['faq-new-price',`How much does a new ${n} cost?`,`$${m.new.price.toLocaleString('en-US')} on the MicroBT shop (read November 3, 2026, same on November 13 and November 25), which is $${(m.new.price/m.th).toFixed(2)} per TH/s.${m.new.sold?` That bin showed as sold out on the shop on ${m.new.sold}, so check stock and current price before you plan around it.`:''}`]);
      faq.push(['faq-new-payback',`How long does a new ${n} take to pay back?`,ans]);}
     // 2c-bis. New price from new-condition eBay sales (ING Mining CSV, read November 13, 2026), against the used median, for models carrying m.newBM.
     if(m.newBM&&m.used){const N=m.newBM,u=UP[m.slug],P=[0.03,0.04,0.05,0.06],pr=p=>rev-kwh*p;
@@ -223,15 +228,9 @@ ${rt}`;
 <p><b>${esc(ans)}</b></p>
 ${B==='used'?`<p>${more}</p>`:''}
 <table><thead><tr><th>Machine (1 MW)</th><th>${B==='used'?'Used median':'List price'}</th><th>Machines</th><th>PH/s</th><th>Profit / day at $0.04</th><th>Machine cost</th><th>Payback</th></tr></thead><tbody>${R.map(r=>`<tr${r===me?' class="hl"':''}><td>${r===me?`<b>${esc(r.o.m.name)}</b>`:`<a href="${r.o.url}">${esc(r.o.m.name)}</a>`}${r.o.m.cool?` (${r.o.m.cool})`:''}</td><td>$${r.price.toLocaleString('en-US')}</td><td>${r.cnt}</td><td>${r.ph.toFixed(1)}</td><td>$${k(r.prof)}</td><td>$${k(r.capex)}</td><td>${days(r.capex,r.prof)}</td></tr>`).join('')}</tbody></table>
-<p class="note">Machines = 1,000,000 W ÷ watts per box, rounded down (our arithmetic). ${B==='used'?`Prices are 90-day eBay medians from <a href="${ING.url}">${ING.src}</a> (${ING.window}, read ${ING.read}).`:`Prices are list prices on the <a href="https://shop.whatsminer.com/products">MicroBT shop</a> (read November 3, 2026, rechecked for the M63S and M66S on November 4, 2026).`} Machines only: no cooling, transformers, building, pool fee or downtime, and hashprice held flat.</p>`);
+<p class="note">Machines = 1,000,000 W ÷ watts per box, rounded down (our arithmetic). ${B==='used'?`Prices are 90-day eBay medians from <a href="${ING.url}">${ING.src}</a> (${ING.window}, read ${ING.read}).`:`Prices are list prices on the <a href="https://shop.whatsminer.com/products">MicroBT shop</a> (read November 3, 2026, rechecked November 25, 2026).`} Machines only: no cooling, transformers, building, pool fee or downtime, and hashprice held flat.</p>`);
      faq.push(['faq-per-mw',`How many ${n} miners fit in 1 MW?`,ans]);}
-    // 2f. Payback vs the one-year MicroBT warranty (shop after-sales policy).
-    if(m.warranty&&m.new){const pp=[0.03,0.04,0.05].map(p=>rev-kwh*p),d=pp.map(x=>x>0?m.new.price/x:Infinity);
-     const ans=`MicroBT's shop gives a one-year warranty. At the hashprice on ${day}, a new ${n} at list price ($${m.new.price.toLocaleString('en-US')}) pays back in about ${days(m.new.price,pp[0])} at $0.03/kWh, ${days(m.new.price,pp[1])} at $0.04 and ${days(m.new.price,pp[2])} at $0.05. ${d[1]<=365?'So at $0.04/kWh it earns back its list price inside the warranty year.':d[0]<=365?'So it only earns back its list price inside the warranty year on power around $0.03/kWh.':'So even at $0.03/kWh it needs longer than the warranty year to earn back its list price.'}`;
-     html.push(`<h2 id="warranty">Does the ${esc(n)} pay for itself inside its warranty?</h2>
-<p><b>${esc(ans)}</b></p>
-<p class="note">Warranty and payment terms from the <a href="${m.new.url}">MicroBT shop product page</a>, read November 4, 2026. Payback = list price ÷ daily profit (our arithmetic), machine only, hashprice held flat.</p>`);
-     faq.push(['faq-warranty',`What warranty does the ${n} have?`,`One year from MicroBT, per its shop's after-sales policy (read November 4, 2026). Running outside spec, overclocking and unofficial firmware or parts are not covered.`]);}
+    // 2f. Warranty: folded into the new-payback answer and note above (Nov 25, 2026), no separate section.
     // 2d. Spec sheet and site needs, straight from the manufacturer page.
     if(m.specs){html.push(`<h2 id="specs">What does the ${esc(n)} need to run?</h2>
 <p>${esc(m.site)}</p>
@@ -242,7 +241,7 @@ ${B==='used'?`<p>${more}</p>`:''}
     if(m.variants){html.push(`<h2 id="versions">Which ${esc(n)} version do you have, and does it matter?</h2>
 <p><b>For break-even, no.</b> ${esc(m.maker)} sells the ${esc(n)} in ${m.variants.length} hashrate bins from ${m.variants[m.variants.length-1][0]} to ${m.variants[0][0]} TH/s, all rated ${m.jth} J/TH, so every bin breaks even at the same power price. Bigger bins just earn, or lose, more per box.</p>
 <table><thead><tr><th>Version</th><th>W</th><th>Revenue / day</th><th>Profit / day at $0.04</th><th>Profit / day at $0.05</th></tr></thead><tbody>${m.variants.map(([t,w])=>{const rv=t*hp,k=w/1000*24;return `<tr${t===m.th?' class="hl"':''}><td>${t} TH/s</td><td>${w.toLocaleString('en-US')}</td><td>${$(rv)}</td><td>${$(rv-k*0.04)}</td><td>${$(rv-k*0.05)}</td></tr>`;}).join('')}</tbody></table>
-<p class="note">Bins and wattage from the <a href="${m.url}">${m.src}</a> (accessed November 3, 2026), which allows ±3% on hashrate and ±5% on power. Revenue at the hashprice below.</p>`);
+<p class="note">${m.varNote||`Bins and wattage from the <a href="${m.url}">${m.src}</a> (accessed November 3, 2026), which allows ±3% on hashrate and ±5% on power.`} Revenue at the hashprice below.</p>`);
      faq.push(['faq-versions',`What is the difference between the ${n} versions?`,`Only the hashrate bin. ${m.maker} lists ${m.variants.map(v=>v[0]+'T').join(', ')} versions, all at ${m.jth} J/TH, from ${m.variants[m.variants.length-1][1].toLocaleString('en-US')} W to ${m.variants[0][1].toLocaleString('en-US')} W. They all break even at the same power price.`]);}
     return {html:html.join('\n'),faq};
   }
@@ -277,7 +276,7 @@ ${B==='used'?`<p>${more}</p>`:''}
 <ul><li><b>Hashrate:</b> ${m.th} TH/s</li><li><b>Power:</b> ${m.w.toLocaleString('en-US')} W</li><li><b>Efficiency:</b> ${m.jth} J/TH</li><li><b>Source:</b> <a href="${m.url}">${m.src}</a>, accessed ${m.accessed||'October 21, 2026'}.${m.maker==='MicroBT'&&!m.specs?' The shop lists hashrate and J/TH; the wattage is our arithmetic (TH/s × J/TH).':''}</li></ul>
 ${story}
 <h2 id="daily-profit">How much does the ${esc(m.name)} make a day at different power prices?</h2>
-<p>At the hashprice below, one ${esc(m.name)} grosses about <b>${$(rev)}</b> a day. At $0.05/kWh it ${p05<0?`loses about <b>${$(-p05)}</b>`:`nets about <b>${$(p05)}</b>`} a day, and it breaks even at about <b>$${be.toFixed(3)}/kWh</b>.</p>
+<p>At the hashprice on ${day}, one ${esc(m.name)} grosses about <b>${$(rev)}</b> a day. At $0.05/kWh it ${p05<0?`loses about <b>${$(-p05)}</b>`:`nets about <b>${$(p05)}</b>`} a day, and it breaks even at about <b>$${be.toFixed(3)}/kWh</b>.</p>
 <table><thead><tr><th>Power price</th><th>Revenue / day</th><th>Power / day</th><th>Profit / day</th><th>Profit / 30 days</th></tr></thead><tbody>${tbl}</tbody></table>
 <p class="note">${dataLine} Revenue is gross: no pool fee, downtime, hosting markup or hardware cost. Assumes the machine runs at spec 24 hours a day (our assumption). Figures update when the site is rebuilt.</p>
 ${ex.html}
@@ -288,7 +287,11 @@ ${famLinks}
 ${slots}
 <div class="callout"><b>Use your own numbers or paste your payout address.</b> Pool fee, live price and your exact power cost are all inputs in the ASIC calculator, or paste your Bitcoin mining payout address in <a href="/fleet/">Fleet Check</a> to reconcile your actual 90-day on-chain payouts.<br><a class="btn" href="/mining-calculator/#m-${m.slug}">Open the ASIC calculator <span aria-hidden="true">→</span></a> <a class="btn ghost" href="/fleet/" style="margin-left:.4rem">Benchmark your payout address <span aria-hidden="true">→</span></a></div>
 <!--signup--></article>`;
-    const ld={"@context":"https://schema.org","@graph":[{"@type":"WebPage","name":title,"description":desc,"url":SITE+url,"dateModified":edAsic,"breadcrumb":{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ASIC profitability","item":SITE+'/asic/'},{"@type":"ListItem","position":2,"name":m.name,"item":SITE+url}]}}]};
+    // FAQPage JSON-LD from the page's own question H2s and the first paragraph under each (visible text, no separate FAQ block).
+    const unesc=t=>t.replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim().replace(/&quot;/g,'"').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&');
+    const qa=[...body.matchAll(/<h2 id="[^"]+">([^<]*\?)<\/h2>\s*<p>([\s\S]*?)<\/p>/g)].map(x=>[unesc(x[1]),unesc(x[2])]).filter(([q,a])=>a.length>40);
+    const ld={"@context":"https://schema.org","@graph":[{"@type":"WebPage","name":title,"description":desc,"url":SITE+url,"dateModified":edAsic,"breadcrumb":{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ASIC profitability","item":SITE+'/asic/'},{"@type":"ListItem","position":2,"name":m.name,"item":SITE+url}]}},
+     ...(qa.length?[{"@type":"FAQPage","mainEntity":qa.map(([q,a])=>({"@type":"Question","name":q,"acceptedAnswer":{"@type":"Answer","text":a}}))}]:[])]};
     fs.mkdirSync('dist'+url,{recursive:true});fs.writeFileSync('dist'+url+'index.html',page({title:m.ctr?title:`${title} | joulemath`,desc,url,ld,body}));
   }
   rows.sort((a,b)=>b.be-a.be);

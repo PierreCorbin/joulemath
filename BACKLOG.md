@@ -23,6 +23,7 @@ Deindex recovery shipped 2026-11-23 (Pierre, "Do everything needed to get us to 
 - [x] IndexNow 200, GSC sitemap resubmitted.
 - [ ] Pierre: Request indexing on /mining-calculator/, /methodology/, /guides/is-bitcoin-mining-profitable-2026/, /asic/antminer-s19k-pro/, /asic/.
 - [ ] Re-inspect the 5 in a week; new pages stay paused until impressions come back.
+- [x] 2026-11-25 site improve: WhatsMiner pages depth. M60S gets its MicroBT shop spec table (184/186/188T bins, 3,478 W listed for 188T, C19 16 A, -5 to 35 °C, 13.5 kg), bins table and warranty line; all 7 ASIC model pages get FAQPage JSON-LD built from their own question H2s (no duplicate FAQ block); separate warranty section folded into new-payback on M60S/M63S/M66S; MicroBT prices rechecked Nov 25 (unchanged, M63S still sold out).
 
 Shipped 2026-11-03 SEO/AEO run (Pierre: "improve it all so we rank higher"):
 - [x] 8ff2910 calculator + ASIC cluster AEO. 871f881 power prices: Quebec "Hydro-Quebec Rate CB" title/FAQ, ASIC-by-place tables, hub short answer + break-even + FAQ schema. 2c7242e /methodology/ "how to calculate mining profitability and hashprice", live worked example, TechArticle. d64fc39 rent-out guide Nov 3 prices. 0c69822 /gpu/ hub + H100 Nov 3 prices and FAQ. 2ba9901 Oct GPU post Nov 3 update. cd388d9 pivot post Nov 3 update (Cipher Q3 first AI rent). dd59828 Breadcrumb schema sitewide, WebSite+Organization on home, joulemath.pages.dev 301 to apex, preview hosts noindex.
